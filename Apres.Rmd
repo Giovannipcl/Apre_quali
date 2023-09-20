@@ -16,7 +16,7 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-      ratio: '4:3' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
       navigation:
         scroll: false # disable slide transitions by scrolling
 ---
