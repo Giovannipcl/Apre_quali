@@ -57,22 +57,15 @@ ___
 - Many of these models assume only conditional expected value as a unique characteristic of interest and presume other distribution moments as fixed or independent of explanatory variables. Model inference relapse on strong assumptions like homoscedasticity and symmetry.
 - An approach that guarantees the flexibilization of some assumptions in the class of regression models is the Generalized additive model for the location, scale, and shape (GAMLSS) class.
 - The class includes a broad family of distributions for continuous and discrete responses incorporating highly skew or kurtotic distributions.
-
----
 - However, choosing a parametric distribution on a large family of distributions has to be done carefully since it imposes assumptions on the model.
-- Quantile regression models escape from the parametric context offering an approach that flexible the assumptions over the response variable.
-- In quantile regression, each conditional quantile is modeled separately in terms of linear or smooth functions of explanatory variables.
-- Based on the idea of quantile regression and on the independence of parametric imposes there is the Conditional Transformation Model (CTM).
-- CTM addresses the direct estimation of the conditional distribution function of a random variable $Y$ conditional on a set of covariates $X = x$ `r Citep(myBib,"hothorn2014conditional")`.
-- The model uses a conditional transformation function $h(Y|x)$ of a random variable $Y$ for some fixed and known explanatory variable, $x$, value and a baseline distribution function free of parameter to be estimated.
-
 ---
 
+- Based on the idea of quantile regression and on the independence of parametric imposes there is the Conditional Transformation Model (CTM) `r Citep(myBib,"hothorn2014conditional")`.
+- CTM addresses the direct estimation of the conditional distribution function of a random variable $Y$ conditional on a set of covariates $X = x$.
+- The model uses a conditional transformation function $h(Y|x)$ of a random variable $Y$ for some fixed and known explanatory variable, $x$, value and a baseline distribution function free of parameter to be estimated.
 - The transformation function $h(Y|x)$ is the crucial aspect of the CTM. Its construction can range from low-parameterized to more complex structures.
-- In this work we cover two distinct approaches for $h(Y|\boldsymbol{x})$ construction.
 - `r Citet(myBib,"carlan2023bayesian")` presented the Bayesian Conditional Transformation Model (BCTM) class and based the model inferences on Markov Monte Carlo Chain (MCMC) simulation.
-- We present an alternative Bayesian estimation procedure based on the Laplace approximation, motivated by the Integrated Nested Laplace Approximation (INLA) approach `r Citep(myBib,"rue2009approximate")`.
-- The lower computational cost of the Laplace algorithm for posterior estimates compared to MCMC methods is a relevant aspect of the choice made.
+- We present an alternative estimation procedure based on the Laplace approximation, motivated by the Integrated Nested Laplace Approximation (INLA) approach `r Citep(myBib,"rue2009approximate")`.
 - We tested our proposed algorithm to some models already fitted with other approaches (MCMC and Maximum likelihood).
 
 ---
@@ -91,9 +84,8 @@ ___
      P(Y \leq y|\boldsymbol{X} = \boldsymbol{x}) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
 \end{equation}
 
-- A reasonable choice for $F_Z$ is the standard Normal distribution. 
 - The $h(Y|\boldsymbol{x})$ function is seen as standardization since it transforms the response variable conditionally on $\boldsymbol{x}$ such that it follows a pre-defined conditional distribution function $F_Z$. 
-- The transformation functions  $h(Y|\boldsymbol{x})$ can assume many forms.
+- A reasonable choice for $F_Z$ is the standard Normal distribution.
 
 
 ---
@@ -129,7 +121,6 @@ $$f_Y(y_k|h) = \left\lbrace \begin{array}{cc}
 
 ### Transformation function of random variables
 ___ 
-- We have say that CTM is extremely dependent of the transformation function $h(Y|\boldsymbol{x})$ of the random variable $Y$. 
 - Instead of searching for new distributions which could be reasonable estimates for $F_Y$, we aim to find a transformation function that would provide a estimate for $F_Y$.
 - Finding a suitable function is possibly tougher than finding a suited distribution. 
 - For now, we write the transformation as a linear function of its basis-transformed argument $y$ using basis function.
@@ -139,21 +130,25 @@ $$
 $$
 which $\Xi$ is the domain of the random variable.
 
----
+
 - The transformation function is written as
 $$
 h(y) = \boldsymbol{a}^T(y) \boldsymbol{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^p. 
 $$
+---
 - The choice of the basis has to attend to the monotonically increasing restriction, and the first derivative $a(y)'$ must be available. 
 - For an evaluated basis and a vector of coefficients, we estimate the $F_Y$ distribution through the decomposition $F_Z \circ \boldsymbol{a}(y)^T \boldsymbol{\gamma}$.
 - To abroad the class of transformation functions, $h$ may depend on explanatory variables $\boldsymbol{X} \in \mathcal{X}$. 
 - From that, we could obtain estimates of $F_{Y|\boldsymbol{X} = \boldsymbol{x}}$ by some conditional transformation function $h(Y|\boldsymbol{x})$, such that $F_{Y|\boldsymbol{X}}(y) = F_Z(h(y|\boldsymbol{x}))$.
 - We have a basis for explanatory variables
 $$\boldsymbol{b}: \mathcal{X} \rightarrow \mathbb{R}^Q$$
----
+
 - The conditional transformation function is written in terms of a joint basis 
 $$h(y|\boldsymbol{x}) = c(y, \boldsymbol{x})^T\boldsymbol{\gamma},$$
 is parameterized as a linear function of joint evaluate basis of $Y$ and $\boldsymbol{x}$ denoted as $\boldsymbol{c}(y,\boldsymbol{x}): \Xi \times \mathcal{X}  \rightarrow \mathbb{R}^{d(P, Q)}$.
+
+---
+
 - The monotonically increasing restriction has to be attend only on $y$ direction.
 - All characteristics and objectives of the constructed model should be considered in $h(y|\boldsymbol{x})$ construction.
 - The BCTM is based on additive decomposition of the transformation function $h$ into $J$ partial transformation function for all $\boldsymbol{x} \in \mathcal{X}$. 
@@ -260,7 +255,7 @@ ___
 
 - Basis splines define a space of smooth function,  which our function is restricted to belong.
 - The basis splines functions includes good approximation to most smooth functions `r Citep(myBib,"green1993nonparametric")`. 
-- There is several spline basis. Here we used B-splines `r Citep(myBib,"de1978practical")`.
+- There are several spline basis. Here we used B-splines `r Citep(myBib,"de1978practical")`.
 - The B-spline allow to control the smoothness of the function. 
 - The B-spline has a relevant application called P-splines `r Citep(myBib,"eilers1996flexible")`.
 - Finally, it is possible to construct monotone functions using basis B-splines.
@@ -412,6 +407,7 @@ ___
 $$\begin{align}\label{bctm_model}
     h(y|x) = \sum_{l_1 = 1}^{L_1}\sum_{l_2 = 1}^{L_2} \gamma_{l_1l_2} B_{l_1,3,\boldsymbol{l}_1}(y)B_{l_2,3,\boldsymbol{l}_2}(x) =  (\boldsymbol{a}(y)^{\top} \otimes \boldsymbol{b}(x)^{\top})^{\top} \boldsymbol{\gamma} \end{align}$$
 
+- We have a total of $L_1 \times L_2$ parameters.
 - Now, the restriction of monotonicity is necessary only in the $y$ direction. In the matrix notation $\boldsymbol{\gamma} = \Sigma \boldsymbol{\tilde{\beta}}$ with $\Sigma = \Sigma_1 \otimes I_2$ and
 
 $$\begin{equation}\label{betatilde}
@@ -429,8 +425,7 @@ ___
 - In the Bayesian context, smoothness and regularization are accomplished through adequate prior distributions for model parameters. 
 - In the Bayesian P-Splines approach `r Citep(myBib,"lang2004bayesian")`, we set multivariate normal distributions with zero vector mean and precision matrix $\boldsymbol{K}$.
 ---
-- For the vector of unconstrained parameters $\boldsymbol{\beta}$, we set Gaussian prior distribution with precision matrix being the P-splines ﬁrst-order diﬀerence penalty starting with the second working parameter
-
+- For the vector of unconstrained parameters $\boldsymbol{\beta}$, from $h(y) = \boldsymbol{a}^T(y) \Sigma \boldsymbol{\tilde{\beta}}$, we set Gaussian prior distribution with precision matrix being the P-splines ﬁrst-order diﬀerence penalty 
 $$\begin{equation}\label{matrix_rw1}
 \boldsymbol{K_1} = \left(
     \begin{array}{cccccc}
@@ -464,67 +459,6 @@ $$\begin{equation}
 \end{equation}$$
 
 - For the vector $\boldsymbol{\tau} = (\tau_1, \tau_2)$ we set independent prior distributions considering then $\pi(\boldsymbol{\tau}) = \pi(\tau_1)\pi(\tau_2)$.
----
-### Identifiability constraints
-___
-
-- Multiple solutions of model coefficients may lead to the same approximated function of the spline space.
-- As described by `r Citep(myBib,"wood2017generalized")` for unconstrained B-splines, to deal with this situation one may set a sum-to-zero constraint, that is, $\sum_{i = 1}^n f(x) = 0$.
-- Let us consider the monotone B-spline in $y$ for a particular $j$ transformation
-
-$$\begin{equation}\label{spline_f}
-    h_j(y) = \sum_{l_1 = 1}^{L_1} B_{j,l_1,3,\boldsymbol{l}_1}(y) \gamma_{l_1} =  \boldsymbol{B}_j \boldsymbol{\gamma}^T =  \boldsymbol{B}_j \Sigma \boldsymbol{\tilde{\beta}}  =  \boldsymbol{X}_j \boldsymbol{\tilde{\beta}}.
-\end{equation}$$
-
-
-.content-box-gray[- Sum-to-zero restriction
-    $$\boldsymbol{1}^T\boldsymbol{X}_j \boldsymbol{\tilde{\beta}} = 0, \forall \tilde{\boldsymbol{\beta}}$$
-    $$\Rightarrow \boldsymbol{1}^T\boldsymbol{X}_j = \boldsymbol{0}$$
-]
-
----
-
-- A method to achieve this restriction is using QR decomposition of $(\boldsymbol{1}^T\boldsymbol{X}_j)^T$. Set as $\boldsymbol{Z}$ the final $L_1 - 1$ columns of the orthogonal matrix from the QR decompostion of $(\boldsymbol{1}^T\boldsymbol{X}_j)^T$, then we rewrite $\tilde{\boldsymbol{\beta}}$ as 
-
-$$\begin{equation}
-     \tilde{\boldsymbol{\beta}} = \boldsymbol{Z} \tilde{\boldsymbol{\beta}}'
- \end{equation}$$
- 
-- This construction will satisfy the constraint $\boldsymbol{1}^T\boldsymbol{X}_j \boldsymbol{\tilde{\beta}} = 0$ for any value of the $L_1 - 1$ dimensional vector $\tilde{\boldsymbol{\beta}}'$. 
-- In practice, we post multiply $\boldsymbol{X}_j$ by $\boldsymbol{Z}$ and set the first element of $\tilde{\boldsymbol{\beta}}$ to zero. 
-- The prior precision matrix for $\tilde{\boldsymbol{\beta}}'$ is the $\boldsymbol{K}_1$ with the first row and column removed.
-- The tensor construction, $h(y|\boldsymbol{x})$ which involves $L_1 \times L_2$ parameters has the constraint
-
-$$\begin{equation}\label{sumtozero}
-    \sum_{q = 1}^{L_2} \beta_{j1q} = 0
-\end{equation}$$
-
-
----
-
--  We achieve (\ref{sumtozero}) by introducing a re-parametrization matrix $\boldsymbol{Z}$, such that $\tilde{\boldsymbol{\beta}}_j = \boldsymbol{Z}\tilde{\boldsymbol{\beta}}_j'$, which
-
-$$\begin{equation} \boldsymbol{Z} = \left(
-    \begin{array}{c|c}
-       \boldsymbol{Z}'  &  \boldsymbol{0} \\
-       \hline
-        \boldsymbol{0}  &  \boldsymbol{I}
-    \end{array} \right),
-\end{equation}$$
-
-and
-
-$$\begin{equation}
-    \boldsymbol{Z}' =  \left( \begin{array}{cccccc}
-       -1  & 0  & 0 & 0 & \dots & 0 \\
-        1  &  -1 & 0 & 0 & \dots & 0 \\
-        0  &  1 & -1 & 0 & \dots & 0 \\
-        0  &  0 & 1 & -1 & \dots & 0 \\
-        \dots  &  \dots & \dots & \dots & \dots & \dots \\
-        0  &  0 & 0 & 0 & \dots & 1 \\
-    \end{array} \right)
-\end{equation}$$
-
 ---
 
 **Remark:** 
@@ -561,26 +495,13 @@ $$\begin{equation}
 
 
 where $\pi(\boldsymbol{\gamma}_s|\mu, \Sigma_s, \boldsymbol{c}_s'(\boldsymbol{y}|\boldsymbol{x}), 0)$ is the density of truncated normal multivariate with linear constraint $\boldsymbol{c}_s'(y|x)^T \boldsymbol{\gamma}_s \geq 0$. 
-- We are interested in the marginal posterior distributions $\pi(\gamma_i|\boldsymbol{y})$
-- The Laplace's method can be used to approximate these marginal densities.
----
-- The marginal of $\gamma_i$ is given by
-
-$$\begin{equation}\label{marginal_laplace}
-    \pi(\gamma_i|\boldsymbol{y}) = \frac{\pi(\gamma_1,y)}{\pi(y)} = \frac{\int \pi(\boldsymbol{y}|\boldsymbol{\gamma}) \pi(\boldsymbol{\gamma}) d \boldsymbol{\gamma}_{-i}}{\int  \pi(\boldsymbol{y}|\boldsymbol{\gamma})\pi(\boldsymbol{\gamma}) d \boldsymbol{\gamma}}
-     = \frac{\int \pi(\boldsymbol{\gamma})e^{g(y;\boldsymbol{\gamma})} d \boldsymbol{\gamma}_{-i} }{\int \pi(\boldsymbol{\gamma})e^{g(y;\boldsymbol{\gamma})} d \boldsymbol{\gamma}}
-\end{equation}$$
-- ${\gamma}_{-i}$ is the vector of parameters removing the ith parameter, $g(y;\boldsymbol{\gamma})$ is the log-likelihood of the model and $\pi(\boldsymbol{\gamma}) = \pi(\boldsymbol{\gamma}_s) \pi(\boldsymbol{\gamma}_u)$. 
-- To obtain an approximation for $\pi(\gamma_i|\boldsymbol{y})$ is necessary to apply the Laplace approximation in numerator and denominator in (\ref{marginal_laplace}).
 - The final expression for marginal distributions of the parameters is already presented by `r Citet(myBib,"tierney1986accurate")`
 
 $$\begin{equation}
     \tilde{\pi}(\gamma_i|\boldsymbol{y}) = \left(\frac{|H_{\pi}(\boldsymbol{\gamma}(\gamma_i))|}{2\pi n |H_{\pi}(\boldsymbol{\gamma}_0)|}\right)^{1/2} \frac{\pi(\boldsymbol{\gamma}_0(\gamma_i))e^{g(y;\boldsymbol{\gamma_0}(\gamma_i)})}{\pi(\boldsymbol{\gamma}_0) e^{g(y; \boldsymbol{\gamma_0})}}. 
 \end{equation}$$
-
-- The posterior mode $\boldsymbol{\gamma_0}$ of $\pi(\boldsymbol{\gamma}|\boldsymbol{y}) = \pi(\boldsymbol{\gamma})e^{g(y;\boldsymbol{\gamma})}$ is find by Newton-Raphson method.
-
 ---
+
 ### Posterior Inference for the BCTM
 ___
 
@@ -707,13 +628,14 @@ $$\begin{equation}
     H_{\tilde{\pi}_G(\boldsymbol{\beta}_{-i} |\beta_i)} = H_{-i,-i} - (H_{-i,i})^{-1}H_{i,i}(H_{i,-i}),
 \end{equation}$$
 where $H$ is the Hessian from $p(\boldsymbol{\beta})$ applied to $\boldsymbol{\beta}(\boldsymbol{\tau})$, it is constant since is independent of $\beta_i$.
+- Since the Hessian matrix is independent of $\beta_i$ then $\pi(\beta_i| \boldsymbol{\tau}, \boldsymbol{y}) \propto \pi(\tilde{\boldsymbol{\beta}}, \boldsymbol{y}, \boldsymbol{\tau})$. 
 - The benefits of this approximation are immediate since we do not evaluate the integral in (\ref{beta_marginais2}) for each $i$ but only to find the mode of $p(\boldsymbol{\beta})$ and by Normal distribution properties find the conditional expected value.
 
 
 ---
 
-- Since the Hessian matrix is independent of $\beta_i$ then $\pi(\beta_i| \boldsymbol{\tau}, \boldsymbol{y}) \propto \pi(\tilde{\boldsymbol{\beta}}, \boldsymbol{y}, \boldsymbol{\tau})$. 
-The last step is to integrate $\boldsymbol{\tau}$ from $\pi(\beta_i| \boldsymbol{\tau}, \boldsymbol{y})$ numerically as 
+
+- The last step is to integrate $\boldsymbol{\tau}$ from $\pi(\beta_i| \boldsymbol{\tau}, \boldsymbol{y})$ numerically as 
 
 $$\begin{equation}
   \int \pi(\beta_i| \boldsymbol{\tau}, \boldsymbol{y}) d\boldsymbol{\tau} = \sum_{j = 1}^{J} \pi(\beta_i| \boldsymbol{\tau}^{(j)}, \boldsymbol{y}) \Delta_j.   
@@ -727,58 +649,16 @@ $$\begin{equation}
 ___
 
 - The main point of the BCTM is the estimate of conditional distribution. The construction of the conditional distribution involves a non-linear combination of parameters.
-- Using the approximated distributions obtained it is complicated to obtain the resultanting distribution of the combination.
-- An alternative is to use simulated samples from the marginal posterior distribution of parameters and obtain an estimate of the conditional distribution. 
-- Simulations from these marginals are possible by the Metropolis-Hasting (MH) algorithm.
-
----
-
+- Using the approximated distributions obtained it is complicated to obtain the resultanting distribution of the combination. However, simulations from these marginals are possible by the Metropolis-Hasting (MH) algorithm.
 - The resulting MCMC samples are employed to estimate the conditional cumulative distribution $F_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = \hat{F}_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = F_Z(\hat{h}(y|\boldsymbol{x}))$ where $\hat{h}(y|\boldsymbol{x})$ is the posterior mean estimate
 
 $$\begin{equation}
      \hat{h}(y|\boldsymbol{x}) = \sum_{s = 1}^S \frac{1}{S}(\boldsymbol{a}_j(y)^{\top} \otimes \boldsymbol{b}_j(x)^{\top})^{\top} \boldsymbol{\gamma}_j^{(s)},
  \end{equation}$$
-- The posterior mean estimate for $F_{Y|\boldsymbol{X} = \boldsymbol{x}}(y)$ is 
+and the posterior mean estimate for $F_{Y|\boldsymbol{X} = \boldsymbol{x}}(y)$ is 
 
 $$\begin{equation}
     \hat{F}_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = \frac{1}{S} \sum_{s = 1}^S F_Z((\boldsymbol{a}_j(y)^{\top} \otimes \boldsymbol{b}_j(x)^{\top})^{\top} \boldsymbol{\gamma}_j^{(s)}).
-\end{equation}$$
----
-### Information Criteria
-___
-
-- We discuss information criteria in the context of our presented models.
-- For our context, we used them to contrast models with different transformation functions $h$, for example, models with different numbers of B-splines parameters.
-- The first criteria is the Deviance Information Criteria (DIC) proposed by `r Citep(myBib,"spiegelhalter2002bayesian")`. 
-- The DIC is defined in terms of the deviance, $D(\boldsymbol{\beta}, \boldsymbol{\tau}) =-2\log p(y|\boldsymbol{\tau}, \boldsymbol{\beta})$ and a model complexity measure named as the effective number of parameters, $p_{DIC}$.
-
-$$\begin{equation}
-    \textrm{DIC} = -2 \log \pi(y| \hat{\boldsymbol{\beta}}, \hat{\boldsymbol{\tau}}) + 2p_{DIC},
-\end{equation}$$
-
-where, 
-$$\begin{equation}\label{pdic}
-    p_{DIC} = E_{\boldsymbol{\beta}, \boldsymbol{\tau}|\boldsymbol{y}}[D(\boldsymbol{\beta}, \boldsymbol{\tau})] - D(\hat{\boldsymbol{\beta}}, \hat{\boldsymbol{\tau}}),
-\end{equation}$$
----
-
-- The first term in $p_{DIC}$ is written as
-
-$$\begin{equation}\label{pdic_int}
-    E_{\boldsymbol{\beta}, \boldsymbol{\tau}|\boldsymbol{y}}[-2\log p(y|\boldsymbol{\tau}, \boldsymbol{\beta})] = \int \int -2\log p(y|\boldsymbol{\tau}, \boldsymbol{\beta}) p(\boldsymbol{\beta}|\boldsymbol{\tau}, \boldsymbol{y})p(\boldsymbol{\tau}|\boldsymbol{y})d\boldsymbol{\beta}d\boldsymbol{\tau}
-\end{equation}$$
-- The integral on $\boldsymbol{\beta}$ in (\ref{pdic_int}) is evaluated by Monte Carlo since $p(\boldsymbol{\beta}|\boldsymbol{\tau}, \boldsymbol{y})$ is roughly Gaussian. 
-- We approximate the integral of $p(\boldsymbol{\tau}|\boldsymbol{y})$ by a trapezoidal rule. 
-- The $D(\hat{\boldsymbol{\beta}}, \hat{\boldsymbol{\tau}})$ is just a plug-in estimate using the posterior mean estimate of $\boldsymbol{\beta}$ and the posterior mode of $\boldsymbol{\tau|\boldsymbol{y}}$.
-- The WAIC criterion `r Citep(myBib,"watanabe2010asymptotic")` , unlike DIC, is not based on the deviance, but in the Bayesian predictive distribution $p^*(y)$
-
-$$\begin{equation}
-    \textrm{WAIC} = -2\left(\sum_i \log p^*(y_i) - p_{WAIC}\right).
-\end{equation}$$
-with 
-
-$$\begin{equation}
-    p_{WAIC} = \sum_i \lbrace E_{\boldsymbol{\beta}, \boldsymbol{\tau}|\boldsymbol{y}}[(\log p(y_i|\boldsymbol{\tau}, \boldsymbol{\beta}))^2] - E_{\boldsymbol{\beta}, \boldsymbol{\tau}|\boldsymbol{y}}[\log p(y_i|\boldsymbol{\tau}, \boldsymbol{\beta})]^2 \rbrace.
 \end{equation}$$
 ---
 ### Applications
@@ -890,7 +770,7 @@ Image caption
 ---
 ### Application 2  
 ___
-- We considered a data set which the observations are measures of age ($x$) and head circumference ($y$) of 7040 young Dutch boys.
+- We considered a data set which the observations are measures of age ( $x$ ) and head circumference ( $y$ ) of 7040 young Dutch boys.
 
 ```{r,  results='asis', echo=FALSE, message=FALSE, warning = FALSE}
 library(gamlss)
@@ -900,11 +780,11 @@ library(ggplot2)
 library(ggExtra)
 ```
 
-```{r,results='asis', echo=FALSE, message=FALSE, warning = FALSE,  fig.retina=2, fig.align='center',out.width = "40%"}
+```{r,results='asis', echo=FALSE, message=FALSE, warning = FALSE,  fig.retina=2, fig.align='center',out.width = "30%"}
 # Save the scatter plot in a variable
 p <- ggplot(db, aes(x = age, y = head)) +
   geom_point(col = "grey", size = 0.51) + theme_classic() +
-  xlab("Age") + ylab("Head Circumference")+theme(axis.text=element_text(size=18),
+  xlab("Age") + ylab("Head Circumference")+theme(axis.text=element_text(size=20),
                                    axis.title=element_text(size=14,face="bold"))
 
 # Plot the scatter plot with marginal histograms
@@ -922,7 +802,7 @@ ggMarginal(p, type = "histogram",size = 2, fill = "lightblue")
 - BCLTM
 $${\small F_Y(y|\boldsymbol{x}) = F_Z(\beta_0 + y\cdot\beta_1 + y\cdot age \cdot \beta_2 + \beta_3 \cdot x)}$$
  
-```{r, echo=FALSE,  out.width = "90%", dpi = 300 , fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE,  out.width = "100%", dpi = 300 , fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/Linear_bctm.png")
 ```
 
@@ -934,7 +814,7 @@ knitr::include_graphics("figuras/Linear_bctm.png")
 - Linear regression
 $${\small y_i \sim N(\beta_0 + \beta_1 x_i, \sigma)}$$
 
-```{r, echo=FALSE,  out.width = "90%", dpi = 300 ,  fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE,  out.width = "100%", dpi = 300 ,  fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/Lm_IC.png")
 ```
 ] 
@@ -1102,10 +982,10 @@ $$\boldsymbol{K}_{re} = \begin{pmatrix}
 <style type="text/css">
 .tg  {border-collapse:collapse;border-color:#ccc;border-spacing:0;}
 .tg td{background-color:#fff;border-bottom-width:1px;border-color:#ccc;border-style:solid;border-top-width:1px;
-  border-width:0px;color:#333;font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;
+  border-width:0px;color:#333;font-family:Arial, sans-serif;font-size:16px;overflow:hidden;padding:10px 5px;
   word-break:normal;}
 .tg th{background-color:#f0f0f0;border-bottom-width:1px;border-color:#ccc;border-style:solid;border-top-width:1px;
-  border-width:0px;color:#333;font-family:Arial, sans-serif;font-size:14px;font-weight:normal;overflow:hidden;
+  border-width:0px;color:#333;font-family:Arial, sans-serif;font-size:16px;font-weight:normal;overflow:hidden;
   padding:10px 5px;word-break:normal;}
 .tg .tg-xvg5{background-color:#f9f9f9;border-color:#aaaaaa;text-align:left;vertical-align:top}
 .tg .tg-buh4{background-color:#f9f9f9;text-align:left;vertical-align:top}
@@ -1113,7 +993,7 @@ $$\boldsymbol{K}_{re} = \begin{pmatrix}
 .tg .tg-dzk6{background-color:#f9f9f9;text-align:center;vertical-align:top}
 .tg .tg-73oq{border-color:#000000;text-align:left;vertical-align:top}
 </style>
-<font size="3">
+<font size="4">
 <table class="tg">
  <caption>DIC and elapsed time second from the two models fitted by different algorithms.</caption>
 <thead>
@@ -1176,21 +1056,21 @@ $$\boldsymbol{K}_{re} = \begin{pmatrix}
 
 
 .pull-left[
-```{r, echo=FALSE, out.width = "80%", dpi = 300 , fig.cap="Coefficients from the VCM model.", fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE, out.width = "60%", dpi = 300 , fig.cap="Coefficients from the VCM model.", fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/coefs_vcm.png")
 ```
 
-```{r, echo=FALSE, out.width = "80%", dpi = 300 , fig.cap="Coefficients from the VCM random effects model.", fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE, out.width = "60%", dpi = 300 , fig.cap="Coefficients from the VCM random effects model.", fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/coefs_vcm_re.png")
 ```
  
 ]
 .pull-right[
-```{r, echo=FALSE, out.width = "80%", dpi = 300 , fig.cap="Coefficients from the Tensor model.", fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE, out.width = "60%", dpi = 300 , fig.cap="Coefficients from the Tensor model.", fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/coef_tensor.png")
 ```
 
-```{r, echo=FALSE, out.width = "80%", dpi = 300 , fig.cap="Coefficients from the Tensor random effects model.", fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE, out.width = "60%", dpi = 300 , fig.cap="Coefficients from the Tensor random effects model.", fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/coef_tensor_re.png")
 ```
 ] 
@@ -1199,21 +1079,28 @@ knitr::include_graphics("figuras/coef_tensor_re.png")
 ---
 
 .pull-left[
-```{r, echo=FALSE, out.width = "90%", dpi = 300 , fig.cap="95% quantile interval and the median for every individual posterior cumulative distribution estimated by INLA based algorithm for the VCM random effects model.", fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE, out.width = "110%", dpi = 300 , fig.cap="95% quantile interval and the median for every individual posterior cumulative distribution estimated by INLA based algorithm for the VCM random effects model.", fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/Tensor_vcm_IC.png")
 ```
 
-```{r, echo=FALSE, out.width = "90%", dpi = 300 , fig.cap="95% quantile interval and the median for every individual posterior cumulative distribution estimated by stochastic simulation for the VCM random effects model.", fig.retina = 2,fig.align='center'}
+]
+
+.pull-right[
+```{r, echo=FALSE, out.width = "110%", dpi = 300 , fig.cap="95% quantile interval and the median for every individual posterior cumulative distribution estimated by stochastic simulation for the VCM random effects model.", fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/Tensor_vcm_IC_simu.png")
 ```
- 
 ]
-.pull-right[
-```{r, echo=FALSE, out.width = "90%", dpi = 300 , fig.cap="95% quantile interval and the median for every individual posterior cumulative distribution estimated by INLA based algorithm for the tensor random effects model.", fig.retina = 2,fig.align='center'}
+---
+ 
+
+.pull-left[
+```{r, echo=FALSE, out.width = "110%", dpi = 400 , fig.cap="95% quantile interval and the median for every individual posterior cumulative distribution estimated by INLA based algorithm for the tensor random effects model.", fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/Tensor_re_IC.png")
 ```
+]
 
-```{r, echo=FALSE, out.width = "90%", dpi = 300 , fig.cap="95% quantile interval and the median for every individual posterior cumulative distribution estimated by stochastic simulation for the tensor random effects model.", fig.retina = 2,fig.align='center'}
+.pull-right[
+```{r, echo=FALSE, out.width = "110%", dpi = 400 , fig.cap="95% quantile interval and the median for every individual posterior cumulative distribution estimated by stochastic simulation for the tensor random effects model.", fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/Tensor_re_IC_sim.png")
 ```
 ] 
@@ -1241,7 +1128,7 @@ ___
 - Taking apart some discrepancies between the fitted models, our alternative estimation process obtained similar DIC and estimated quantile posterior intervals for the observations. 
 - The main result of this application is the gap between the elapsed time provided by the two Bayesian estimation procedures.
 - Some alterations in the BCTM models presented here are available for discussion.
-  - he $F_Z$ specifying could include an alternative to Gaussian distribution.
+  - The $F_Z$ specifying could include an alternative to Gaussian distribution.
   - A multivariate CTM, where $F_Z$ is a multivariate Gaussian distribution.
   - Bernstein polynomial could be a alternative for the B-spline.
   - A Deep CTM using neural network predictors.
