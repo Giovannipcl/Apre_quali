@@ -671,14 +671,14 @@ ___
 
 ---
 .pull-left[
-```{r, echo=FALSE, fig.height=10, fig.width=10, dpi = 300 , fig.cap="Approximated distribution for one hyperparameter.", fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE,  out.width = "100%", dpi = 300 , fig.cap="Approximated distribution for one hyperparameter.", fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/Hyper_uni_den.png")
 ```
 
 ]
 
 .pull-right[
-```{r, echo=FALSE, fig.height=10, fig.width=10, dpi = 300 , fig.cap="Approximated distribution for two hyperparameter.", fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE,  out.width = "100%", , dpi = 300 , fig.cap="Approximated distribution for two hyperparameter.", fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/Den_hyper.png")
 ```
 ]
@@ -922,7 +922,7 @@ ggMarginal(p, type = "histogram",size = 2, fill = "lightblue")
 - BCLTM
 $${\small F_Y(y|\boldsymbol{x}) = F_Z(\beta_0 + y\cdot\beta_1 + y\cdot age \cdot \beta_2 + \beta_3 \cdot x)}$$
  
-```{r, echo=FALSE, fig.height=5, fig.width=12, dpi = 300 , fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE,  out.width = "90%", dpi = 300 , fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/Linear_bctm.png")
 ```
 
@@ -934,7 +934,7 @@ knitr::include_graphics("figuras/Linear_bctm.png")
 - Linear regression
 $${\small y_i \sim N(\beta_0 + \beta_1 x_i, \sigma)}$$
 
-```{r, echo=FALSE, fig.height=5, fig.width=12, dpi = 300 ,  fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE,  out.width = "90%", dpi = 300 ,  fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/Lm_IC.png")
 ```
 ] 
@@ -952,7 +952,7 @@ where $\boldsymbol{a}$ and $\boldsymbol{b}(age)$ are vectors of evaluated cubic 
 .pull-left[
 - BCTM
 
-```{r, echo=FALSE, fig.height=5, fig.width=12, dpi = 300 , fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE,  out.width = "90%",  dpi = 300 , fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/y_age_13_cp.png")
 ```
  
@@ -960,7 +960,7 @@ knitr::include_graphics("figuras/y_age_13_cp.png")
 .pull-right[
 - CTM
 
-```{r, echo=FALSE, fig.height=5, fig.width=12, dpi = 300, fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE,  out.width = "90%",  dpi = 300, fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/y_age_ctm_13_cp.png")
 ```
 ] 
