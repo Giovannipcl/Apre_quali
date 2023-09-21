@@ -257,10 +257,10 @@ $$\begin{align}
 - An alternative is to relax the specification of the transformation function and return for our basis specification.
 - We must pick up a basis that defines a space of functions which our transformation function belongs.
 - But many questions and challenges arise from this approach.
-  - The functions should be express complex functions, but they should preferably be smooth.
-  - They should be monotone.
+  - The functions should express complex functions, but they should preferably be smooth.
   - How much smooth should they be?
-- Splines answer!  
+  - They should be monotone.
+- Answer: Splines!  
   
 ---
 
