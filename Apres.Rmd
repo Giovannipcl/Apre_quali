@@ -691,14 +691,14 @@ where $\boldsymbol{a}$ is a vector of evaluated B-spline basis of dimension eigh
 .pull-left[
 
 ```{r, echo=FALSE, out.width = "90%", dpi = 300 , fig.cap="Estimated density for waiting times between eruptions by the mlt package (dashed line) and BCTM model (continuous line)", fig.retina = 2,fig.align='center'}
-knitr::include_graphics("figuras/dens_geys.png")
+knitr::include_graphics("figuras/dens_geys2.png")
 ```
 
 ]
 
 .pull-right[
 ```{r, echo=FALSE, out.width = "90%", dpi = 300 , fig.cap="Estimated density with the respective credible interval (dashed line) for waiting times between eruptions for BCTM model", fig.retina = 2,fig.align='center'}
-knitr::include_graphics("figuras/dens_gey_HPD.png")
+knitr::include_graphics("figuras/dens_gey_HPD2.png")
 ```
 ]
 
@@ -780,7 +780,7 @@ library(ggplot2)
 library(ggExtra)
 ```
 
-```{r,results='asis', echo=FALSE, message=FALSE, warning = FALSE,  fig.retina=2, fig.align='center',out.width = "30%"}
+```{r,results='asis', echo=FALSE, message=FALSE, warning = FALSE,  fig.retina=2, fig.align='center',out.width = "40%"}
 # Save the scatter plot in a variable
 p <- ggplot(db, aes(x = age, y = head)) +
   geom_point(col = "grey", size = 0.51) + theme_classic() +
@@ -791,10 +791,10 @@ p <- ggplot(db, aes(x = age, y = head)) +
 ggMarginal(p, type = "histogram",size = 2, fill = "lightblue")
 
 ```
-- `r Citet(myBib,"hothorn2018most")` used the *mlt* package to fit a conditional transformation model for head circumference with explanatory variable $x = age^{1/3}$. 
 
 ---
 
+- `r Citet(myBib,"hothorn2018most")` used the *mlt* package to fit a conditional transformation model for head circumference with explanatory variable $x = age^{1/3}$. 
 - We first propose a BCLTM and a linear regression to observe how a restricted model fit this data.
 
 .pull-left[
@@ -827,12 +827,12 @@ $$\begin{equation}
     F_Y(y|\boldsymbol{x}) = F_Z(h(y|\boldsymbol{x})) = F_Z(\boldsymbol{a}(y)\otimes \boldsymbol{b}(age) \boldsymbol{\gamma})^T 
 \end{equation}$$
 
-where $\boldsymbol{a}$ and $\boldsymbol{b}(age)$ are vectors of evaluated cubic B-spline basis of dimension 7. The vector $\boldsymbol{\gamma} = (\gamma_1, \dots, \gamma_{49})$ is the basis coefficients model. 
+where $\boldsymbol{a}$ and $\boldsymbol{b}(age)$ are vectors of evaluated cubic B-spline basis of dimension 7.
 
 .pull-left[
 - BCTM
 
-```{r, echo=FALSE,  out.width = "90%",  dpi = 300 , fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE,  out.width = "95%",  dpi = 300 , fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/y_age_13_cp.png")
 ```
  
@@ -840,7 +840,7 @@ knitr::include_graphics("figuras/y_age_13_cp.png")
 .pull-right[
 - CTM
 
-```{r, echo=FALSE,  out.width = "90%",  dpi = 300, fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE,  out.width = "95%",  dpi = 300, fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/y_age_ctm_13_cp.png")
 ```
 ] 
@@ -1057,21 +1057,21 @@ $$\boldsymbol{K}_{re} = \begin{pmatrix}
 
 .pull-left[
 ```{r, echo=FALSE, out.width = "60%", dpi = 300 , fig.cap="Coefficients from the VCM model.", fig.retina = 2,fig.align='center'}
-knitr::include_graphics("figuras/coefs_vcm.png")
+knitr::include_graphics("figuras/coefs_vcm2.png")
 ```
 
-```{r, echo=FALSE, out.width = "60%", dpi = 300 , fig.cap="Coefficients from the VCM random effects model.", fig.retina = 2,fig.align='center'}
-knitr::include_graphics("figuras/coefs_vcm_re.png")
+```{r, echo=FALSE, out.width = "55%", dpi = 300 , fig.cap="Coefficients from the VCM random effects model.", fig.retina = 2,fig.align='center'}
+knitr::include_graphics("figuras/coefs_vcm_re2.png")
 ```
  
 ]
 .pull-right[
-```{r, echo=FALSE, out.width = "60%", dpi = 300 , fig.cap="Coefficients from the Tensor model.", fig.retina = 2,fig.align='center'}
-knitr::include_graphics("figuras/coef_tensor.png")
+```{r, echo=FALSE, out.width = "55%", dpi = 300 , fig.cap="Coefficients from the Tensor model.", fig.retina = 2,fig.align='center'}
+knitr::include_graphics("figuras/coef_tensor2.png")
 ```
 
-```{r, echo=FALSE, out.width = "60%", dpi = 300 , fig.cap="Coefficients from the Tensor random effects model.", fig.retina = 2,fig.align='center'}
-knitr::include_graphics("figuras/coef_tensor_re.png")
+```{r, echo=FALSE, out.width = "55%", dpi = 300 , fig.cap="Coefficients from the Tensor random effects model.", fig.retina = 2,fig.align='center'}
+knitr::include_graphics("figuras/coef_tensor_re2.png")
 ```
 ] 
 
@@ -1112,13 +1112,13 @@ knitr::include_graphics("figuras/Tensor_re_IC_sim.png")
 
 .pull-left[
 ```{r, echo=FALSE, out.width = "90%", dpi = 300 , fig.cap="Posterior estimated densities of the Tensor model for different male individual ages in the middle of the study. Shown are the estimated.", fig.retina = 2,fig.align='center'}
-knitr::include_graphics("figuras/chol_dist_age.png")
+knitr::include_graphics("figuras/chol_dist_age2.png")
 ```
 ]
 
 .pull-right[
 ```{r, echo=FALSE, out.width = "90%", dpi = 300 , fig.cap="Expected value (E(Y)), standard deviation (SD(Y)), Skewness and Kurtosis of Tensor model conditional on Age.", fig.retina = 2,fig.align='center'}
-knitr::include_graphics("figuras/moments.png")
+knitr::include_graphics("figuras/moments2.png")
 ```
 ]
 ---
@@ -1137,6 +1137,7 @@ ___
   - The points of exploration from hyperparameter distribution.
   - The mode of distribution of the hyperparameters.
 - A simulation study for the recovery of parameters model and transformation function will guide us to detect any algorithm problem. 
+- Residual analysis.
 
 ---
 
