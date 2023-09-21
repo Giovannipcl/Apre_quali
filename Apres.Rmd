@@ -141,14 +141,14 @@ ___
 - For now, we write the transformation as a linear function of its basis-transformed argument $y$ using basis function.
 - We define a basis
 $$
-\boldsymbol{a} : \Xi \rightarrow \mathbb{R}^p,
+\boldsymbol{a} : \Xi \rightarrow \mathbb{R}^P,
 $$
 which $\Xi$ is the domain of the random variable.
 
 
 - The transformation function is written as
 $$
-h(y) = \boldsymbol{a}^T(y) \boldsymbol{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^p. 
+h(y) = \boldsymbol{a}^T(y) \boldsymbol{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^P. 
 $$
 ---
 - The choice of the basis has to attend to the monotonically increasing restriction, and the first derivative $a(y)'$ must be available. 
@@ -499,7 +499,7 @@ ___
 - The contribution is to provide an alternative way to the MCMC methods to implement Bayesian inference on these models.
 
 ---
-### Posterior Inference for BCLTM
+### Posterior Inference for the BCLTM
 ___
 - The BCLTM model defined there is no hyperparameter included (unless we consider a transformation function with B-spline basis) and the response variable $Y$ is continuous.
 - Set $\boldsymbol{\gamma} = (\gamma_0, \boldsymbol{\gamma}_{J1},\boldsymbol{\gamma}_{J2} , \boldsymbol{\gamma}_{J3})$. From $\boldsymbol{\gamma}$ vector, we split our model parameters into two distinct parts denoted by $\boldsymbol{\gamma}_s$ and $\boldsymbol{\gamma}_u$
