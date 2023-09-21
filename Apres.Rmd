@@ -291,10 +291,10 @@ $$B_{j,0,\boldsymbol{t}}(y)  = \left\lbrace\begin{array}{lc}
  
 - A B-spline form for some function $f$ requires: two integers, $k$ and $q$, defining respectively the degree and the number of linear parameters, a vector of knots $\boldsymbol{t}$ of length $2k + q$ in increasing order, where the $t_{k + 1}, \dots, t_q$ are the inner knots.
 - The interval over which the spline is to be evaluated lies within $t_{k + 1}, \dots, t_q$. The first and last $k$ knot locations are arbitrary.
-
+- On the other hand, we can define a basis by choosing only $k$ and the inner knots. In this case, $q = q' + k - 1.$ The length of vector knots is $q' + 3k - 1$.
 ---
 
-- For degree $k = 1$, with a vector of inner knots $(2,3, \dots, 8)$ of length 7, we should have a vector of knots $\boldsymbol{t} = (t_1, 2,3, \dots, 8, t_9)$. The total of curve and linear parameters is $q = 9 - 2\times 1$.
+- For degree $k = 1$, with a vector of inner knots $(2,3, \dots, 8)$ of length 7, we should have a vector of knots $\boldsymbol{t} = (t_1, 2,3, \dots, 8, t_9)$. The total of curve and linear parameters is $q = 7 - k - 1$.
 - j = 1
 $$\small{ B_{1,1,\boldsymbol{t}}(y) = \frac{y - 2}{3- 2} B_{1,0,\boldsymbol{t}}(y) + \frac{4 - y}{4 - 3} B_{2,0,\boldsymbol{t}}(y), j =1, \dots, 7, }$$
 
@@ -338,9 +338,9 @@ bscols(
 
 ---
 
-- For degree $k = 2$ with a vector of inner knots $(2,3, \dots, 8)$ of length 7 we should have a vector of knots $\boldsymbol{t} = (t_1, t_2, 2,3, \dots, 8, t_9, t_{10})$.  The total of curve and linear parameters is $q = 11 - 2\times 2 = 8$.
+- For degree $k = 2$ with a vector of inner knots $(2,3, \dots, 8)$ of length 7 we should have a vector of knots $\boldsymbol{t} = (t_1, t_2, 2,3, \dots, 8, t_{10}, t_{11}, t_{12})$.  The total of curve and linear parameters is $q = 7 + 4 -2 +1 = 8$.
 - j = 1
-$$\small{  B_{1,2,\boldsymbol{t}}(y) = \frac{y - 2}{3- 2} B_{1,1,\boldsymbol{t}}(y) + \frac{4 - y}{4 - 3} B_{2,1,\boldsymbol{t}}(y), j =1, \dots, 7,}$$
+$$\small{  B_{1,2,\boldsymbol{t}}(y) = \frac{y - 2}{3- 2} B_{1,1,\boldsymbol{t}}(y) + \frac{4 - y}{4 - 3} B_{2,1,\boldsymbol{t}}(y), j =1, \dots, 8,}$$
 ```{r,results='asis', echo=FALSE, message=FALSE, warning = FALSE,  fig.retina=2, fig.align='center',fig.width=4, fig.height=4}
 ##### 2
 k = 2
