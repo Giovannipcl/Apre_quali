@@ -209,7 +209,7 @@ $$\begin{align}\label{expectation_linear_model}
 \end{align}$$
 $$\begin{align}
     & V(\gamma_0 + \gamma_1 \cdot Y + \gamma_2\cdot x \cdot Y + \gamma_3 \cdot x|\boldsymbol{x}) = 1  \nonumber \\
-    & V(Y|\boldsymbol{x}) = \frac{1}{  (\gamma_1^2 + \gamma_2^2\cdot x)}  \nonumber . 
+    & V(Y|\boldsymbol{x}) = \frac{1}{  (\gamma_1 + \gamma_2\cdot x)^2}  \nonumber . 
 \end{align}$$
 - We have that $\boldsymbol{c}'(y|\boldsymbol{x})^T = (0, 1, x,0)$ and the linear constraint of the model can be written as $\boldsymbol{c}'_s \boldsymbol{\gamma}_s \geq 0 = \gamma_1 + x \cdot \gamma2 \geq 0$.
 ]
@@ -1127,16 +1127,16 @@ ___
 - The BCTM targets a flexible estimation leaving aside any parametric and linear restriction on conditional transformation function. However, flexibility comes with a price, and the interpretability of the model is restrictive. 
 - Taking apart some discrepancies between the fitted models, our alternative estimation process obtained similar DIC and estimated quantile posterior intervals for the observations. 
 - The main result of this application is the gap between the elapsed time provided by the two Bayesian estimation procedures.
+- A simulation study for the recovery of parameters model and transformation function will guide us to detect any algorithm problem. 
 - Some alterations in the BCTM models presented here are available for discussion.
-  - The $F_Z$ specifying could include an alternative to Gaussian distribution.
   - A multivariate CTM, where $F_Z$ is a multivariate Gaussian distribution.
   - Bernstein polynomial could be a alternative for the B-spline.
   - A Deep CTM using neural network predictors.
 ---
 - Some aspects should be improved in the algorithm.
-  - The points of exploration from hyperparameter distribution.
-  - The mode of distribution of the hyperparameters.
-- A simulation study for the recovery of parameters model and transformation function will guide us to detect any algorithm problem. 
+  - Can we reduce the points of exploration from hyperparameter distribution?
+  - A faster algorithm to find the mode of distribution of the hyperparameters.
+  - Extend the algorithm for more than two hyperparameters.
 - Residual analysis.
 
 ---
