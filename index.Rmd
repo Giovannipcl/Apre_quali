@@ -116,7 +116,19 @@ ___
 
 
 ---
+### Conditional Transformation Models
+- A ideia de transformacao de variaveis aleatorias já é muito popular na área de modelagem. 
+- Another well-known example of a transformation model is the Box-Cox transformation. The Box-Cox transformation is a family of power transformations defined as:
+$$
+Y(\lambda) = 
+\begin{cases}
+\frac{Y^\lambda - 1}{\lambda} & \text{if } \lambda \neq 0, \\
+\log(Y) & \text{if } \lambda = 0,
+\end{cases}
+$$
+where $\lambda$ is a parameter that determines the type of transformation.
 
+---
 
 ### Bayesian Conditional Transformation Models
 
