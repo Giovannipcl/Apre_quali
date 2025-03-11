@@ -51,15 +51,39 @@ ___
 
 - Introduction
 
+- Conditional Transformation Models
+
 - Bayesian Conditional Transformation Models
+  - B-spline and Bernstein basis
+  - Prior specification
 
-- B-spline basis
-
-- Prior specification
+- Properties of the Bayesian Conditional Transformation Models
 
 - Posterior inference
+  - Integrated Laplace with Bayesian Conditional
+Transformation Models
+  - Variational Bayes correction to BCTM
+  - Posterior predictive check
 
-- Applications
+
+
+---
+
+- Simulation studies
+  - Study 1: Evaluating the ILBCTM performance
+  - Study 2: BCTM with Bernstein polynomials
+
+- Applications 
+  - Framingham heart study
+  - Sleep deprivation study
+
+- Original dataset applications
+  - Modeling the mortality rate from bronchial and
+lung cancer in Brazil
+  - Analysis of vehicle theft incident in the city of São
+Paulo
+
+- Final Remarks
 
 ---
 
@@ -67,21 +91,29 @@ ___
 
 ___
 
-- Regression models are relevant statistical models and widely applicable in many fields.
-- In principle, they aim to find the conditional distribution of probability $F_{Y|X = x}$ of a random variable $Y$ conditional on explanatory variables $\boldsymbol{X}$ with observed value $\boldsymbol{x}$.
-- Many of these models assume only conditional expected value as a unique characteristic of interest and presume other distribution moments as fixed or independent of explanatory variables. Model inference relapse on strong assumptions like homoscedasticity and symmetry.
+- The primary objective of regression models is to estimate the conditional probability distribution $F_{Y|X=x}$ of a random variable $Y$, given an explanatory variable $X$ with an observed value $x$.
+- Many regression models focus exclusively on the conditional expected value $E(Y|X=x)$, assuming that other moments of the distribution remain fixed or are only indirectly influenced by the explanatory variables.
+- As a result, model inference often relies on strong assumptions, such as homoscedasticity and symmetry.
 - An approach that guarantees the flexibilization of some assumptions in the class of regression models is the Generalized additive model for the location, scale, and shape (GAMLSS) class.
-- The class includes a broad family of distributions for continuous and discrete responses incorporating highly skew or kurtotic distributions.
-- However, choosing a parametric distribution on a large family of distributions has to be done carefully since it imposes assumptions on the model.
+- The class includes a broad family of distributions for continuous and discrete responses incorporating highly skew or kurtotic distributions, however, choosing a parametric distribution on a large family of distributions has to be done carefully since it imposes assumptions on the model.
 ---
 
-- Based on the idea of quantile regression and on the independence of parametric imposes there is the Conditional Transformation Model (CTM) `r Citep(myBib,"hothorn2014conditional")`.
-- CTM addresses the direct estimation of the conditional distribution function of a random variable $Y$ conditional on a set of covariates $X = x$.
-- The model uses a conditional transformation function $h(Y|x)$ of a random variable $Y$ for some fixed and known explanatory variable, $x$, value and a baseline distribution function free of parameter to be estimated.
-- The transformation function $h(Y|x)$ is the crucial aspect of the CTM. Its construction can range from low-parameterized to more complex structures.
-- `r Citet(myBib,"carlan2023bayesian")` presented the Bayesian Conditional Transformation Model (BCTM) class and based the model inferences on Markov Monte Carlo Chain (MCMC) simulation.
+- To move beyond the parametric framework, quantile regression models `r Citep(myBib,"koenker2001quantile")` provide a flexible alternative to regression models. In quantile regression, each conditional quantile is modeled independently as a function of linear or smooth terms of the explanatory variables.
+- Conditional Transformation Models (CTM) `r Citep(myBib,"hothorn2014conditional")` address the direct estimation of the conditional distribution function of a random variable $Y$ conditional on a set of covariates $X = x$.
+-  The approach involves applying a transformation function $h(Y|x)$ to the random variable $Y$, where $x$ is a fixed and known value, in conjunction with a baseline distribution function.
+- `r Citet(myBib,"carlan2023bayesian")` presented the Bayesian Conditional Transformation Model (BCTM) Building on the same definition as the CTM, this approach proposed a different parameterization for the transformation function $h(y|\boldsymbol{X})$ and utilized a Markov Chain Monte Carlo (MCMC) simulation algorithm to generate inferences about the parameters.
 - We present an alternative estimation procedure based on the Laplace approximation, motivated by the Integrated Nested Laplace Approximation (INLA) approach `r Citep(myBib,"rue2009approximate")`.
 - We tested our proposed algorithm to some models already fitted with other approaches (MCMC and Maximum likelihood).
+
+---
+- In this work, we aim to contribute to the CTM class and, more specifically, to the BCTM. We present two alternative and efficient Bayesian estimation procedures for the BCTM.
+- The first is based on the Laplace approximation, inspired by the Integrated Nested Laplace Approximation (INLA). 
+
+- However, applying these proposed algorithms requires some restrictions on the construction of the transformation function \( h(y|\boldsymbol{X}) \). Despite this, these restrictions are minimal and do not affect the model's applicability in various scenarios.
+- we also propose an alternative parameterization for the transformation functions \( h(y|x) \), distinct from the one presented in \citet{carlan2023bayesian}. In this proposal, we utilize Bernstein bases, which allow us to express nonlinear functions as linear combinations of these bases.
+- of this work is related to the interpretability of the effects of the explanatory variables \( x \) on the distribution of the response variable \( y \). The BCTM class of models suffers from a lack of interpretability due to its construction. In this work, we propose two different results that enable us to evaluate how a particular variable \( x \) impacts both the expected value of \( Y \) and the quantiles of the distribution of \( Y \).
+
+
 
 ---
 
