@@ -117,8 +117,10 @@ ___
 
 ---
 ### Conditional Transformation Models
-- A ideia de transformacao de variaveis aleatorias já é muito popular na área de modelagem. 
-- Another well-known example of a transformation model is the Box-Cox transformation. The Box-Cox transformation is a family of power transformations defined as:
+
+___
+
+- A ideia de transformacao de variaveis aleatorias já é muito popular na área de modelagem. A trnasformacao Box-Cox é um exemplo
 $$
 Y(\lambda) = 
 \begin{cases}
@@ -126,86 +128,93 @@ Y(\lambda) =
 \log(Y) & \text{if } \lambda = 0,
 \end{cases}
 $$
-where $\lambda$ is a parameter that determines the type of transformation.
+- These transformations help reframe the distribution of the response variable, making it easier to model and analyze.
+
+- The Conditional Transformation Model (CTM) extends the transformation models class by allowing the transformation functions depending on a set of M explanatory variables $\bfs{X} \in \mathbb{R}^{M}$.
+- These new transformation functions from CTM are univariate functions of the response variable, conditional on fixed values of explanatory variables $\bfs{X} = \boldsymbol{x}$.
+
+The functions are denoted by $h(Y|\boldsymbol{x}): \mathbb{R} \rightarrow \mathbb{R}$
 
 ---
 
-### Bayesian Conditional Transformation Models
+- These conditional transformation models aim to estimate the conditional distribution function of a response variable $Y$, given an observed explanatory vector $\bfs{X} = \bfs{x}$, denoted as $F_{Y|\bfs{X} = \bfs{x}}$.
 
-___
+- It is achieved by estimating the transformation function $h(Y| \bfs{x})$ rather than assuming a fixed form and selecting a baseline distribution without parameters to be estimated.
 
-- The Bayesian Conditional Transformation models estimate the conditional distribution of response variable $Y$ given $\boldsymbol{X} = \boldsymbol{x}$ by means of estimating a transformation function $h(Y| \boldsymbol{x})$ and electing a baseline distribution free of parameters to be estimated. 
-- These new transformations from BCTM are functions of univariate response variable conditional on fixed values of explanatory variables $\boldsymbol{X} = \boldsymbol{x}$.
-- The BCTM class is composed of a transformation function $h(Y|\boldsymbol{x})$ and a pre-defined continuous cumulative distribution function $F_Z$
+- In the CTMs context exist a conditional transformation function \( h(Y \mid \mathbf{x}) \) such that the transformed variable follows a known probability distribution (baseline distribution).
 
+- The conditional distribution function of a random variable \( Y \), given a set of observed explanatory variables \( \mathbf{x} \), is defined as follows:
 
 \begin{equation}\label{ctm}
-     P(Y \leq y|\boldsymbol{X} = \boldsymbol{x}) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
+    F_{Y|\bfs{X} = \bfs{x}}(y) = P(Y \leq y|\boldsymbol{X} = \boldsymbol{x})= P(Y \leq y|\boldsymbol{X} = \boldsymbol{x}) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
 \end{equation}
 
-- The $h(Y|\boldsymbol{x})$ function is seen as standardization since it transforms the response variable conditionally on $\boldsymbol{x}$ such that it follows a pre-defined conditional distribution function $F_Z$. 
-- A reasonable choice for $F_Z$ is the standard Normal distribution.
+\noindent where \( F_Z(\cdot) \) is a continuous baseline cumulative distribution function (cdf) of the Gaussian distribution.
 
-
----
-
-### Transformation of random variables
-___
-
-- Suppose we are interested in inferences about the distribution $F_Y$ of a random variable $Y$. Our task is to obtain an estimate $\hat{F}_{Y}$ from a random sample $Y_1, \dots, Y_N \sim F_Y$. 
-- We write a potentially complex distribution function $F_Y$ as the composition of a much simpler and a prior specified distribution function $F_Z$ and a strictly monotonic transformation function $h$.
-
-**Corollary 1.** For all random variables $Y$ and $Z$, there exists an unique strictly monotonically increasing transformation $g$, such that $F_Y = F_{g \circ Z}.$ 
-
-**Corollary 2.** For $Y$ continuous random variable, there exists $g = h^{-1}$, such that $h = F_Z^{-1} \circ F_Y$ is strictly monotonic and right continuous with first derivative defined.
-
-**Corollary 3.** For $Y$ discrete random variable, there exists $g = h^{-1}$, such that $h = F_Z^{-1} \circ F_Y$ is a right-continuous step function because $F_Y$ is a right-continuous step function with steps at $y \in \Xi$.
-
+- The conditional transformation function \( h(Y \mid \boldsymbol{x}) \) is defined on the real line \( \mathbb{R} \) and is monotonically increasing in \( y \in \mathbb{R} \), conditional on \( \boldsymbol{X} = \boldsymbol{x} \).
 
 ---
 
-- Now, from the corollaries we write $F_Y$ distribution as a function of a transformation function $h$ that belongs to space of function $\mathcal{H}$ defined as $\mathcal{H} = \lbrace h: \Xi \rightarrow \mathbb{R} \hspace{0.1cm} | \hspace{0.1cm} h(y_1) < h(y_2) \hspace{0.1cm} ,\forall \hspace{0.1cm} y_1 < y_2 \in \Xi \rbrace$.
--  Therefore, with the transformation function $h$ we can evaluate $F_Y(y)$ by $F_Y(y|h) = F_Z(h(y))$.
-- The density for absolutely continuous case given by 
-$$f_Y(y) = f_Z(h(y))h'(y)$$
--  For discrete response $Y$ with countably infinite sample spaces $\Xi = \lbrace y_1, y_2, \dots \rbrace$ we get the density
+$$
+    F_{Y|\bfs{X} = \bfs{x}}(y) = P(Y \leq y|\boldsymbol{X} = \boldsymbol{x})= P(Y \leq y|\boldsymbol{X} = \boldsymbol{x}) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
+$$
 
-$$f_Y(y_k|h) = \left\lbrace \begin{array}{cc}
-        F_Z(h(y_k)) & k = 1  \\
-         F_Z(h(y_k)) - F_Z(h(y_{k-1})) & k > 1
-    \end{array} \right .$$
+- The second equation holds because \( h(Y \mid X = x) \) is monotonic in \( y \). This ensures that \( Y \leq y \) if and only if \( h(Y) \leq h(y) \).
 
+\textit{For all random variables \( Y \) conditional on $\bfs{X} = \bfs{x}$, and for any random variable \( Z \), there exists a unique strictly monotonically increasing transformation \( g_x \) such that \( F_{Y|\bfs{X} = \bfs{x}} = F_{g_x \circ Z} \) for a given value $\bfs{x}$ of $\bfs{X}$.}
+
+For \( Y \) conditional on $\bfs{X} = \bfs{x}$ a continuous random variable, there exists \( g_x = h^{-1}(\cdot|\bfs{x}) \), such that \( h(\cdot|\bfs{x}) = F_Z^{-1} \circ F_{Y|\bfs{X} = \bfs{x} } \) is strictly monotonic and right-continuous, with a well-defined first derivative.
+
+---
+- The task of obtaining \( F_{Y|\bfs{X} = \bfs{x}} \) reduces to estimating the transformation function \( h \).
+
+- The construction of \( h(y|\bfs{x}) \) must account for all the characteristics and objectives of the proposed model.
+
+- It is convenient to decompose the transformation function \( h \) additively into \( J \) partial transformation functions, defined for all \( \bfs{x} \in \mathbb{R}^M \).
+
+
+\begin{equation}\label{decomp_h}
+    h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x}).
+\end{equation}
+
+- The transformation functions \( h_j(y|\bfs{x}) \) from (\ref{decomp_h}) can range from low-parameterized forms to complex structures with many parameters.
+
+-  we have assumed that the transformation function \( h(y \mid \bfs{x}) \) is strictly monotonic, right-continuous, differentiable, and additively decomposed as in (\ref{decomp_h}).
+
+- we parameterize the transformation function, making the definition of conditional transformation models more general. This parameterization is achieved using basis functions. A basis, in this context, refers to a set of functions that can be used to express other functions as linear combinations.
 
 ---
 
 ### Transformation function of random variables
-___ 
-- Instead of searching for new distributions which could be reasonable estimates for $F_Y$, we aim to find a transformation function that would provide a estimate for $F_Y$.
-- Finding a suitable function is possibly tougher than finding a suited distribution. 
+___
+
+- Now, from the corollaries we write $F_Y$ distribution as a function of a transformation function $h$ that belongs to space of function $\mathcal{H}$ defined as $\mathcal{H} = \lbrace h: \Xi \rightarrow \mathbb{R} \hspace{0.1cm} | \hspace{0.1cm} h(y_1) < h(y_2) \hspace{0.1cm} ,\forall \hspace{0.1cm} y_1 < y_2 \in \Xi \rbrace$.
 - For now, we write the transformation as a linear function of its basis-transformed argument $y$ using basis function.
-- We define a basis
+- First, let us parameterize the transformation function as a linear function of evaluated basis of $y$,
 $$
-\boldsymbol{a} : \Xi \rightarrow \mathbb{R}^P,
+\bfs{a}: \mathbb{R} \rightarrow \mathbb{R}^v,
 $$
-which $\Xi$ is the domain of the random variable.
+such that
 
-
-- The transformation function is written as
 $$
-h(y) = \boldsymbol{a}^T(y) \boldsymbol{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^P. 
+h(y) = \bfs{a(y)}^T \gamma$, $\gamma \in \mathbb{R}^v
 $$
----
 - The choice of the basis has to attend to the monotonically increasing restriction, and the first derivative $a(y)'$ must be available. 
 - For an evaluated basis and a vector of coefficients, we estimate the $F_Y$ distribution through the decomposition $F_Z \circ \boldsymbol{a}(y)^T \boldsymbol{\gamma}$.
-- To abroad the class of transformation functions, $h$ may depend on explanatory variables $\boldsymbol{X} \in \mathcal{X}$. 
-- From that, we could obtain estimates of $F_{Y|\boldsymbol{X} = \boldsymbol{x}}$ by some conditional transformation function $h(Y|\boldsymbol{x})$, such that $F_{Y|\boldsymbol{X}}(y) = F_Z(h(y|\boldsymbol{x}))$.
-- We have a basis for explanatory variables
-$$\boldsymbol{b}: \mathcal{X} \rightarrow \mathbb{R}^Q$$
+- To abroad the class of transformation functions, $h$ may depend on explanatory variables $\boldsymbol{X} \in \mathbb{R}^m$. 
+-Let
+$$\mathbb{R} \rightarrow \mathbb{R}^m$$
+be a basis for explanatory variables.
+-  The conditional transformation function $h(Y|\bfs{x})$ is parameterized as  a linear function of joint evaluate basis of $Y$ and $\bfs{x}$.
 
-- The conditional transformation function is written in terms of a joint basis 
-$$h(y|\boldsymbol{x}) = c(y, \boldsymbol{x})^T\boldsymbol{\gamma},$$
+ $$\bfs{c}: \mathbb{R}^v \times \mathbb{R}^m  \rightarrow \mathbb{R}^{d(v, m)}$$
 is parameterized as a linear function of joint evaluate basis of $Y$ and $\boldsymbol{x}$ denoted as $\boldsymbol{c}(y,\boldsymbol{x}): \Xi \times \mathcal{X}  \rightarrow \mathbb{R}^{d(P, Q)}$.
 
+such that $h(y|\bfs{x}) = c(y, \bfs{x})^T\bfs{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^{d(v,m)}$
+
+- The choice of the basis $\bfs{c}$ has to attend to the monotonically increasing restriction on $y$
+
+- For an evaluated basis and a vector of coefficients, we estimate the $F_{Y|\bfs{X} = \bfs{x}}$ distribution through the decomposition $F_Z \circ \bfs{c(y,\bfs{x})}^T \bfs{\gamma}$.
 ---
 
 - The monotonically increasing restriction has to be attend only on $y$ direction.
@@ -217,6 +226,48 @@ $$\begin{equation}\label{decomp_h}
 \end{equation}$$
 - Monotonically of $h_j$ is sufficient for $h$ being monotone.
 ---
+
+### Example of a simple CTM
+ We assume $J = 3$ in (\ref{decomp_h}) and
+    \begin{equation}
+        h(y \mid x) = h_1(y) + h_2(y \mid x) + h_3(x) = \gamma_0 + \gamma_1 \cdot y + \gamma_2 \cdot x \cdot y + \gamma_3 \cdot x.
+    \end{equation}
+    
+- The first transformation function $h_1(y) = \gamma_1 \cdot y$ is a linear function of y .
+- The second transformation function $h_2(y|\boldsymbol{x}) = \gamma_2 \cdot x \cdot y$ involves a linear interaction between $y$ and $x$.
+- The last transformation function $h_3(\boldsymbol{x}) = \gamma_4 \cdot x$ describes marginal effects of $x$.
+
+$$\begin{aligned}
+     E(\gamma_0 + \gamma_1 \cdot Y + \gamma_2\cdot x \cdot Y + \gamma_3 \cdot x|\boldsymbol{x}) = E(Z) \\
+     E(Y|\boldsymbol{x})(\gamma_1 + \gamma_2\cdot x)  = - (\gamma_0  + \gamma_3 \cdot x)\\
+     E(Y|\boldsymbol{x}) = \frac{ -(\gamma_0  + \gamma_3 \cdot x) }{\gamma_1  + \gamma_2\cdot x}.\\
+     V(\gamma_0 + \gamma_1 \cdot Y + \gamma_2\cdot x \cdot Y + \gamma_3 \cdot x|\boldsymbol{x}) = 1 \\
+     V(Y(\gamma_1 + \gamma_2\cdot x)|\boldsymbol{x}) = 1 \\
+     V(Y|\boldsymbol{x}) = \frac{1}{  (\gamma_1 + \gamma_2\cdot x)^2}. \\
+    \end{aligned}$$
+---
+- The joint basis for this model is given by $\bfs{c}(y|\bfs{x})^{\top} = (1,y, y \cdot x,x)$, with $\bfs{\gamma} = (\gamma_0, \gamma_1, \gamma_2, \gamma_3)$.
+
+\begin{equation}\label{constrainA}
+    \frac{\partial h(y|\bfs{x})}{\partial y} = \frac{\partial \bfs{c}(y|\bfs{x})^{\top}\bfs{\gamma}}{\partial y} \geq 0.
+\end{equation}
+
+We have that $\bfs{c}'(y|\bfs{x})^{\top} = \frac{\partial \bfs{c}(y|\bfs{x})^{\top}\bfs{\gamma}}{\partial y} = (1, x, 0,0)$, so the constrain in (\ref{constrainA}) is 
+
+$$\bfs{c}'(y|\bfs{x})^T \bfs{\gamma}  = \gamma_1 + x \cdot \gamma2 \geq 0$$.
+
+
+
+---
+
+### Bayesian Conditional Transformation Models
+
+
+---
+
+
+
+
 ### Bayesian Conditional Linear Transformation Models
 ___
 
