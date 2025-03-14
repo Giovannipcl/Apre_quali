@@ -260,91 +260,6 @@ $$\bfs{c}'(y|\bfs{x})^T \bfs{\gamma}  = \gamma_1 + x \cdot \gamma2 \geq 0$$.
 
 ---
 
-### Bayesian Conditional Transformation Models
-
-
----
-
-
-
-
-### Bayesian Conditional Linear Transformation Models
-___
-
-- The Bayesian Conditional Linear Transformation Models (BCLTM) is a particular class of BCTM. They involve only linear  only linear interactions between $y$ and $\boldsymbol{x}$.
-- The immediate benefit is an interpretable or partially interpretable model.
-- A generic construction of BCLTM is presented by dividing the $h(y|x)$ function into three parts called, respectively, unconditional, conditional, and fixed parts
-
-$$\begin{equation}\label{BCLTM}
-    h(y|x) = \gamma_0 + \sum_{j_1 = 1}^{J_1} h_{j_1}(y) + \sum_{j_2 = 1}^{J_2} h_{j_2}(y|x) + \sum_{j_3 = 1}^{J_3} h(x).
-\end{equation}$$
-- We rewrite $h(y|\boldsymbol{x})$ in terms of the basis vector $\boldsymbol{c}(y|\boldsymbol{x})^{\top}$ which 
-
-$$\boldsymbol{c}(y|\boldsymbol{x})^{\top} = ( 1,c_1(y)^{\top}, \dots, c_{J_1}^{\top}(y),c_1(y|x)^{\top}, \dots, c_{J_2}(y|x)^{\top}, \\ c_1(x)^{\top}, \dots, c_{J_3}(x)^{\top})$$ 
-
----
-- The transformation function is given by
-
-$$\begin{equation}
-    h(y|\boldsymbol{x})= \boldsymbol{c}(y|\boldsymbol{x})^{\top}\boldsymbol{\gamma}.
-\end{equation}$$
-
-
-.content-box-gray[- Monotonically increasing restriction: 
-
-$$\frac{\partial h(y|\boldsymbol{x})}{\partial y} = h(y|\boldsymbol{x})' = \boldsymbol{c}'(y|\boldsymbol{x})^T \boldsymbol{\gamma} = \boldsymbol{c}_s'(y|\boldsymbol{x})^T \boldsymbol{\gamma}_s \geq 0,$$
-
-which
-
-$${\small
-    \boldsymbol{c}'(y|\boldsymbol{x})^T = (0, c_1'(y)^T, c_2'(y)^T, \dots, c_{J_1}'(y)^T, c_1'(y|\boldsymbol{x})^T, c_2'(y|\boldsymbol{x})^T, \dots, c_{J_2}'(y|\boldsymbol{x})^T, 0, \dots, 0)}.$$
-]
-
-- We propose the use of the multivariate truncated normal distribution as the prior distribution for $\boldsymbol{\gamma}_s = (\gamma_1,\gamma_2)$ vector of parameters with linear constraint $\boldsymbol{c}_s'(y|\boldsymbol{x})^T \boldsymbol{\gamma}_s \geq 0$.
-
-
-
----
-### Particular cases
-___
-.pull-left[
-- $J_1 = 1, J_2 = 1, J_3 = 1$ 
-$$\begin{align}
-\  h(y|\boldsymbol{x}) & = \gamma_0 + h_1(y) + h_1(y|\boldsymbol{x}) + h_1(\boldsymbol{x}) \nonumber \\ 
-& = \gamma_0 + \gamma_1 \cdot y + \gamma_2\cdot x \cdot y + \gamma_3 \cdot x \nonumber \end{align}$$
-
-$$\begin{align}\label{expectation_linear_model}
-    & E(\gamma_0 + \gamma_1 \cdot Y + \gamma_2\cdot x \cdot Y + \gamma_3 \cdot x|\boldsymbol{x}) = E(Z)  \nonumber \\
-    & E(Y|\boldsymbol{x}) = \frac{ -(\gamma_0  + \gamma_3 \cdot x) }{\gamma_1  + \gamma_2\cdot x}.  \nonumber
-\end{align}$$
-$$\begin{align}
-    & V(\gamma_0 + \gamma_1 \cdot Y + \gamma_2\cdot x \cdot Y + \gamma_3 \cdot x|\boldsymbol{x}) = 1  \nonumber \\
-    & V(Y|\boldsymbol{x}) = \frac{1}{  (\gamma_1 + \gamma_2\cdot x)^2}  \nonumber . 
-\end{align}$$
-- We have that $\boldsymbol{c}'(y|\boldsymbol{x})^T = (0, 1, x,0)$ and the linear constraint of the model can be written as $\boldsymbol{c}'_s \boldsymbol{\gamma}_s \geq 0 = \gamma_1 + x \cdot \gamma2 \geq 0$.
-]
-
-.pull-right[
-- $J_1 = 1, J_3 = 1$.
-$$\begin{align}
-  h(y|\boldsymbol{x}) & = h_1(y) + h_2(\boldsymbol{x}) \nonumber \\
-  & = \gamma_0 +  \tilde{h}(y)\cdot{\gamma}_1 + \gamma_2 \cdot x. \nonumber
-  \end{align}$$
-  
-$$\begin{align}
- & E(\gamma_0 +  \tilde{h}(Y)\cdot{\gamma}_1 + \gamma_2 \cdot x) = E(Z)  \nonumber \\
-& E(\tilde{h}(Y)|\boldsymbol{x}) = \frac{ -(\gamma_0  + \gamma_2 \cdot x) }{\gamma_1}.  \nonumber
-\end{align}$$
-
-$$\begin{align}
-& V(\gamma_0 +  \tilde{h}(Y)\cdot{\gamma}_1 + \gamma_2 \cdot x) = 1  \nonumber \\
-& V( \tilde{h}(Y)|\boldsymbol{x}) = \frac{1}{ \gamma_1^2}  \nonumber . 
-\end{align}$$
-- Since $\tilde{h}'(Y) > 0$ we have to ensure that $\gamma_1 > 0$ for $h(y|\boldsymbol{x}) > 0$. 
-
-]
-
----
 
 - Assuming linear transformation of the response variable, like $h(y) = y \cdot \gamma$ or even $h(y|x) = y \cdot x \cdot \gamma$, will only give us Gaussian models. 
 - To leave the class of Gaussian models, we have to increase the $h(y)$ complexity. 
@@ -355,23 +270,31 @@ $$\begin{align}
   - The functions should express complex functions, but they should preferably be smooth.
   - How much smooth should they be?
   - They should be monotone.
-- Answer: Splines!  
+
   
 ---
 
-### Why Splines?
+### Bayesian Conditional Transformation Models
 ___
-.content-box-gray[ A spline is a function defined piecewise by polynomials.]
 
-- Basis splines define a space of smooth function,  which our function is restricted to belong.
-- The basis splines functions includes good approximation to most smooth functions `r Citep(myBib,"green1993nonparametric")`. 
-- There are several spline basis. Here we used B-splines `r Citep(myBib,"de1978practical")`.
-- The B-spline allow to control the smoothness of the function. 
-- The B-spline has a relevant application called P-splines `r Citep(myBib,"eilers1996flexible")`.
-- Finally, it is possible to construct monotone functions using basis B-splines.
+- In the previous section, we introduced the definition of CTMs.
+
+- Bayesian Conditional Transformation Models (BCTMs) extend CTMs by incorporating a Bayesian framework for inference.
+
+- The first presentation of BCTMs was given by \citet{carlan2023bayesian}, where the author proposed the use of monotonic B-spline bases \citep{pya2015shape} to model conditional transformation functions. 
+
+- Additionally, an MCMC algorithm based on the No-U-Turn Sampler (NUTS) \citep{hoffman2014no} was employed to sample from the posterior distributions of the model parameters.
+
+- The construction of BCTMs follows the same principles as CTMs. However, the Bayesian framework naturally introduces penalization and smoothness in the B-spline bases through the choice of prior distributions on the basis coefficients. 
+
+- Consequently, inferences about model parameters can be conducted using Highest Posterior Density (HPD) intervals and posterior probability calculations.
+
+- The assessment of model fit can be performed using goodness-of-fit measures based on the posterior predictive distribution
 
 
 ---
+
+
 ### B-splines basis
 ___
 
@@ -569,6 +492,114 @@ $$\begin{equation}
 \end{equation}$$
 
 - For the vector $\boldsymbol{\tau} = (\tau_1, \tau_2)$ we set independent prior distributions considering then $\pi(\boldsymbol{\tau}) = \pi(\tau_1)\pi(\tau_2)$.
+---
+
+
+
+
+### Bayesian Conditional Linear Transformation Models
+___
+
+- The Bayesian Conditional Linear Transformation Models (BCLTM) is a particular class of BCTM. They involve only linear  only linear interactions between $y$ and $\boldsymbol{x}$.
+- The immediate benefit is an interpretable or partially interpretable model.
+- A generic construction of BCLTM is presented by dividing the $h(y|x)$ function into three parts called, respectively, unconditional, conditional, and fixed parts
+
+$$\begin{equation}\label{BCLTM}
+    h(y|x) = \gamma_0 + \sum_{j_1 = 1}^{J_1} h_{j_1}(y) + \sum_{j_2 = 1}^{J_2} h_{j_2}(y|x) + \sum_{j_3 = 1}^{J_3} h(x).
+\end{equation}$$
+- We rewrite $h(y|\boldsymbol{x})$ in terms of the basis vector $\boldsymbol{c}(y|\boldsymbol{x})^{\top}$ which 
+
+$$\boldsymbol{c}(y|\boldsymbol{x})^{\top} = ( 1,c_1(y)^{\top}, \dots, c_{J_1}^{\top}(y),c_1(y|x)^{\top}, \dots, c_{J_2}(y|x)^{\top}, \\ c_1(x)^{\top}, \dots, c_{J_3}(x)^{\top})$$ 
+
+---
+- The transformation function is given by
+
+$$\begin{equation}
+    h(y|\boldsymbol{x})= \boldsymbol{c}(y|\boldsymbol{x})^{\top}\boldsymbol{\gamma}.
+\end{equation}$$
+
+
+.content-box-gray[- Monotonically increasing restriction: 
+
+$$\frac{\partial h(y|\boldsymbol{x})}{\partial y} = h(y|\boldsymbol{x})' = \boldsymbol{c}'(y|\boldsymbol{x})^T \boldsymbol{\gamma} = \boldsymbol{c}_s'(y|\boldsymbol{x})^T \boldsymbol{\gamma}_s \geq 0,$$
+
+which
+
+$${\small
+    \boldsymbol{c}'(y|\boldsymbol{x})^T = (0, c_1'(y)^T, c_2'(y)^T, \dots, c_{J_1}'(y)^T, c_1'(y|\boldsymbol{x})^T, c_2'(y|\boldsymbol{x})^T, \dots, c_{J_2}'(y|\boldsymbol{x})^T, 0, \dots, 0)}.$$
+]
+
+- We propose the use of the multivariate truncated normal distribution as the prior distribution for $\boldsymbol{\gamma}_s = (\gamma_1,\gamma_2)$ vector of parameters with linear constraint $\boldsymbol{c}_s'(y|\boldsymbol{x})^T \boldsymbol{\gamma}_s \geq 0$.
+
+
+
+---
+### Particular cases
+___
+.pull-left[
+- $J_1 = 1, J_2 = 1, J_3 = 1$ 
+$$\begin{align}
+\  h(y|\boldsymbol{x}) & = \gamma_0 + h_1(y) + h_1(y|\boldsymbol{x}) + h_1(\boldsymbol{x}) \nonumber \\ 
+& = \gamma_0 + \gamma_1 \cdot y + \gamma_2\cdot x \cdot y + \gamma_3 \cdot x \nonumber \end{align}$$
+
+$$\begin{align}\label{expectation_linear_model}
+    & E(\gamma_0 + \gamma_1 \cdot Y + \gamma_2\cdot x \cdot Y + \gamma_3 \cdot x|\boldsymbol{x}) = E(Z)  \nonumber \\
+    & E(Y|\boldsymbol{x}) = \frac{ -(\gamma_0  + \gamma_3 \cdot x) }{\gamma_1  + \gamma_2\cdot x}.  \nonumber
+\end{align}$$
+$$\begin{align}
+    & V(\gamma_0 + \gamma_1 \cdot Y + \gamma_2\cdot x \cdot Y + \gamma_3 \cdot x|\boldsymbol{x}) = 1  \nonumber \\
+    & V(Y|\boldsymbol{x}) = \frac{1}{  (\gamma_1 + \gamma_2\cdot x)^2}  \nonumber . 
+\end{align}$$
+- We have that $\boldsymbol{c}'(y|\boldsymbol{x})^T = (0, 1, x,0)$ and the linear constraint of the model can be written as $\boldsymbol{c}'_s \boldsymbol{\gamma}_s \geq 0 = \gamma_1 + x \cdot \gamma2 \geq 0$.
+]
+
+.pull-right[
+- $J_1 = 1, J_3 = 1$.
+$$\begin{align}
+  h(y|\boldsymbol{x}) & = h_1(y) + h_2(\boldsymbol{x}) \nonumber \\
+  & = \gamma_0 +  \tilde{h}(y)\cdot{\gamma}_1 + \gamma_2 \cdot x. \nonumber
+  \end{align}$$
+  
+$$\begin{align}
+ & E(\gamma_0 +  \tilde{h}(Y)\cdot{\gamma}_1 + \gamma_2 \cdot x) = E(Z)  \nonumber \\
+& E(\tilde{h}(Y)|\boldsymbol{x}) = \frac{ -(\gamma_0  + \gamma_2 \cdot x) }{\gamma_1}.  \nonumber
+\end{align}$$
+
+$$\begin{align}
+& V(\gamma_0 +  \tilde{h}(Y)\cdot{\gamma}_1 + \gamma_2 \cdot x) = 1  \nonumber \\
+& V( \tilde{h}(Y)|\boldsymbol{x}) = \frac{1}{ \gamma_1^2}  \nonumber . 
+\end{align}$$
+- Since $\tilde{h}'(Y) > 0$ we have to ensure that $\gamma_1 > 0$ for $h(y|\boldsymbol{x}) > 0$. 
+
+]
+
+---
+
+- Assuming linear transformation of the response variable, like $h(y) = y \cdot \gamma$ or even $h(y|x) = y \cdot x \cdot \gamma$, will only give us Gaussian models. 
+- To leave the class of Gaussian models, we have to increase the $h(y)$ complexity. 
+- This transformation can take a familiar form, such as $\log$. If we consider non-linear monotone functions the range of options is very large. 
+- An alternative is to relax the specification of the transformation function and return for our basis specification.
+- We must pick up a basis that defines a space of functions which our transformation function belongs.
+- But many questions and challenges arise from this approach.
+  - The functions should express complex functions, but they should preferably be smooth.
+  - How much smooth should they be?
+  - They should be monotone.
+- Answer: Splines!  
+  
+---
+
+### Why Splines?
+___
+.content-box-gray[ A spline is a function defined piecewise by polynomials.]
+
+- Basis splines define a space of smooth function,  which our function is restricted to belong.
+- The basis splines functions includes good approximation to most smooth functions `r Citep(myBib,"green1993nonparametric")`. 
+- There are several spline basis. Here we used B-splines `r Citep(myBib,"de1978practical")`.
+- The B-spline allow to control the smoothness of the function. 
+- The B-spline has a relevant application called P-splines `r Citep(myBib,"eilers1996flexible")`.
+- Finally, it is possible to construct monotone functions using basis B-splines.
+
+
 ---
 
 **Remark:** 
