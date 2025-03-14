@@ -530,10 +530,47 @@ $$\begin{equation} \bfs{P}_u = \left(
 
 - For the vector $\boldsymbol{\tau} = (\tau_1, \tau_2)$ we set independent prior distributions considering then $\pi(\boldsymbol{\tau}) = \pi(\tau_1)\pi(\tau_2)$.
 ---
+### Bernstein polynomial basis
+___
 
+Let $k$ be a non-negative integer and $t \in [0,1]$, the Bernstein polynomials of degree $k$ are defined by
 
+\begin{equation}\label{bern_def}
+    B_{r,k}(t) = \binom{k}{r} t^r(1 - t)^{k -r},
+\end{equation}
 
+\noindent for $r = 0, \hdots, k$,  where 
 
+$$
+\binom{k}{r} = \frac{k!}{r!(k-r)!}.
+$$
+
+**Definition:**  The Bernstein polynomials of degree 1 are represented by the following equations:  
+
+$$\begin{align}
+    B_{0,1}(t) & = 1 - t, \\
+    B_{1,1}(t) & = t,
+\end{align}
+$$
+\noindent for $t \in [0,1]$.  
+
+The Bernstein polynomials of degree 2 are given by:  
+
+$$\begin{align}
+    B_{0,2}(t) & = (1 - t)^2, \\
+    B_{1,2}(t) & = 2t(1 - t), \\
+    B_{2,2}(t) & = t^2,
+\end{align}$$
+
+\noindent also for $t \in [0,1]$.  
+
+- These polynomials can be combined to approximate or represent a function as follows:  
+
+\begin{equation}\label{func_asbern}
+    f(x) = \sum_{r=0}^k B_{r,k}(x) \beta_r,
+\end{equation}
+
+\noindent where $\beta_r$, $r = 1, \dots, k,$ are the Bernstein coefficients. 
 ---
 ### Posterior Inference
 ___
