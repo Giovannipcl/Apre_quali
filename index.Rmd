@@ -533,7 +533,7 @@ $$\begin{equation} \bfs{P}_u = \left(
 ### Bernstein polynomial basis
 ___
 
-Let $k$ be a non-negative integer and $t \in [0,1]$, the Bernstein polynomials of degree $k$ are defined by
+**Definition:** Let $k$ be a non-negative integer and $t \in [0,1]$, the Bernstein polynomials of degree $k$ are defined by
 
 \begin{equation}\label{bern_def}
     B_{r,k}(t) = \binom{k}{r} t^r(1 - t)^{k -r},
@@ -545,13 +545,13 @@ $$
 \binom{k}{r} = \frac{k!}{r!(k-r)!}.
 $$
 
-**Definition:**  The Bernstein polynomials of degree 1 are represented by the following equations:  
+ The Bernstein polynomials of degree 1 are represented by the following equations:  
 
 $$\begin{align}
     B_{0,1}(t) & = 1 - t, \\
     B_{1,1}(t) & = t,
-\end{align}
-$$
+\end{align}$$
+
 \noindent for $t \in [0,1]$.  
 
 The Bernstein polynomials of degree 2 are given by:  
@@ -562,15 +562,81 @@ $$\begin{align}
     B_{2,2}(t) & = t^2,
 \end{align}$$
 
-\noindent also for $t \in [0,1]$.  
+\noindent also for $t \in [0,1]$. 
+
+---
 
 - These polynomials can be combined to approximate or represent a function as follows:  
 
-\begin{equation}\label{func_asbern}
+$$\begin{equation}\label{func_asbern}
     f(x) = \sum_{r=0}^k B_{r,k}(x) \beta_r,
-\end{equation}
+\end{equation}$$
 
 \noindent where $\beta_r$, $r = 1, \dots, k,$ are the Bernstein coefficients. 
+
+- The domain of the Bernstein basis can be redefined over an arbitrary interval $[a, b]$ by changing the variable $y = (b-a)t + a$ for $t \in [0,1]$, resulting in:  
+   $$B_{r,k}(y) = \binom{k}{r} \left(\frac{y-a}{b-a}\right)^r \left(1 - \frac{y-a}{b-a}\right)^{k-r}, \quad y \in [a,b].$$  
+    
+- We propose to represent the transformation function $h_j(y)$, independent of explanatory variables, $\boldsymbol{x}$, for some $j = 1, \hdots, J$ as a Bernstein polynomial of degree $k$
+
+$$\begin{equation}\label{bern_transf}
+    h_j(y) = \sum_{r = 0}^p B_{r,k}(y) \gamma_{j,k+1} = \boldsymbol{a}_j(y)^{\top} \boldsymbol{\gamma}_j
+\end{equation}$$
+---
+
+** Proposition ** Let $h_j(y)$ be the transformation function defined in (\ref{bern_transf}) with Bernstein basis representation. Let $\boldsymbol{\gamma}_j = \boldsymbol{\Sigma}_j \boldsymbol{\Tilde{\beta}}_j$ with $\boldsymbol{\Tilde{\beta}}_j$ as in (\ref{beta_tilde}) and $\Sigma$ defined in (\ref{Sigma_mono}). Then, $h_j(y)$ is monotonically increasing, that is for all $y_1, y_2 \in \mathbb{R}$ with $y_1 < y_2$ we have $h(y_1) \leq h(y_2)$.
+
+
+---
+### Properties of the BCTM
+
+- Let us assume the transformation function $h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x})$, and a set of explanatory variables represented by $\boldsymbol{x} = (x_1, x_2, \hdots, x_m)$. The marginal impact of a particular covariate $x_l \in \bfs{x}, l =1, \hdots, m$ is the expected rate of change on the expected value of $Y$ for a one-unit variation in the covariate $x_l$, keeping all other variables constant is defined by
+
+
+$$\begin{align}\label{rate_of_chane_ey}
+    \frac{\mathbb{E}(Y|\bfs{X} = \bfs{x})}{\partial x_l}  = &\int_{\mathbb{R}} y \frac{\partial }{\partial x_l} f_Z(h(y|\boldsymbol{x}))h'(y|\boldsymbol{x}) dy  \nonumber \\
+     = & \int_{\mathbb{R}} y \left[ f_Z(h(y|\boldsymbol{x}))\left( 2 h(y|\boldsymbol{x}) \frac{\partial h(y|\boldsymbol{x})}{\partial x_l}h'(y|\boldsymbol{x}) + \frac{\partial h'(y|\boldsymbol{x})}{\partial x_l} \right)\right] dy
+\end{align}$$
+
+- If there is no interaction between $y$ and $x_l$ in the terms of $h(y|\boldsymbol{x})$ the expression in (\ref{rate_of_chane_ey}) simplifies to
+
+$$\begin{align}\label{impact_EY_nointeraction}
+    & = \int_{\mathbb{R}} y \left[ f_Z(h(y|\boldsymbol{x}))\left( 2 h(y|\boldsymbol{x}) \frac{\partial h(y|\boldsymbol{x})}{\partial x_1}h'(y|\boldsymbol{x}) \right)\right] dy \nonumber \\
+    & =  2 \frac{\partial h(y|\boldsymbol{x})}{\partial x_1} \mathbb{E}(Yh(Y|\boldsymbol{x})).
+\end{align}$$
+
+---
+- If even the term of $x_l$ in the transformation function $h(y|\boldsymbol{x})$ is linear, that is, $h_j(x_l) = x_l\beta_j$ for some $j$ from 1 to $J$, and the coefficient $\beta_j \in \mathbb{R}$ the effect of $x_l$ is not linear on the expected value of $Y$
+
+
+
+$$\begin{align}
+    \frac{E(Y|\bfs{X} = \bfs{x})}{\partial x_l} = &  2\beta_j \int y h(y|\boldsymbol{x}) \left[ f_{Y|\boldsymbol{x}}(y) \right] dy \nonumber \\
+    & =  2\beta_j \mathbb{E}(Yh(Y|\boldsymbol{x})). \nonumber   
+\end{align}$$
+
+**Property** Let $Q_p$ be the p-quantile of the random variable $Y|\boldsymbol{X} = \boldsymbol{x}$. Then,
+
+$$\begin{equation}
+    Q_p = h^{-1}(\Phi^{-1}(p)|\boldsymbol{x})
+\end{equation}$$
+
+- Let us assume the transformation function $h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x})$, and a set of explanatory variables represented by $\boldsymbol{x} = (x_1, x_2, \hdots, x_p)$. The marginal impact of a particular covariate $x_l \in \bfs{x}, l =1, \hdots, m$ is the expected rate of change on the quantile $Q_p$ of $Y|\bfs{X} = \bfs{x}$ for a one-unit variation in the covariate $x_l$, keeping all other variables constant
+
+
+$$\begin{align}\label{rate_of_chane_qp}
+    \frac{\partial Q_p}{\partial x_l} = & \left[ \frac{\partial h(q_p \mid \boldsymbol{x}) - \Phi^{-1}(p)}{\partial x_l} \right] \left[ \frac{\partial h(q_p \mid \boldsymbol{x})}{\partial q_p} \right]^{-1} \quad \text{(using the implicit differentiation rule)} \nonumber \\
+    = & \left[ \sum_{j = 1}^J \frac{\partial h_j(y \mid \boldsymbol{x})}{\partial x_l} \right] \left[ \frac{\partial h(q_p \mid \boldsymbol{x})}{\partial q_p} \right]^{-1}.
+\end{align}$$
+
+---
+If even the term of $x_l$ in the transformation function $h(y|\boldsymbol{x})$ is linear, that is, $h_j(x_l) = x_l\beta_j$ for some $j$ from 1 to $J$, and the coefficient $\beta_j \in \mathbb{R}$ the effect of $x_l$ is not linear on the quantile $p$ of $Y$
+
+\begin{equation}
+    \frac{\partial q_p}{\partial x_l}  = \beta_j \left[ \frac{\partial h(q_p|\boldsymbol{x})}{\partial q_p} \right]^{-1} .
+\end{equation}
+
+
 ---
 ### Posterior Inference
 ___
@@ -578,6 +644,7 @@ ___
 - To obtain posterior estimates of the BCTM, `r Citet(myBib,"carlan2023bayesian")` proposed an MCMC method based on No-U-Turn-Sample and Gibbs sampling to sample values from the posterior distribution of model parameters.
 - We present an alternative estimation method based on the Integrated Nested Laplace Approximation (INLA) given by `r Citet(myBib,"rue2009approximate")`.
 - The contribution is to provide an alternative way to the MCMC methods to implement Bayesian inference on these models.
+
 
 ---
 ### Posterior Inference for the BCLTM
