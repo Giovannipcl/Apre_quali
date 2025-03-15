@@ -109,9 +109,9 @@ ___
 - In this work, we aim to contribute to the CTM class and, more specifically, to the BCTM. We present two alternative and efficient Bayesian estimation procedures for the BCTM.
 - The first is based on the Laplace approximation, inspired by the Integrated Nested Laplace Approximation (INLA). 
 
-- However, applying these proposed algorithms requires some restrictions on the construction of the transformation function \( h(y|\boldsymbol{X}) \). Despite this, these restrictions are minimal and do not affect the model's applicability in various scenarios.
-- we also propose an alternative parameterization for the transformation functions \( h(y|x) \), distinct from the one presented in \citet{carlan2023bayesian}. In this proposal, we utilize Bernstein bases, which allow us to express nonlinear functions as linear combinations of these bases.
-- of this work is related to the interpretability of the effects of the explanatory variables \( x \) on the distribution of the response variable \( y \). The BCTM class of models suffers from a lack of interpretability due to its construction. In this work, we propose two different results that enable us to evaluate how a particular variable \( x \) impacts both the expected value of \( Y \) and the quantiles of the distribution of \( Y \).
+- However, applying these proposed algorithms requires some restrictions on the construction of the transformation function$h(y|\boldsymbol{X}) $. Despite this, these restrictions are minimal and do not affect the model's applicability in various scenarios.
+- we also propose an alternative parameterization for the transformation functions $h(y|x) $, distinct from the one presented in \citet{carlan2023bayesian}. In this proposal, we utilize Bernstein bases, which allow us to express nonlinear functions as linear combinations of these bases.
+- of this work is related to the interpretability of the effects of the explanatory variables $x$ on the distribution of the response variable $y $. The BCTM class of models suffers from a lack of interpretability due to its construction. In this work, we propose two different results that enable us to evaluate how a particular variable $x$ impacts both the expected value of $Y$ and the quantiles of the distribution of $Y $.
 
 
 
@@ -141,17 +141,17 @@ The functions are denoted by $h(Y|\boldsymbol{x}): \mathbb{R} \rightarrow \mathb
 
 - It is achieved by estimating the transformation function $h(Y| \bfs{x})$ rather than assuming a fixed form and selecting a baseline distribution without parameters to be estimated.
 
-- In the CTMs context exist a conditional transformation function \( h(Y \mid \mathbf{x}) \) such that the transformed variable follows a known probability distribution (baseline distribution).
+- In the CTMs context exist a conditional transformation function $h(Y \mid \mathbf{x})$ such that the transformed variable follows a known probability distribution (baseline distribution).
 
-- The conditional distribution function of a random variable \( Y \), given a set of observed explanatory variables \( \mathbf{x} \), is defined as follows:
+- The conditional distribution function of a random variable $Y $, given a set of observed explanatory variables $\mathbf{x} $, is defined as follows:
 
 \begin{equation}\label{ctm}
     F_{Y|\bfs{X} = \bfs{x}}(y) = P(Y \leq y|\boldsymbol{X} = \boldsymbol{x})= P(Y \leq y|\boldsymbol{X} = \boldsymbol{x}) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
 \end{equation}
 
-\noindent where \( F_Z(\cdot) \) is a continuous baseline cumulative distribution function (cdf) of the Gaussian distribution.
+\noindent where $F_Z(\cdot)$ is a continuous baseline cumulative distribution function (cdf) of the Gaussian distribution.
 
-- The conditional transformation function \( h(Y \mid \boldsymbol{x}) \) is defined on the real line \( \mathbb{R} \) and is monotonically increasing in \( y \in \mathbb{R} \), conditional on \( \boldsymbol{X} = \boldsymbol{x} \).
+- The conditional transformation function $h(Y \mid \boldsymbol{x})$ is defined on the real line $\mathbb{R}$ and is monotonically increasing in $y \in \mathbb{R} $, conditional on $\boldsymbol{X} = \boldsymbol{x} $.
 
 ---
 
@@ -159,27 +159,27 @@ $$
     F_{Y|\bfs{X} = \bfs{x}}(y) = P(Y \leq y|\boldsymbol{X} = \boldsymbol{x})= P(Y \leq y|\boldsymbol{X} = \boldsymbol{x}) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
 $$
 
-- The second equation holds because \( h(Y \mid X = x) \) is monotonic in \( y \). This ensures that \( Y \leq y \) if and only if \( h(Y) \leq h(y) \).
+- The second equation holds because $h(Y \mid X = x)$ is monotonic in $y $. This ensures that $Y \leq y$ if and only if $h(Y) \leq h(y) $.
 
-\textit{For all random variables \( Y \) conditional on $\bfs{X} = \bfs{x}$, and for any random variable \( Z \), there exists a unique strictly monotonically increasing transformation \( g_x \) such that \( F_{Y|\bfs{X} = \bfs{x}} = F_{g_x \circ Z} \) for a given value $\bfs{x}$ of $\bfs{X}$.}
+\textit{For all random variables $Y$ conditional on $\bfs{X} = \bfs{x}$, and for any random variable $Z $, there exists a unique strictly monotonically increasing transformation $g_x$ such that $F_{Y|\bfs{X} = \bfs{x}} = F_{g_x \circ Z}$ for a given value $\bfs{x}$ of $\bfs{X}$.}
 
-For \( Y \) conditional on $\bfs{X} = \bfs{x}$ a continuous random variable, there exists \( g_x = h^{-1}(\cdot|\bfs{x}) \), such that \( h(\cdot|\bfs{x}) = F_Z^{-1} \circ F_{Y|\bfs{X} = \bfs{x} } \) is strictly monotonic and right-continuous, with a well-defined first derivative.
+For $Y$ conditional on $\bfs{X} = \bfs{x}$ a continuous random variable, there exists $g_x = h^{-1}(\cdot|\bfs{x}) $, such that $h(\cdot|\bfs{x}) = F_Z^{-1} \circ F_{Y|\bfs{X} = \bfs{x} }$ is strictly monotonic and right-continuous, with a well-defined first derivative.
 
 ---
-- The task of obtaining \( F_{Y|\bfs{X} = \bfs{x}} \) reduces to estimating the transformation function \( h \).
+- The task of obtaining $F_{Y|\bfs{X} = \bfs{x}}$ reduces to estimating the transformation function $h $.
 
-- The construction of \( h(y|\bfs{x}) \) must account for all the characteristics and objectives of the proposed model.
+- The construction of $h(y|\bfs{x})$ must account for all the characteristics and objectives of the proposed model.
 
-- It is convenient to decompose the transformation function \( h \) additively into \( J \) partial transformation functions, defined for all \( \bfs{x} \in \mathbb{R}^M \).
+- It is convenient to decompose the transformation function $h$ additively into $J$ partial transformation functions, defined for all $\bfs{x} \in \mathbb{R}^M $.
 
 
 \begin{equation}\label{decomp_h}
     h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x}).
 \end{equation}
 
-- The transformation functions \( h_j(y|\bfs{x}) \) from (\ref{decomp_h}) can range from low-parameterized forms to complex structures with many parameters.
+- The transformation functions $h_j(y|\bfs{x})$ from (\ref{decomp_h}) can range from low-parameterized forms to complex structures with many parameters.
 
--  we have assumed that the transformation function \( h(y \mid \bfs{x}) \) is strictly monotonic, right-continuous, differentiable, and additively decomposed as in (\ref{decomp_h}).
+-  we have assumed that the transformation function $h(y \mid \bfs{x})$ is strictly monotonic, right-continuous, differentiable, and additively decomposed as in (\ref{decomp_h}).
 
 - we parameterize the transformation function, making the definition of conditional transformation models more general. This parameterization is achieved using basis functions. A basis, in this context, refers to a set of functions that can be used to express other functions as linear combinations.
 
@@ -397,7 +397,7 @@ bscols(
 
 $$h_j(y) = \sum_{i = 1}^q B_{i,3,\boldsymbol{t}}(y) \gamma_{j,i} =  \boldsymbol{a}(y)^{\top} \boldsymbol{\gamma}_j,$$
 with $\bfs{a}(y) = (B_{1,3,\bfs{t}}(y), B_{2,3,\bfs{t}}(y) \hdots, B_{q,3,\bfs{t}}(y))^{\top}$, and $\bfs{\gamma}_j = (\gamma_{j,1},\gamma_{j,2}, \hdots, \gamma_{j,q})^{\top}$.
-- But it is not necessary monotonic on $y$. But, it is sufficient for the derivative of the function with respect to \( y \) to be greater than zero for all \( y \).
+- But it is not necessary monotonic on $y$. But, it is sufficient for the derivative of the function with respect to $y$ to be greater than zero for all $y $.
 - A positive and increasing sequence of all parameters $\gamma_i$ produces a monotonically increasing spline function. 
 - We consider an alternative parameterization of the spline parameters to produce monotonically increasing spline function `r Citep(myBib,"pya2015shape")`. 
 -  The vector $\bfs{\gamma}_j = (\gamma_{j,1}, \hdots, \gamma_{j,q})^{\top}$ is defined in terms of unconstrained parameters $\bfs{\beta}_j$ as
@@ -431,9 +431,9 @@ $$\begin{equation}
 ---
 
 - A further case that contemplates $y$ and $x$ non-linear interaction is achieved by considering the tensor product of B-splines bases.
-- We use two distinct B-spline bases for \( y \) and \( x \), each one with of degree \( k \) with knot vectors \( \mathbf{t}_1 \) and \( \mathbf{t}_2 \), respectively
+- We use two distinct B-spline bases for $y$ and $x $, each one with of degree $k$ with knot vectors $\mathbf{t}_1$ and $\mathbf{t}_2 $, respectively
 - Let us take two distinct B-spline basis for $y$ and $x$ of degree $k$ with knots vector $\boldsymbol{l}_1$ and $\boldsymbol{l}_2$. 
--  The transformation function formed by the tensor product of these bases as \( h_j(y|x) \) and express it as
+-  The transformation function formed by the tensor product of these bases as $h_j(y|x)$ and express it as
 
 $$\begin{align}\label{bctm_model}
     h_j(y|x) = \sum_{l_1 = 1}^{L_1}\sum_{l_2 = 1}^{L_2} \gamma_{j,l_1,l_2} B_{l_1,3,\boldsymbol{t}_1}(y)B_{l_2,3,\boldsymbol{t}_2}(x) =  (\boldsymbol{a}(y)^{\top} \otimes \boldsymbol{b}(x)^{\top}) \boldsymbol{\gamma}_j \end{align}$$
@@ -452,7 +452,7 @@ ___
 - The B-spline bases is already used in regression models. In this context, they estimate effects of exploratory variables using smooth functions.
 - `r Citep(myBib,"eilers1996flexible")` proposes an appealing penalty based on the finite difference of adjacent basis coefficients, called P-splines to addresses the overfitting problem of unregularized splines.
 - In the Bayesian context, smoothness and regularization are achieved through shrinkage priors distributions.
-- In the Bayesian P-Splines approach `r Citep(myBib,"lang2004bayesian")`, we assign multivariate normal distributions with a zero vector mean and a precision matrix \( \boldsymbol{Q} \) to the parameter models
+- In the Bayesian P-Splines approach `r Citep(myBib,"lang2004bayesian")`, we assign multivariate normal distributions with a zero vector mean and a precision matrix $\boldsymbol{Q}$ to the parameter models
 ---
 - For the case $h_j(y) = \sum_{i = 1}^q B_{i,3,\bfs{t}}(y) \gamma_{j, i} =  \boldsymbol{a}(y)^T \bfs{\gamma}_j$, see (\ref{spline}),  we set $\bfs{\beta}_j \sim N_q(0, \bfs{Q}_j(\tau_j))$, which $\bfs{Q}_j(\tau_j) = \frac{1}{\tau_j}\bfs{K}_1$, and
 
@@ -632,10 +632,55 @@ $$\begin{align}\label{rate_of_chane_qp}
 ---
 If even the term of $x_l$ in the transformation function $h(y|\boldsymbol{x})$ is linear, that is, $h_j(x_l) = x_l\beta_j$ for some $j$ from 1 to $J$, and the coefficient $\beta_j \in \mathbb{R}$ the effect of $x_l$ is not linear on the quantile $p$ of $Y$
 
-\begin{equation}
+$$\begin{equation}
     \frac{\partial q_p}{\partial x_l}  = \beta_j \left[ \frac{\partial h(q_p|\boldsymbol{x})}{\partial q_p} \right]^{-1} .
-\end{equation}
+\end{equation}$$
 
+
+---
+### Bayesian Count CTM
+
+- The primary goal of the proposed model is to directly estimate the discrete conditional probability distribution $F_{Y \mid \bfs{X} = \bfs{x}}$, where now $Y \in \{ 0, 1, 2, \dots \}$
+
+- The Bayesian count transformation model specifies the conditional distribution function $F_{Y|\bfs{X} = \bfs{x}}$ of a count response $Y$ given $x$ as follows:  
+
+$$\begin{equation}\label{count_BCTM}
+F_{Y|X = x}(y) = P(Y \leq y \mid x) = F_Z(h(y|\boldsymbol{x}) = F_Z(\alpha( \lfloor y \rfloor) + h(\bfs{x})), \quad y \in \mathbb{R}^+,
+\end{equation}$$
+
+- where $\alpha$ is a smooth, continuous, and monotonically increasing function applied to the greatest integer $\lfloor y \rfloor$ less than or equal to $y$. The function $\alpha$ can be written in terms of basis functions $\bfs{a}: \mathbb{R} \rightarrow \mathbb{R}^q $, such that
+
+
+\begin{equation}
+    \alpha(y) = \bfs{a}(y)^{\top} \boldsymbol{\gamma}, \bfs{\gamma} \in \mathbb{R}^q,
+\end{equation}
+ 
+\noindent where $\bfs{a}(y)$ is a vector of evaluated Bernstein or B-spline basis functions. The restrictions on $\bfs{\gamma}$ are those already presented. As a consequence, the function $\alpha(y)$ is monotonically increasing in $y$.
+
+---
+- For this count model, we restrict the transformation function to $h(y \mid \bfs{x}) = \alpha(y) + h(\bfs{x})$, where $h(\boldsymbol{x})$ can be decomposed as
+- The functions in (\ref{hx}) could include linear fixed effects, $h_j(x_i) = x_i\beta_j$, for some $i = 1,\hdots, p$, and $j = 1, \hdots, J$, or $h_j(x_i) = \sum \boldsymbol{b}(x_i)\bfs{\beta}_j$ for some evaluated basis (B-spline or Bernstein) of $x_i$. 
+
+$$\begin{equation}\label{hx}
+  h(\bfs{x}) = \sum_{j = 1}^J h_j(\boldsymbol{x}). 
+\end{equation}$$
+
+- The construction in (\ref{count_BCTM}) is identical to the continuous BCTM; however, the floor function applied to \( y \) makes the transformation function stepwise, with jumps at the integers \( 0, 1, 2, \dots \).
+
+$$\begin{equation}\label{count_BCTM}
+F_{Y \mid \bfs{X} = \bfs{x}}(y) = F(\alpha(\lfloor y \rfloor) + \bfs{x}^\top \bfs{\beta})
+\end{equation}$$
+
+---
+
+```{r, echo=FALSE,  out.width = "75%", dpi = 300 , fig.retina = 2,fig.align='center'}
+knitr::include_graphics("figuras/count_model.png")
+```
+
+Count transformation model. Illustration of a cumulative distribution function (F, left panel) and of a
+transformation function ($h(y|\bfs{x})$, right panel) of a count response ($\lfloor y \rfloor$, red) and a corresponding continuous variable ($y$, blue) both functions coinciding for counts $0,1,2,\hdots$. 
+
+- An important technical detail is that the function $\alpha$ is specified in terms of basis functions of $a(y)$, $a(y+1)$, or even on the log-scale: $a(\log(y))$ or $a(\log(y + 1))$. 
 
 ---
 ### Posterior Inference
@@ -645,37 +690,25 @@ ___
 - We present an alternative estimation method based on the Integrated Nested Laplace Approximation (INLA) given by `r Citet(myBib,"rue2009approximate")`.
 - The contribution is to provide an alternative way to the MCMC methods to implement Bayesian inference on these models.
 
+- In this context, we aim to contribute to the BCTM class by proposing an algorithm that is more computationally efficient than traditional MCMC approaches. This chapter introduces two alternative estimation methods for this class of models, both based on approximation techniques, including Laplace approximation and variational inference.
 
 ---
-### Posterior Inference for the BCLTM
+
+### Integrated Laplace with Bayesian Conditional Transformation Models
 ___
-- The BCLTM model defined there is no hyperparameter included (unless we consider a transformation function with B-spline basis) and the response variable $Y$ is continuous.
-- Set $\boldsymbol{\gamma} = (\gamma_0, \boldsymbol{\gamma}_{J1},\boldsymbol{\gamma}_{J2} , \boldsymbol{\gamma}_{J3})$. From $\boldsymbol{\gamma}$ vector, we split our model parameters into two distinct parts denoted by $\boldsymbol{\gamma}_s$ and $\boldsymbol{\gamma}_u$
 
-$$\begin{equation}
-    \pi(\boldsymbol{\gamma}|\boldsymbol{y}) \propto \left[ \prod_{i = 1}^n f_Z(h(y_i|\boldsymbol{x}_i))h'(y_i|\boldsymbol{x}_i)\right] \pi(\boldsymbol{\gamma}_s|\mu, \Sigma_s, \boldsymbol{c}(\boldsymbol{y}|\boldsymbol{x}, 0)) \pi(\boldsymbol{\gamma}_u|\mu, \Sigma_u),
-\end{equation}$$
+- In the BCTM, we have the vector of constrained parameters $\bfs{\gamma}$, which are functions the unconstrained vector of parameters $\bfs{\beta}$. 
+-  Additionally, we have the vector of hyperparameters $\boldsymbol{\tau} = (\bfs{\tau}_1, \dots, \bfs{\tau}_J)^{\top}$.
+- Ultimately, we have the following quantities to estimate: $\bfs{\beta} = (\bfs{\beta}_1, \dots, \bfs{\beta}_J)^{\top}$, and $\boldsymbol{\tau} = (\bfs{\tau}_1, \dots, \bfs{\tau}_J)^{\top}$.
+- To obtain posterior estimates of the BCTM, we propose an estimation method based on the Integrated Nested Laplace Approximation (INLA) presented by \citet{rue2009approximate}.
+Let $\bfs{y} = (y_1, \ldots, y_n)^{\top}$ be a random sample of the random variable $Y$, which is independently distributed given $\bfs{x}$ with distribution $F_{Y|\bfs{X} = \bfs{x}}$. Then, the joint posterior distribution of the parameters $\boldsymbol{\beta}$ and $\bfs{\tau}$ is
 
+\begin{equation}\label{joint_prior}
+\pi(\bfs{\beta}, \bfs{\tau}|\bfs{y}) \propto \left[ f_{\bfs{Y}|\bfs{X} = \bfs{x}}(\bfs{y}|\bfs{x}, \bfs{\beta})\right] 
+    \phi(\bfs{\beta}|\bfs{\mu}, \bfs{Q}(\bfs{\tau})) \pi(\bfs{\tau}), 
+\end{equation}
 
-where $\pi(\boldsymbol{\gamma}_s|\mu, \Sigma_s, \boldsymbol{c}_s'(\boldsymbol{y}|\boldsymbol{x}), 0)$ is the density of truncated normal multivariate with linear constraint $\boldsymbol{c}_s'(y|x)^T \boldsymbol{\gamma}_s \geq 0$. 
-- The final expression for marginal distributions of the parameters is already presented by `r Citet(myBib,"tierney1986accurate")`
-
-$$\begin{equation}
-    \tilde{\pi}(\gamma_i|\boldsymbol{y}) = \left(\frac{|H_{\pi}(\boldsymbol{\gamma}(\gamma_i))|}{2\pi n |H_{\pi}(\boldsymbol{\gamma}_0)|}\right)^{1/2} \frac{\pi(\boldsymbol{\gamma}_0(\gamma_i))e^{g(y;\boldsymbol{\gamma_0}(\gamma_i)})}{\pi(\boldsymbol{\gamma}_0) e^{g(y; \boldsymbol{\gamma_0})}}. 
-\end{equation}$$
 ---
-
-### Posterior Inference for the BCTM
-___
-
-- The methodology presented using the Laplace approximation to access the marginal distribution work very well in the cases without hyperparameters.
-- The models defined by B-spline basis assume one or more hyperparameters to control the smoothness of the estimated functions.
-- The joint posterior distribution of $\boldsymbol{\beta}$ (parameters model $\gamma's$ are function of the unconstrained one $\beta's$) and $\boldsymbol{\tau}$ parameters
-
-$$\begin{equation}
-    \pi(\boldsymbol{\beta}, \boldsymbol{\tau}|\boldsymbol{y}) \propto \left[ \prod_{i = 1}^n f_{Y|\boldsymbol{X} = \boldsymbol{x}}\right] 
-    \prod_{j = 1}^J \pi_j(\boldsymbol{\beta}_j|\boldsymbol{\mu}, \boldsymbol{K}(\boldsymbol{\tau})) \pi_j(\boldsymbol{\tau}), 
-\end{equation}$$
 - The marginal density is given by
 
 
