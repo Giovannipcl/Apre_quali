@@ -703,23 +703,28 @@ ___
 - To obtain posterior estimates of the BCTM, we propose an estimation method based on the Integrated Nested Laplace Approximation (INLA) presented by \citet{rue2009approximate}.
 Let $\bfs{y} = (y_1, \ldots, y_n)^{\top}$ be a random sample of the random variable $Y$, which is independently distributed given $\bfs{x}$ with distribution $F_{Y|\bfs{X} = \bfs{x}}$. Then, the joint posterior distribution of the parameters $\boldsymbol{\beta}$ and $\bfs{\tau}$ is
 
-\begin{equation}\label{joint_prior}
+$$\begin{equation}\label{joint_prior}
 \pi(\bfs{\beta}, \bfs{\tau}|\bfs{y}) \propto \left[ f_{\bfs{Y}|\bfs{X} = \bfs{x}}(\bfs{y}|\bfs{x}, \bfs{\beta})\right] 
     \phi(\bfs{\beta}|\bfs{\mu}, \bfs{Q}(\bfs{\tau})) \pi(\bfs{\tau}), 
-\end{equation}
+\end{equation}$$
+
+
 
 ---
-- The marginal density is given by
 
+- We are interested in the marginal distribution of the unconstrained parameters $\beta_r$, which are components of vector $\bfs{\beta}_j = (\beta_1, \hdots, \beta_{I_j})^{\top}$ from the vector $\boldsymbol{\beta} = (\bfs{\beta}_1, \hdots, \bfs{\beta}_J)^{\top}$, where $j \in \lbrace 1, \dots, J\rbrace$,
 
 $$\begin{equation}\label{marginal_app}
-    \pi(\beta_i|\boldsymbol{y}) = \int \pi(\beta_i|\boldsymbol{\tau},\boldsymbol{y}) \pi(\boldsymbol{\tau}|\boldsymbol{y})d\boldsymbol{\tau}.
+    \pi(\beta_r|\bfs{y}) = \int \pi(\beta_r|\bfs{\tau},\bfs{y}) \pi(\bfs{\tau}|\bfs{y})d\bfs{\tau}.
 \end{equation}$$
----
+
 - The marginal $\pi(\beta_i|\boldsymbol{y})$ involves
   - approximation of $\pi(\boldsymbol{\tau}|\boldsymbol{y})$.
-  - approximation of $\pi(x_i|\boldsymbol{\tau},\boldsymbol{y})$.
+  - approximation of $\pi(\beta_{r}|\boldsymbol{\tau},\boldsymbol{y})$.
   - a numerical integration.
+
+
+---
 -  The first step is approximate $\pi(\boldsymbol{\tau}|\boldsymbol{y})$ which is given by
  
 $$\begin{equation}\label{hyper_dist}
@@ -734,19 +739,16 @@ $$\begin{align}\label{condi_beta}
     = & \frac{\exp(p(\boldsymbol{\beta}))}{\int \exp(p(\boldsymbol{\beta})) d\boldsymbol{\beta}}
 \end{align}$$
 
+- We write $p(\bfs{\beta}) = \log \pi(\bfs{\beta}, \bfs{\tau}, \bfs{y}) $ (the conditional on $\bfs{\tau}$ and $\bfs{y}$ is implicit). 
+
+$$\begin{align}\label{pbeta}
+    p(\bfs{\beta}) = & \log \pi(\bfs{y}|\bfs{\beta}) + \log \pi(\bfs{\beta}| \bfs{\tau}) + \log \pi(\bfs{\tau}) \nonumber \\
+    p(\bfs{\beta}) = & \sum_{i = 1}^n \left[ \log f_Z(\bfs{c}(y_i,\bfs{x}_i)^{\top}\bfs{\gamma(\beta)}) + \log (\bfs{c}'(y_i,\bfs{x}_i)^{\top}\bfs{\gamma(\beta)})\right] \nonumber \\
+    & -0.5 \bfs{\beta}^{\top} \bfs{Q}(\bfs{\tau}) \bfs{\beta} + \sum_{j = 1}^J\sum_{l \in \mathcal{L}_j} \beta_{lj} + \log \pi(\bfs{\tau}).
+\end{align}$$
+
 ---
 
-- The distribution $p(\boldsymbol{\beta}) \propto \log(\pi(\boldsymbol{\beta}, \boldsymbol{\tau},\boldsymbol{y}))$ is 
-$$\small{\begin{aligned}
-    p(\boldsymbol{\beta}) = \sum_{i = 1}^n \log f_Z(\boldsymbol{c}(y_i,\boldsymbol{x}_i)^{\top}\boldsymbol{\gamma(\beta)}) + \sum_{i = 1}^n  \log (\boldsymbol{c}'(y_i,\boldsymbol{x}_i)\boldsymbol{\gamma(\beta)}) - 0.5 \boldsymbol{\beta}^{\top} \boldsymbol{K}(\boldsymbol{\tau}) \boldsymbol{\beta} + \sum_{j = 1}^J\sum_{l \in \mathcal{L}_j} \beta_{lj}, 
-    \end{aligned}}$$
-
-for continuous case, and 
-$$\small{\begin{aligned}
-    p(\boldsymbol{\beta}) = \sum_{i = 1}^n \log (F_Z(h(y_i|\boldsymbol{x})) - F_Z(h(y_i - 1|\boldsymbol{x}))) + \sum_{i = 1}^n  \log (\boldsymbol{c}'(y_i,\boldsymbol{x}_i)\boldsymbol{\gamma(\beta)}) -  \\
-    0.5 \boldsymbol{\beta}^{\top} \boldsymbol{K}(\boldsymbol{\tau}) \boldsymbol{\beta} + \sum_{j = 1}^J\sum_{l \in \mathcal{L}_j} \beta_{lj}, 
-    \end{aligned}}$$
-for discrete case.     
 - The integral in the denominator of $\pi(\boldsymbol{\beta}|\boldsymbol{\tau}, \boldsymbol{y})$ can be approximated by Laplace  method
 
 $$\begin{equation}
@@ -757,7 +759,8 @@ where $\boldsymbol{\beta}^{*}(\boldsymbol{\tau})$ is the mode of $p(\boldsymbol{
 
 ---
 
-- The gradient and Hessian matrix have a closed form which speeds up the Newton-Raphson algorithm.
+- The gradient and Hessian matrix have a analytical expressions!
+- To evaluate the approximation in (\ref{laplace_approx}), we have to optimize $p(\bfs{\beta})$ to find the mode $\bfs{\beta^*(\tau)}$ for a given $\bfs{\tau}$. We applied the following Newton-Raphson method. 
 - The final approximation of log density of full conditional evaluated at the mode $\boldsymbol{\beta}^{*}(\boldsymbol{\tau})$  is
 $$\begin{equation}
     \log( \tilde{\pi}(\boldsymbol{\beta}^{*}(\boldsymbol{\tau})|\boldsymbol{y}, \boldsymbol{\tau})) \approx -\frac{n}{2} \log(2\pi) + \frac{1}{2} \log \left| -H_p(\boldsymbol{\beta}^{*}(\boldsymbol{\tau})) \right |
@@ -767,51 +770,49 @@ $$\begin{equation}
 $$\begin{equation}
     \log \tilde{\pi}(\boldsymbol{\tau}|\boldsymbol{y}) \propto \left[ \log(\pi(\boldsymbol{y},\boldsymbol{\beta}^{*}(\boldsymbol{\tau}), \boldsymbol{\tau}) - \frac{1}{2} \log \left| -H_p(\boldsymbol{\beta}^{*}(\boldsymbol{\tau})) \right| \right]_{\boldsymbol{\beta} = \boldsymbol{\beta}^{*}(\boldsymbol{\tau})}
 \end{equation}$$
+
+
 - The difficult is that the evaluation of this distribution require the optimization of $p(\boldsymbol{\beta})$.
-- Besides that, we can not acess a expression for gradient and Hessian matrix for this distribution.
-- These characteristics dificult the exploration of $\boldsymbol{\tau}|y$ distribution for the further numerical integration of marginal posterior $\beta_i|\boldsymbol{\tau}, \boldsymbol{y}$.
+
 
 ---
 
 ### Exploring hyper-parameter distribution
 ___
 - Locate the $\boldsymbol{\tau}^{*}$ mode by using the quasi-Newton L-BFGS-B method to optimize the $\log \pi(\boldsymbol{\tau}|\boldsymbol{y})$ density concerning $\boldsymbol{\tau}$.
-.content-box-red[
-.footnotesize[The *optim* function in R has the L-BFGS-B. However we used the *optimParallel* function which provided a 2 to 3 times faster optimization.]
-]
-- Select and evaluate a grid of points around $\boldsymbol{\tau}^{*}$, like $\boldsymbol{\tau}^{*} \pm \delta$, where $\delta$ parameter can be customized. We adopted small values like 1.
-.content-box-red[
-.footnotesize[ The problem is to guess what is the variability of hyperparameter.]
-]
-- Interpolate and normalize the approximated $\pi(\boldsymbol{\tau}|\boldsymbol{y})$ density by using the evaluated points from the previous step.
-- Select high density points, for example  $\pi(\boldsymbol{\tau}|\boldsymbol{y}) > 0$.  
 
----
+- Select and evaluate a grid of points around $\boldsymbol{\tau}^{*}$, like $\boldsymbol{\tau}^{*} \pm \delta$, where $\delta$ parameter can be customized. We adopted small values like 1.
+
 .pull-left[
-```{r, echo=FALSE,  out.width = "100%", dpi = 300 , fig.cap="Approximated distribution for one hyperparameter.", fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE,  out.width = "70%", dpi = 300 , fig.cap="Approximated distribution for one hyperparameter.", fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/Hyper_uni_den.png")
 ```
 
 ]
 
 .pull-right[
-```{r, echo=FALSE,  out.width = "100%", , dpi = 300 , fig.cap="Approximated distribution for two hyperparameter.", fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE,  out.width = "70%", , dpi = 300 , fig.cap="Approximated distribution for two hyperparameter.", fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/Den_hyper.png")
 ```
 ]
 ---
-- The next step is to approximate the posterior marginals for the $\beta_i$'s, conditioned on the explored values of $\boldsymbol{\tau}$ from the $\tilde{\pi}(\boldsymbol{\tau}|\boldsymbol{y})$ distribution. The approximated posterior marginal is
+#### Approximating $\pi(\beta_r|\bfs{\tau}, \bfs{y})$
+
+- The next step is to approximate the posterior marginals for the $\beta_r$'s from $\bfs{\beta}$ vector, conditioned on $\bfs{\tau}$.
+- Using the same logical of the approximation in (\ref{hyperdist1}) we got the following equation 
 
 $$\begin{equation}\label{beta_marginais}
-    \tilde{\pi}(\boldsymbol{\beta}_i| \boldsymbol{\tau}, \boldsymbol{y}) \propto \frac{\pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})}{\tilde{\pi}(\beta_{-i} |\beta_i, \boldsymbol{\tau}, \boldsymbol{y})} \bigg|_{\boldsymbol{\beta}_{-i} = \boldsymbol{\beta}_{-i}^{*}(\beta_i, \boldsymbol{\tau})},
+    \Tilde{\pi}({\beta}_r| \bfs{\tau}, \bfs{y}) \propto \frac{\pi(\bfs{\beta}, \bfs{\tau}, \bfs{y})}{\Tilde{\pi}(\bfs{\beta_{-r}} |\beta_r, \bfs{\tau}, \bfs{y})} \bigg|_{\bfs{\beta}_{-r} = \bfs{\beta}_{-r}^{*}(\beta_r, \bfs{\tau})},
 \end{equation}$$
-where $\boldsymbol{\beta}_{-i}^{*}(\beta_i, \boldsymbol{\tau})$ maximizes $\pi(\boldsymbol{\beta}|\boldsymbol{\tau}, \boldsymbol{y})$ given the constraint $\beta_i^* = \beta_i$.
+ where $\bfs{\beta}_{-r}^{*}(\beta_r, \bfs{\tau})$ maximizes $p(\bfs{\beta}) \propto \log(\pi(\bfs{\beta}, \bfs{\tau},\bfs{y}))$ given the constraint $\beta^*(\bfs{\tau})_r = \beta_r$ (the r-th component of the mode vector $\beta^*(\bfs{\tau})$ is equal to $\beta_r$), and $\Tilde{\pi}(\beta_{-r} |\beta_r, \bfs{\tau}, \bfs{y})$ is an approximation to $\beta_{-r} |\beta_r, \bfs{\tau}, \bfs{y}$ evaluated at $\bfs{\beta}_{-r}^{*}(\beta_r, \bfs{\tau})$.
+ 
+ 
 - The denominator in \ref{beta_marginais} is a approximation from 
 
 $$\begin{equation}\label{beta_marginais2}
     \pi(\boldsymbol{\beta}_{-i}|{\beta}_{i}, \boldsymbol{\tau},\boldsymbol{y}) = \frac{\pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})}{\int \pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})d\boldsymbol{\beta}_{-i}}
 \end{equation}$$
-- Using a Laplace approximation for the integral in the denominator is computational massive. It involves optimization for every $\beta_i$ nested in each $\tau$ explored from hyperparameter distribution. 
+- The computational cost to approximate (\ref{beta_marginais2}) is massive since the Laplace method for the integral in the denominator involves a constrained optimization of $\bfs{\beta}_r$ for a set of values of $\beta_r$ for all $r = 1, \hdots I_j \times J$, with $I_j$ being the number of parameters of a particular transformation $j = 1, \hdots, J$.
 
 ---
 - A computational cheaper option is to base this approximation on a conditional density implied by the Gaussian approximation, $\tilde{\pi}_G(\boldsymbol{\beta}| \boldsymbol{\tau}, \boldsymbol{y})$, for $\boldsymbol{\beta}| \boldsymbol{\tau}, \boldsymbol{y}$ distribution.
@@ -841,6 +842,225 @@ $$\begin{equation}
 - For multivariate case we have a lot of points.
 
 ---
+### Variational Bayes
+___
+
+- an alternative approach for posterior inference in the Bayesian Conditional Transformation models based on Variational Bayes (VB).
+
+- Variational Bayes (VB) é uma técnica de inferência aproximada usada para estimar distribuições a posteriori em modelos bayesianos complexos. Ele é especialmente útil quando a distribuição a posteriori exata é intratável ou computacionalmente cara de obter.
+
+- Há muitos algoritmos de VB disponiveis. O algoritmo apresentado \citet{HaavardVBC} é uma proposta da classe de algoritmos VB. A proposta original tem como objetivo ser uma alternativa ao INLA para a classe de Latent Gaussian Models (LGM).
+
+- O algoritmo foi nomeado de "", pois unknown density function using a Gaussian approximation via the Laplace method, followed by a variational correction applied to the mode of this Gaussian approximation.
+
+- Nossa proposta é adaptar esse algortimo para a classe BCTM. Isso é plausivel visto que nossa primeira proposta já envolvia aproximações normais para as posterioris de interesse.
+
+---
+- VB gained popularity due to the increasing complexity of Bayesian models, the massive amount of analyzed data,  and the growing need for computationally efficient alternatives to exact and sampling-based methods.
+
+- The VB methods optimize an objective function over a specific family of distributions to approximate the true posterior distribution in Bayesian inference.
+
+- Unlike Gaussian approximations, VB methods are more general, as the chosen family of distributions is not limited to Gaussian ones. If the selected family includes the true posterior, the VB approximation can recover the exact posterior.
+
+ **A ideia central do VB é transformar o problema da inferência bayesiana em um problema de otimização.**
+ 
+ - Dada uma distribuição a posteriori p(θ∣D), que geralmente é complexa, o VB busca encontrar uma aproximação q(θ) que esteja próxima de p(θ∣D)
+
+---
+
+- This posterior (\( \pi(\bfs{\theta}|y) \)) can be defined through the minimization of the following specific objective function
+
+
+\begin{equation}\label{opt_principal}
+    \pi^*(\boldsymbol{\theta}|\bfs{y})= \underset{q(\boldsymbol{\theta}) \in \mathcal{P}(\boldsymbol{\Theta)}}{\textrm{arg min}} \left\lbrace E_{q(\boldsymbol{\theta})} \left[\sum_{i = 1}^n l(\boldsymbol{\theta};y_i) \right] + \textrm{KLD}(q(\boldsymbol{\theta})||\pi(\boldsymbol{\theta})) \right\rbrace,
+\end{equation}
+
+- A posteriori encontrada em () é a mesma que:
+  - Minimiza a divergência de KL entre a posteriori verdadeira e a estimada.
+  - A que maximiza a ELBO (Evidence Lower BOund)
+- However, working on an infinite domain is impractical. Therefore, the VB methods constrain the posterior distribution to a parametric form, $q(\boldsymbol{\theta}) \in \mathcal{Q}$, where $\mathcal{Q} = \lbrace q(\boldsymbol{\theta}| \boldsymbol{\kappa}): \boldsymbol{\kappa} \in \mathcal{K}\rbrace $ is a family of distributions on $\boldsymbol{\Theta}$ parameterized by $\boldsymbol{\kappa}$.
+-  We call $\mathcal{Q}$ as Variational family, and it is the space where the best approximated posterior distribution is searched.
+
+---
+This best posterior from this parametric family is the solution of equation (\ref{opt_principal}), but $\mathcal{Q}$ instead of $\mathcal{P}(\Theta)$, that is 
+
+\begin{equation}\label{pract_opt}
+    \pi_{{\small VB}}^*(\boldsymbol{\theta}|\bfs{y}) = \underset{q(\boldsymbol{\theta}|\boldsymbol{k}) \in \mathcal{Q}}{\textrm{arg min}} \left\lbrace E_{q(\boldsymbol{\theta})} \left[\sum_{i = 1}^n l(\boldsymbol{\theta};y_i) \right] + \textrm{KLD}(q(\boldsymbol{\theta})||\pi(\boldsymbol{\theta})) \right\rbrace,
+\end{equation}
+
+where $\pi_{{\small VB}}^*(\boldsymbol{\theta}|\bfs{y}) = q(\boldsymbol{\theta}|\boldsymbol{k}^*)$ for some optimal parameter $\boldsymbol{k}^* \in \mathcal{K}$.
+
+```{r, echo=FALSE,  out.width = "35%", , dpi = 300 , fig.cap="Approximated distribution for two hyperparameter.", fig.retina = 2,fig.align='center'}
+knitr::include_graphics("figuras/interpretacao2VB.png")
+```
+
+---
+### Variational Bayes correction
+
+- A recent contribution to VB is the variational correction, where the VB is not employed as an approximation for an unknown posterior, but as a correction to the Gaussian approximation of the posterior distribution obtained from the Laplace method.
+
+- The Gaussian approximation of the log posterior distribution, $\pi(\boldsymbol{\theta}|\boldsymbol{y})$, derived from the Laplace method \citep{tierney1986accurate} is given by
+
+\begin{equation}
+    \ln(\pi(\boldsymbol{\theta}|\boldsymbol{y})) = \ln \pi(\boldsymbol{\theta}_0) - \frac{1}{2} (\boldsymbol{\theta}- \boldsymbol{\theta}_0)^{\top} \boldsymbol{H}_0(\boldsymbol{\theta}- \boldsymbol{\theta}_0) + \textrm{high order terms,}
+\end{equation}
+
+\noindent where $\boldsymbol{\theta}_0$ is the mode of $\ln(\pi(\boldsymbol{\theta}|\boldsymbol{y}))$ and $\boldsymbol{H}_0$ is the negative Hessian matrix of $\ln(\pi(\boldsymbol{\theta}|\boldsymbol{y}))$ evaluated at $\boldsymbol{\theta}_0$. Then the approximation of the posterior distribution is
+
+\begin{equation}\label{gaussian_implied_lm}
+    \Tilde{\pi}_{G}(\boldsymbol{\theta}|\boldsymbol{y}) \propto \exp\left( - \frac{1}{2} (\boldsymbol{\theta}- \boldsymbol{\theta}_0)^{\top} \boldsymbol{H}_0(\boldsymbol{\theta}- \boldsymbol{\theta}_0) \right),
+\end{equation}
+
+
+\noindent so that $\boldsymbol{\theta}|\boldsymbol{y} \approx N(\boldsymbol{\theta}_0, \boldsymbol{H}_0^{-1})$
+---
+
+- The variational correction proposal is to correct only the mean of this Normal approximation $\pi_{G}(\boldsymbol{\theta}|\boldsymbol{y})$ to achieve a more accurate estimate.
+
+The updated mean is given by $\boldsymbol{\theta}_1 = \boldsymbol{\theta}_0 + \boldsymbol{\delta}$,  where $\boldsymbol{\delta}$ is the correction to the mean. The posterior of $\boldsymbol{\theta}$ is now given by
+
+$$\tilde{\pi}_{G}(\boldsymbol{\theta}|\boldsymbol{y}) \propto \exp\left( - \frac{1}{2} (\boldsymbol{\theta}- \boldsymbol{\theta}_1)^{T} \boldsymbol{H}_0(\boldsymbol{\theta}- \boldsymbol{\theta}_1) \right).$$
+
+- In summary, we need to find a vector $\boldsymbol{\delta}$ of length $m$ that produce a more accurate mean, while fixing the precision matrix based on the Hessian of $\ln(\pi(\bfs{\theta}|\bfs{y}))$. 
+
+- The parametric family $\mathcal{Q}$ for this problem is the multivariate Normal, with known covariance matrix $\bfs{H}_0^{-1}$, and a mean vector $\boldsymbol{\theta}_0 + \boldsymbol{\delta}$.
+
+- To get the best approximation for the posterior distribution from the family $\mathcal{Q}$
+
+$$
+    \tilde{\boldsymbol{\delta}} = \underset{\boldsymbol{\delta}} {\textrm{arg min}}\left\lbrace E_{\boldsymbol{\theta} \sim N(\boldsymbol{\theta}_0 + \boldsymbol{\delta}, \boldsymbol{H}^{-1}_0)} \left[-\log \pi(\boldsymbol{y}|\boldsymbol{\theta}) \right] + \textrm{KLD}(\phi(\boldsymbol{\theta}|\boldsymbol{\theta}_0 + \boldsymbol{\delta},\boldsymbol{H}_0^{-1})||\pi(\boldsymbol{\theta})) \right\rbrace,
+$$
+---
+
+-The proposed approach to approximate the posterior can be summarized as follows:
+
+  -Find the mode $\bfs{\theta}_0$ of $\ln \pi(\boldsymbol{\theta}|\boldsymbol{y})$.
+
+  -Produces the approximation $\boldsymbol{\theta}|\boldsymbol{y} \approx N(\boldsymbol{\theta}_0, \boldsymbol{H}_0^{-1})$, where $\boldsymbol{H}_0$ is the negative Hessian matrix of $\ln(\pi(\boldsymbol{\theta}|\boldsymbol{y}))$ evaluated at $\boldsymbol{\theta}_0$.
+
+  - Solve for $\boldsymbol{\delta}$ the objective function in (\ref{delta_correction1}).
+
+  - The approximated posterior $\boldsymbol{\theta}$ is a multivariate Normal with mean $\boldsymbol{\theta}_1 = \boldsymbol{\theta}_0 + \boldsymbol{\delta}$ and precision matrix $\boldsymbol{Q}_0 = \boldsymbol{H}_0$.
+
+
+**It is important to note that we are not producing approximate posterior marginals or marginal corrections. Instead, this proposal ensures a joint improvement of the posterior distribution.**
+
+---
+### Variational Bayes correction to BCTM
+
+- Our general definition of BCTM involves hyperparameters.
+
+- The variational correction defined up to now does not introduce any hyperparameters into the posterior.
+
+$$\begin{equation}\label{joint_prior2}
+  \pi(\bfs{\beta}, \bfs{\tau}|\bfs{y}) \propto \left[ f_{\bfs{Y}|\bfs{X} = \bfs{x}}(\bfs{y}|\bfs{x})\right] 
+    \prod_{j = 1}^J \phi_j(\bfs{\beta}_j|\bfs{\mu}_j, \bfs{Q}_j(\bfs{\tau}_j)) \pi(\bfs{\tau}_j).    
+\end{equation}$$
+
+- The proposal utilizes the variational correction within the joint Normal posterior $\Tilde{\pi}_G(\boldsymbol{\beta}|\boldsymbol{\tau}, \boldsymbol{y})$.
+
+- Conditional on the hyperparameters, $\boldsymbol{\tau}$,  the corrected posterior mean of the joint distribution is given by $\boldsymbol{\beta}_1(\bfs{\tau}) = \boldsymbol{\beta}_0(\bfs{\tau}) + \boldsymbol{\delta}$, where $\boldsymbol{\delta}$ is the correction term.
+
+- So, now we solve the following (conditionally on $\boldsymbol{\tau}$)
+
+$$\begin{align}\label{delta_correction}
+    \Tilde{\boldsymbol{\delta}} &= \underset{\boldsymbol{\delta}} {\textrm{agr min}}\left\lbrace E_{\boldsymbol{\beta}|\boldsymbol{\tau} \sim N(\boldsymbol{\theta}_0 + \boldsymbol{\delta}, \boldsymbol{H}^{-1}_0)} \left[-\log \pi(\boldsymbol{y}|\boldsymbol{\beta},\boldsymbol{\tau} ) \right] + \textrm{KLD}(\phi(\boldsymbol{\beta}|\boldsymbol{\beta}_0 + \boldsymbol{\tau},\boldsymbol{H}_0^{-1})||\phi(\boldsymbol{\beta}| \boldsymbol{0},\boldsymbol{Q}_0)) \right\rbrace, \nonumber \\
+    & = \underset{\boldsymbol{\delta}} {\textrm{agr min}}\left\lbrace E_{\boldsymbol{\beta}|\boldsymbol{\tau} \sim N(\boldsymbol{\beta}_0 + \boldsymbol{\delta}, \boldsymbol{H}^{-1}_0)} \left[-\log \pi(\boldsymbol{y}|\boldsymbol{\beta},\boldsymbol{\tau} ) \right] + \frac{1}{2}(\boldsymbol{\beta}_0 + \boldsymbol{\delta})^T \boldsymbol{Q}_0(\boldsymbol{\beta}_0 + \boldsymbol{\delta}) \right\rbrace.
+\end{align}$$
+
+---
+
+- hus, the improved Normal approximation to $\pi(\boldsymbol{\beta}|\boldsymbol{y}, \boldsymbol{\tau})$, that we will denote as $\Tilde{\pi}_{VBC}$, has mean $\bfs{\beta}_1$ and precision matrix $\boldsymbol{Q}_0$.
+
+-  From this multivariate improved Normal distribution the marginals distributions, $\Tilde{\pi}_{VBC}(\beta_r|\boldsymbol{y}, \boldsymbol{\tau})$, are Gaussian densities with mean $\beta_{1,r}$ and precision $Q_0^{r,r}$
+
+- Finally, the marginal posteriors of the parameters $\boldsymbol{\beta}$ are calculated as 
+
+$$\begin{equation}
+    \Tilde{\pi}_{VBC}(\beta_r|\boldsymbol{y}) = \sum_{p = 1}^P \Tilde{\pi}_{VBC}(\beta_r|\boldsymbol{\tau}^{(p)}, \boldsymbol{y})\Tilde{\pi}(\boldsymbol{\tau}^{(p)}|\bfs{y}) \Delta \bfs{\tau}^{(p)}, 
+\end{equation}$$
+
+where $\lbrace \boldsymbol{\tau}^{[1]}, \hdots, \boldsymbol{\tau}^{[P]} \rbrace$ is a set of points of $\boldsymbol{\tau}$.
+
+\begin{align}
+    \pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y}) & = \prod_{i =1}^n \pi(y_i|\boldsymbol{\beta}, \boldsymbol{\tau})\pi(\boldsymbol{\beta}|\boldsymbol{\tau}) \nonumber \\
+    \Tilde{\pi}(\bfs{\tau}|\bfs{y}) & \propto  \frac{\pi(\bfs{\beta}, \bfs{\tau}, \bfs{y})}{\Tilde{\pi}_{G}(\bfs{\beta}| \bfs{\tau}, \bfs{y})}\bigg|_{\bfs{\beta} = \bfs{\beta}^{*}(\bfs{\tau})} \nonumber \\
+    \Tilde{\pi}(\beta_r|\boldsymbol{y}) & = \int \Tilde{\pi}_{\small{VBC}}(\beta_r |\boldsymbol{\tau}, \boldsymbol{y})\Tilde{\pi}(\boldsymbol{\tau}|\boldsymbol{y})d\boldsymbol{\tau}
+\end{align}
+
+---
+### Low-rank correction
+
+- In the proposed algorithm, the correction is applied to the mean of the Normal approximation of the unknown posterior distribution \(\boldsymbol{\beta}|\boldsymbol{\tau}, \boldsymbol{y}\). Specifically, we use the approximation $N(\boldsymbol{\beta}_0 + \boldsymbol{\delta}, H^{-1}_p(\boldsymbol{\beta}_0)),
+
+- The mean \(\boldsymbol{\beta}_0\), prior to correction, is the solution to the following linear system:
+
+\begin{equation}\label{linear_system_beta0}
+ H_p(\bfs{\beta}_0) = \nabla p(\bfs{\beta}_0) + H_p(\bfs{\beta}_0) \bfs{\beta}_0,
+\end{equation}
+
+- To simplify the notation, let us define $Q_0 = H_p(\boldsymbol{\beta}_0) \quad \text{and} \quad b_0 = \nabla p(\boldsymbol{\beta}_0) + H_p(\boldsymbol{\beta}_0) \boldsymbol{\beta}_0.$
+
+\begin{equation}
+    Q_0 \bfs{\beta}_0 = \bfs{b}_0.
+\end{equation}
+
+- Given that the number of parameters can grow substantially in some applications, such as random effects models, \citet{HaavardVBC} proposes an implicit correction of the mean term \(\boldsymbol{\beta}_0\) by explicitly correcting the estimated gradient, such that the improved posterior mean \(\boldsymbol{\beta}_1\) satisfies the new linear system:
+
+
+\begin{equation}
+    Q_0 \boldsymbol{\beta}_1 = \boldsymbol{b}_0 + \bfs{\lambda} = \boldsymbol{b}_1,
+\end{equation}
+
+- where \(\boldsymbol{\lambda}\) is the implicit correction term applied to \(\boldsymbol{b}_0 = \nabla p(\boldsymbol{\beta}_0) + H_p(\boldsymbol{\beta}_0) \boldsymbol{\beta}_0\). This implies that the mean \(\boldsymbol{\beta}_0\) is no longer explicitly corrected.
+
+---
+
+- However, if \(\boldsymbol{\lambda}\) is of the same dimension as the gradient and the term \(\boldsymbol{\beta}_0\), that is, \(\boldsymbol{\lambda} \in \mathbb{R}^T\), then no computational advantage would be gained over the proposal
+
+- we can examine how a non-zero value of the \(j\)-th element of \(\boldsymbol{\lambda}\), \(\lambda_j \neq 0\), impacts the \(i\)-th element of the corrected mean vector \(\boldsymbol{\beta}_1\), denoted by \(\beta_{1,i}\)
+
+$$\frac{\partial \beta_{1,i}}{\partial \lambda_j} \lambda_j = \frac{\partial \beta_{1,i}}{\partial b_{1,j}} \frac{\partial b_{1,j}}{\partial \lambda_j} \lambda_j = Q_0^{i,j} \lambda_j,$$
+
+- The equation in (\ref{derivada_correcao_low}) shows that the \(j\)-th term of the vector \(\boldsymbol{\lambda}\) impacts the \(i\)-th term of the vector \(\boldsymbol{\beta}_1\) through the term \(Q_0^{i,j}\).
+
+$$\begin{equation}
+    \frac{\partial \boldsymbol{\beta}_1}{\partial \lambda_j} \lambda_j = Q_0^{.,j} \lambda_j,
+\end{equation}$$
+
+where \(Q_0^{.,j}\) denotes the \(j\)-th column of the matrix \(Q_0\).
+
+---
+
+- In other words, a single term of \(\boldsymbol{\lambda}\) propagates its correction to all elements of \(\boldsymbol{\beta}_1\). 
+- This forms the basis of the Low-Rank Variational Bayes correction proposal, as selecting only a subset of p columns of \(Q_0\) would still propagate the correction to all terms of \(\boldsymbol{\beta}_1\).
+
+- Consider a set of indices \( i \in I \subset \{1, 2, \dots, P\} \) for which we aim to correct \( b_{0,i} \). We then extract the corresponding columns of \( \boldsymbol{Q}_0^{-1} \)
+
+
+$$\begin{equation}
+    \boldsymbol{\beta}_1 = \boldsymbol{\beta}_0 + \bfs{Q}_I^{-1}\boldsymbol{\lambda}
+\end{equation}$$
+
+- Now, we can optimize (\ref{delta_correction}), but for the $\boldsymbol{\lambda}$ instead of $\boldsymbol{\delta}$ as follows
+
+\begin{equation}
+    \Tilde{\bfs{\lambda}} = \underset{\boldsymbol{\lambda}} {\textrm{agr min}}\left\lbrace E_{\boldsymbol{\beta}|\boldsymbol{\tau} \sim N(\boldsymbol{\beta}_0 + \bfs{Q}_I^{-1}\boldsymbol{\lambda}, \boldsymbol{Q}^{-1}_0)} \left[-\log \pi(\boldsymbol{y}|\boldsymbol{\beta},\boldsymbol{\tau} ) \right] + \frac{1}{2}(\boldsymbol{\beta}_0 + \bfs{Q}_I^{-1}\boldsymbol{\lambda})^T \boldsymbol{Q}_0(\boldsymbol{\beta}_0 + \bfs{Q}_I^{-1}\boldsymbol{\lambda}) \right\rbrace.
+\end{equation}
+
+
+---
+
+- There is still no established rule or criterion for selecting the optimal set of indices \(I\).
+
+- In the original paper, \citet{HaavardVBC} proposes selecting indices related to the fixed effects parameters. For a random effects model, for example, all indices related to the random effects of individuals would be excluded.
+
+- However, in our context, we also have the parameters of the transformations of the observed response variable.
+
+- We will not delve further into this discussion in this work. 
+
+---
+
 ### Estimation of the conditional cumulative distribution function
 ___
 
@@ -856,6 +1076,502 @@ and the posterior mean estimate for $F_{Y|\boldsymbol{X} = \boldsymbol{x}}(y)$ i
 $$\begin{equation}
     \hat{F}_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = \frac{1}{S} \sum_{s = 1}^S F_Z((\boldsymbol{a}_j(y)^{\top} \otimes \boldsymbol{b}_j(x)^{\top})^{\top} \boldsymbol{\gamma}_j^{(s)}).
 \end{equation}$$
+
+
+---
+### Simulation Study 1: Evaluating the ILBCTM performance
+___
+
+- A simulation study was conducted to evaluate the performance of the ILBCTM algorithm in recovering the parameters for some particular cases of BCTM. We restricted ourselves into 3 differents models. 
+
+  - Model 1: $\textrm{P}(Y \leq y) =         \Phi(\boldsymbol{a}(y)^{\top} \boldsymbol{\gamma})$.
+  - Model 2: $\textrm{P}(Y \leq y | \bfs{X} = \bfs{x}) = \Phi(\bfs{a}(y)^{\top}\bfs{\gamma} + \bfs{x}^{\top} \bfs{\beta})$.
+  - Model 3: $\textrm{P}(Y \leq y | \boldsymbol{X} = \boldsymbol{x}) = \Phi(\boldsymbol{a}(y)^{\top}\boldsymbol{\gamma} + \boldsymbol{x}^{\top} \boldsymbol{\beta} + \boldsymbol{z}^{\top} \boldsymbol{b})$
+
+- The basis parameters are obtained by simulating from the prior distribution, this means that we simulated a random sample from a multivariate Normal distribution with mean zero and precision matrix $K(\tau) = (1/\tau) \bfs{K}_1$, where $\bfs{K}_1$ is defined in (\ref{ordem1}), and $\tau = \exp(15)$.
+
+- We have a total of 9 scenarios with different models and sample sizes. In every scenario, we simulated $R = 500$ replicas of the model considered.
+
+-  For the random effects model, we have considered 10, 20 and 30 observations from the same individual i, denoted by $n_{rep}$.
+
+-  We calculated the posterior mean, and the root-mean-square error (RMSE), given by RMSE($\hat{\beta}$) = $\sqrt{\frac{1}{R} \sum_{r = 1}^R (\hat{\beta}_r - \beta)}$.
+---
+<style type="text/css">
+.tg  {border:none;border-collapse:collapse;border-color:#aaa;border-spacing:0;}
+.tg td{background-color:#fff;border-color:#aaa;border-style:solid;border-width:0px;color:#333;
+  font-family:Arial, sans-serif;font-size:10px;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{background-color:#fff;border-color:#aaa;border-style:solid;border-width:0px;color:#000;
+  font-family:Arial, sans-serif;font-size:10px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-baqh{text-align:center;vertical-align:top}
+.tg .tg-ao2g{border-color:#fff;text-align:center;vertical-align:top}
+.tg .tg-0pky{border-color:fff;text-align:center;vertical-align:top}
+.tg .tg-eqm3{border-color:fff;font-size:10px;text-align:left;vertical-align:top}
+</style>
+
+<font size="3">
+<table class="tg">
+ <caption>Posterior mean and root-mean-squared-error of the parameters for Model 1: $\Phi(\boldsymbol{a}(y)^T \boldsymbol{\gamma})$ using ILBCTM algorithm, considering 500 replicas, in the simulating study 1.</caption>
+<thead>
+  <tr>
+    <th class="tg-ao2g" rowspan="2"><br>True parameter ($\beta$)<br></th>
+    <th class="tg-baqh" colspan="3">n = 200</th>
+    <th class="tg-baqh" colspan="3">n = 500</th>
+    <th class="tg-baqh" colspan="3">n = 2000</th>
+  </tr>
+  <tr>
+    <th class="tg-0pky">Estimate</th>
+    <th class="tg-0pky">RMSE</th>
+    <th class="tg-0pky">Estimate</th>
+    <th class="tg-0pky">RMSE</th>
+    <th class="tg-0pky">Estimate</th>
+    <th class="tg-0pky">RMSE</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-0pky">3.0342</td>
+    <td class="tg-0pky">3.0870</td>
+    <td class="tg-0pky">0.1667</td>
+    <td class="tg-0pky">3.0750</td>
+    <td class="tg-0pky">0.1388</td>
+    <td class="tg-0pky">3.0205</td>
+    <td class="tg-0pky">0.0559</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.2977</td>
+    <td class="tg-0pky">-0.2883</td>
+    <td class="tg-0pky">0.0522</td>
+    <td class="tg-0pky">-0.2852</td>
+    <td class="tg-0pky">0.0402</td>
+    <td class="tg-0pky">-0.2981</td>
+    <td class="tg-0pky">0.0174</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.2970</td>
+    <td class="tg-0pky">-0.2993</td>
+    <td class="tg-0pky">0.0478</td>
+    <td class="tg-0pky">-0.2977</td>
+    <td class="tg-0pky">0.0313</td>
+    <td class="tg-0pky">-0.2995</td>
+    <td class="tg-0pky">0.0175</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.3015</td>
+    <td class="tg-0pky">-0.2997</td>
+    <td class="tg-0pky">0.0449</td>
+    <td class="tg-0pky">-0.3015</td>
+    <td class="tg-0pky">0.0322</td>
+    <td class="tg-0pky">-0.3000</td>
+    <td class="tg-0pky">0.0166</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.2987</td>
+    <td class="tg-0pky">-0.3011</td>
+    <td class="tg-0pky">0.0454</td>
+    <td class="tg-0pky">-0.3014</td>
+    <td class="tg-0pky">0.0300</td>
+    <td class="tg-0pky">-0.2993</td>
+    <td class="tg-0pky">0.0140</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.2948</td>
+    <td class="tg-0pky">-0.3002</td>
+    <td class="tg-0pky">0.0439</td>
+    <td class="tg-0pky">-0.3025</td>
+    <td class="tg-0pky">0.0309</td>
+    <td class="tg-0pky">-0.2988</td>
+    <td class="tg-0pky">0.0141</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.2964</td>
+    <td class="tg-0pky">-0.3020</td>
+    <td class="tg-0pky">0.0468</td>
+    <td class="tg-0pky">-0.3061</td>
+    <td class="tg-0pky">0.0346</td>
+    <td class="tg-0pky">-0.2992</td>
+    <td class="tg-0pky">0.0156</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.2980</td>
+    <td class="tg-0pky">-0.2920</td>
+    <td class="tg-0pky">0.0484</td>
+    <td class="tg-0pky">-0.2995</td>
+    <td class="tg-0pky">0.0332</td>
+    <td class="tg-0pky">-0.2992</td>
+    <td class="tg-0pky">0.0168</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.2961</td>
+    <td class="tg-0pky">-0.2594</td>
+    <td class="tg-0pky">0.0709</td>
+    <td class="tg-0pky">-0.2809</td>
+    <td class="tg-0pky">0.0486</td>
+    <td class="tg-0pky">-0.2978</td>
+    <td class="tg-0pky">0.0180</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.2954</td>
+    <td class="tg-0pky">-0.2139</td>
+    <td class="tg-0pky">0.1161</td>
+    <td class="tg-0pky">-0.2344</td>
+    <td class="tg-0pky">0.0960</td>
+    <td class="tg-0pky">-0.2961</td>
+    <td class="tg-0pky">0.0196</td>
+  </tr>
+</tbody>
+</table>
+</font>
+
+
+---
+
+<style type="text/css">
+.tg  {border:none;border-collapse:collapse;border-color:#aaa;border-spacing:0;}
+.tg td{background-color:#fff;border-color:#aaa;border-style:solid;border-width:0px;color:#333;
+  font-family:Arial, sans-serif;font-size:10px;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{background-color:#fff;border-color:#aaa;border-style:solid;border-width:0px;color:#000;
+  font-family:Arial, sans-serif;font-size:10px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-baqh{text-align:center;vertical-align:top}
+.tg .tg-ao2g{border-color:#fff;text-align:center;vertical-align:top}
+.tg .tg-0pky{border-color:fff;text-align:center;vertical-align:top}
+.tg .tg-eqm3{border-color:fff;font-size:10px;text-align:left;vertical-align:top}
+</style>
+<font size="3">
+<table class="tg">
+ <caption>Posterior mean and root-mean-squared-error of the parameters for Model 2: $\Phi(\boldsymbol{a}(y)^T \boldsymbol{\gamma} + \bfs{x}^T \bfs{\beta} )$ using ILBCTM algorithm, considering 500 replicas, in the simulating study 1.</caption>
+<thead>
+  <tr>
+    <th class="tg-ao2g" rowspan="2">True Parameter ($\beta$)</th>
+    <th class="tg-baqh" colspan="2">n = 200</th>
+    <th class="tg-baqh" colspan="2">n = 500</th>
+    <th class="tg-baqh" colspan="2">n = 2000</th>
+  </tr>
+  <tr>
+    <th class="tg-0pky">Estimate</th>
+    <th class="tg-0pky">RMSE</th>
+    <th class="tg-0pky">Estimate</th>
+    <th class="tg-0pky">RMSE</th>
+    <th class="tg-0pky">Estimate</th>
+    <th class="tg-0pky">RMSE</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-0pky">-0.4792</td>
+    <td class="tg-0pky">-0.4827</td>
+    <td class="tg-0pky">0.0174</td>
+    <td class="tg-0pky">-0.4833</td>
+    <td class="tg-0pky">0.0177</td>
+    <td class="tg-0pky">-0.4840</td>
+    <td class="tg-0pky">0.0185</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4802</td>
+    <td class="tg-0pky">-0.4829</td>
+    <td class="tg-0pky">0.0162</td>
+    <td class="tg-0pky">-0.4836</td>
+    <td class="tg-0pky">0.0166</td>
+    <td class="tg-0pky">-0.4842</td>
+    <td class="tg-0pky">0.0175</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4756</td>
+    <td class="tg-0pky">-0.4833</td>
+    <td class="tg-0pky">0.0156</td>
+    <td class="tg-0pky">-0.4841</td>
+    <td class="tg-0pky">0.0164</td>
+    <td class="tg-0pky">-0.4845</td>
+    <td class="tg-0pky">0.0174</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4780</td>
+    <td class="tg-0pky">-0.4843</td>
+    <td class="tg-0pky">0.0143</td>
+    <td class="tg-0pky">-0.4849</td>
+    <td class="tg-0pky">0.0151</td>
+    <td class="tg-0pky">-0.4849</td>
+    <td class="tg-0pky">0.0155</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4767</td>
+    <td class="tg-0pky">-0.4851</td>
+    <td class="tg-0pky">0.0151</td>
+    <td class="tg-0pky">-0.4857</td>
+    <td class="tg-0pky">0.0157</td>
+    <td class="tg-0pky">-0.4855</td>
+    <td class="tg-0pky">0.0154</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4822</td>
+    <td class="tg-0pky">-0.4856</td>
+    <td class="tg-0pky">0.0144</td>
+    <td class="tg-0pky">-0.4864</td>
+    <td class="tg-0pky">0.0147</td>
+    <td class="tg-0pky">-0.4863</td>
+    <td class="tg-0pky">0.0141</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4866</td>
+    <td class="tg-0pky">-0.4860</td>
+    <td class="tg-0pky">0.0154</td>
+    <td class="tg-0pky">-0.4869</td>
+    <td class="tg-0pky">0.0154</td>
+    <td class="tg-0pky">-0.4866</td>
+    <td class="tg-0pky">0.0146</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4819</td>
+    <td class="tg-0pky">-0.4863</td>
+    <td class="tg-0pky">0.0177</td>
+    <td class="tg-0pky">-0.4869</td>
+    <td class="tg-0pky">0.0176</td>
+    <td class="tg-0pky">-0.4868</td>
+    <td class="tg-0pky">0.0164</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4834</td>
+    <td class="tg-0pky">-0.4863</td>
+    <td class="tg-0pky">0.0184</td>
+    <td class="tg-0pky">-0.4869</td>
+    <td class="tg-0pky">0.0183</td>
+    <td class="tg-0pky">-0.4868</td>
+    <td class="tg-0pky">0.0171</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.1500</td>
+    <td class="tg-0pky">-0.1540</td>
+    <td class="tg-0pky">0.0266</td>
+    <td class="tg-0pky">-0.1534</td>
+    <td class="tg-0pky">0.0263</td>
+    <td class="tg-0pky">-0.1516</td>
+    <td class="tg-0pky">0.0264</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-1.3000</td>
+    <td class="tg-0pky">-1.3183</td>
+    <td class="tg-0pky">0.0292</td>
+    <td class="tg-0pky">-1.3161</td>
+    <td class="tg-0pky">0.0285</td>
+    <td class="tg-0pky">-1.3167</td>
+    <td class="tg-0pky">0.0292</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">0.3000</td>
+    <td class="tg-0pky">0.3078</td>
+    <td class="tg-0pky">0.0374</td>
+    <td class="tg-0pky">0.3069</td>
+    <td class="tg-0pky">0.0362</td>
+    <td class="tg-0pky">0.3034</td>
+    <td class="tg-0pky">0.0367</td>
+  </tr>
+</tbody>
+</table>
+</font>
+
+
+
+---
+
+<style type="text/css">
+.tg  {border:none;border-collapse:collapse;border-color:#aaa;border-spacing:0;}
+.tg td{background-color:#fff;border-color:#aaa;border-style:solid;border-width:0px;color:#333;
+  font-family:Arial, sans-serif;font-size:10px;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{background-color:#fff;border-color:#aaa;border-style:solid;border-width:0px;color:#000;
+  font-family:Arial, sans-serif;font-size:10px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-baqh{text-align:center;vertical-align:top}
+.tg .tg-ao2g{border-color:#fff;text-align:center;vertical-align:top}
+.tg .tg-0pky{border-color:fff;text-align:center;vertical-align:top}
+.tg .tg-eqm3{border-color:fff;font-size:10px;text-align:left;vertical-align:top}
+</style>
+<font size="3">
+<table class="tg">
+ <caption>Posterior mean and root-mean-squared-error of the parameters for Model 2: $\Phi(\boldsymbol{a}(y)^T \boldsymbol{\gamma} + \bfs{x}^T \bfs{\beta} )$ using ILBCTM algorithm, considering 500 replicas, in the simulating study 1.</caption>
+<thead>
+  <tr>
+    <th class="tg-ao2g" rowspan="2">True Parameter ($\beta$)</th>
+    <th class="tg-baqh" colspan="2">n = 200</th>
+    <th class="tg-baqh" colspan="2">n = 500</th>
+    <th class="tg-baqh" colspan="2">n = 2000</th>
+  </tr>
+  <tr>
+    <th class="tg-0pky">Estimate</th>
+    <th class="tg-0pky">RMSE</th>
+    <th class="tg-0pky">Estimate</th>
+    <th class="tg-0pky">RMSE</th>
+    <th class="tg-0pky">Estimate</th>
+    <th class="tg-0pky">RMSE</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-0pky">-0.4792</td>
+    <td class="tg-0pky">-0.4827</td>
+    <td class="tg-0pky">0.0174</td>
+    <td class="tg-0pky">-0.4833</td>
+    <td class="tg-0pky">0.0177</td>
+    <td class="tg-0pky">-0.4840</td>
+    <td class="tg-0pky">0.0185</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4802</td>
+    <td class="tg-0pky">-0.4829</td>
+    <td class="tg-0pky">0.0162</td>
+    <td class="tg-0pky">-0.4836</td>
+    <td class="tg-0pky">0.0166</td>
+    <td class="tg-0pky">-0.4842</td>
+    <td class="tg-0pky">0.0175</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4756</td>
+    <td class="tg-0pky">-0.4833</td>
+    <td class="tg-0pky">0.0156</td>
+    <td class="tg-0pky">-0.4841</td>
+    <td class="tg-0pky">0.0164</td>
+    <td class="tg-0pky">-0.4845</td>
+    <td class="tg-0pky">0.0174</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4780</td>
+    <td class="tg-0pky">-0.4843</td>
+    <td class="tg-0pky">0.0143</td>
+    <td class="tg-0pky">-0.4849</td>
+    <td class="tg-0pky">0.0151</td>
+    <td class="tg-0pky">-0.4849</td>
+    <td class="tg-0pky">0.0155</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4767</td>
+    <td class="tg-0pky">-0.4851</td>
+    <td class="tg-0pky">0.0151</td>
+    <td class="tg-0pky">-0.4857</td>
+    <td class="tg-0pky">0.0157</td>
+    <td class="tg-0pky">-0.4855</td>
+    <td class="tg-0pky">0.0154</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4822</td>
+    <td class="tg-0pky">-0.4856</td>
+    <td class="tg-0pky">0.0144</td>
+    <td class="tg-0pky">-0.4864</td>
+    <td class="tg-0pky">0.0147</td>
+    <td class="tg-0pky">-0.4863</td>
+    <td class="tg-0pky">0.0141</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4866</td>
+    <td class="tg-0pky">-0.4860</td>
+    <td class="tg-0pky">0.0154</td>
+    <td class="tg-0pky">-0.4869</td>
+    <td class="tg-0pky">0.0154</td>
+    <td class="tg-0pky">-0.4866</td>
+    <td class="tg-0pky">0.0146</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4819</td>
+    <td class="tg-0pky">-0.4863</td>
+    <td class="tg-0pky">0.0177</td>
+    <td class="tg-0pky">-0.4869</td>
+    <td class="tg-0pky">0.0176</td>
+    <td class="tg-0pky">-0.4868</td>
+    <td class="tg-0pky">0.0164</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.4834</td>
+    <td class="tg-0pky">-0.4863</td>
+    <td class="tg-0pky">0.0184</td>
+    <td class="tg-0pky">-0.4869</td>
+    <td class="tg-0pky">0.0183</td>
+    <td class="tg-0pky">-0.4868</td>
+    <td class="tg-0pky">0.0171</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-0.1500</td>
+    <td class="tg-0pky">-0.1540</td>
+    <td class="tg-0pky">0.0266</td>
+    <td class="tg-0pky">-0.1534</td>
+    <td class="tg-0pky">0.0263</td>
+    <td class="tg-0pky">-0.1516</td>
+    <td class="tg-0pky">0.0264</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">-1.3000</td>
+    <td class="tg-0pky">-1.3183</td>
+    <td class="tg-0pky">0.0292</td>
+    <td class="tg-0pky">-1.3161</td>
+    <td class="tg-0pky">0.0285</td>
+    <td class="tg-0pky">-1.3167</td>
+    <td class="tg-0pky">0.0292</td>
+  </tr>
+  <tr>
+    <td class="tg-0pky">0.3000</td>
+    <td class="tg-0pky">0.3078</td>
+    <td class="tg-0pky">0.0374</td>
+    <td class="tg-0pky">0.3069</td>
+    <td class="tg-0pky">0.0362</td>
+    <td class="tg-0pky">0.3034</td>
+    <td class="tg-0pky">0.0367</td>
+  </tr>
+</tbody>
+</table>
+</font>
+
+
+---
+### Study 2: BCTM with Bernstein polynomials
+- The main interest is to estimate the conditional distributions.
+
+- We gonna present different scenarios which encompasses some relevant models in regression context.
+
+- In all these scenarios we are trying to recovery the conditional density of all individuals and compare them with the real ones.
+
+- To measure the discrepancy between the true and estimated distributions we adopt the Kullback-Leibler divergence (KLD). In all considered scenarios we use 100 repetions and compare the KLD computed from BCTM with the CTM (from the \texttt{mlt} R package), and with some well established R-packages for regression models (\texttt{gam} and \texttt{gamlss}).
+
+- For each individual \( i = 1, \dots, n, \) we calculate the KLD between the true conditional density estimated conditional densities from different approaches
+
+\begin{equation}
+    \text{KLD}_i = \int f_{i,\text{true}}(y) \log\left(\frac{f_{i,\text{true}}(y)}{f_{i,\text{est}}(y)}\right) \, dy,
+\end{equation}
+
+The calculated KLD is given by
+
+\begin{equation}\label{kld_approx}
+    \text{KLD}_i = \sum_{s = 1}^S f_{i,\text{true}}(y_s) \log\left(\frac{f_{i,\text{true}}(y_s)}{f_{i,\text{est}}(y_s)}\right) \, \Delta y_s,
+\end{equation}
+
+To summarize, we computed the mean KLD, defined as $\overline{KLD} = \sum_{i = 1}^n \frac{KLD_i}{n}$.
+
+
+Our study includes 48 scenarios, combining variations in parameters and sample sizes. For each scenario, we generated \( R = 100 \) replicates of samples of size $n$ from the model \ref{model_simu_original}. For each replicate $r =1, \hdots, 100$,  we computed $\overline{KLD}_t$
+
+---
+#### Regression models with fixed effects
+
+$$\begin{align}\label{model_simu_original}
+Y_{i}| \boldsymbol{x}_i &\sim SN(\mu_{i}, \sigma, \lambda) \\
+\mu_{i} &= \boldsymbol{x}_{i}^{\top}\boldsymbol{\beta}\nonumber
+\end{align}$$
+
+\begin{equation}
+    F_{Y_i|\bfs{X}_i = \bfs{x}_i}(Y_i \leq y_i | \bfs{X}_i = \bfs{x}_i) = \Phi(\boldsymbol{a}(y_i)^{\top}\boldsymbol{\gamma} + \boldsymbol{x}_i^{\top}\boldsymbol{\beta})
+\end{equation}
+
+
+for $i = 1, \hdots, n$, where $\boldsymbol{a}(y)^T\boldsymbol{\gamma}$ is the monotonic Bernstein construction from Section \ref{Bernstein_section} of degree $k$, and $\boldsymbol{\gamma} $ are the Bernstein coefficients.  The model can be summarized as 
+
+
+$$\begin{align}\label{model1_simu}
+    h(Y|\boldsymbol{x}, \boldsymbol{\beta}) & = \boldsymbol{a}(Y)^\top \boldsymbol{\gamma} + \boldsymbol{x}^\top \boldsymbol{\beta}, \nonumber \\
+    Z & \overset{d}{=} h(Y|\boldsymbol{x}, \boldsymbol{\beta}) \sim N(0,1), \nonumber \\
+    Y|\boldsymbol{x} & \overset{d}{=} h^{-1}(Z), \nonumber \\
+    \log(\boldsymbol{\gamma}) & \sim N\left(0, \frac{1}{\tau_1} \bfs{K_1}\right), \nonumber \\
+    \boldsymbol{\beta} & \sim N_4(0, 10^{-6} \times I_4), \nonumber \\
+    \tau_1 & =  \exp(\theta_1),\\
+     \exp(\theta_1) & \sim \text{Inv-Gamma}(1,0.001), \nonumber
+\end{align}$$
+
+- We benchmark the model in (\ref{model1_simu}) fitted by the algorithm proposed in Section \ref{VBC_BCTM}, against a CTM model fitted with the mltR package.
+- Additionally, our comparison include the orginal model from (\ref{model_simu_original}), fitted with the gamlss package. It serves as a gold standard because it aligns with the true model used to simulate the data.
+
 ---
 ### Applications
 ___
@@ -867,6 +1583,302 @@ ___
 
 
 ---
+
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse; font-size: 12px;">
+  <caption>Estimated average KLD for BCTM, CTM and Skew Normal models across different sample sizes, basis dimension and parameter settings from model with p = 4, considering 100 replicas in simulation study 2 for the fixed regression models</caption>
+  <thead>
+    <tr>
+      <th colspan="7" style="text-align:center;">&#963; = 1, &#955; = -2</th>
+    </tr>
+    <tr>
+      <th rowspan="3">Model</th>
+      <th colspan="3" style="text-align:center;">k = 10</th>
+      <th colspan="3" style="text-align:center;">k = 20</th>
+    </tr>
+    <tr>
+      <th colspan="3" style="text-align:center;">n</th>
+      <th colspan="3" style="text-align:center;">n</th>
+    </tr>
+    <tr>
+      <th>500</th>
+      <th>1000</th>
+      <th>2000</th>
+      <th>500</th>
+      <th>1000</th>
+      <th>2000</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>BCTM</td>
+      <td>0.00531</td>
+      <td>0.00297</td>
+      <td>0.00161</td>
+      <td>0.00517</td>
+      <td>0.00278</td>
+      <td>0.00149</td>
+    </tr>
+    <tr>
+      <td>CTM</td>
+      <td>0.00894</td>
+      <td>0.00492</td>
+      <td>0.00257</td>
+      <td>0.00954</td>
+      <td>0.00533</td>
+      <td>0.00283</td>
+    </tr>
+    <tr>
+      <td>Skew Normal</td>
+      <td>0.00510</td>
+      <td>0.00277</td>
+      <td>0.00148</td>
+      <td>0.00481</td>
+      <td>0.00256</td>
+      <td>0.00132</td>
+    </tr>
+    <tr>
+      <td colspan="7" style="text-align:center;">&#963; = 1, &#955; = 2</td>
+    </tr>
+    <tr>
+      <td>BCTM</td>
+      <td>0.00511</td>
+      <td>0.00287</td>
+      <td>0.00159</td>
+      <td>0.00485</td>
+      <td>0.00275</td>
+      <td>0.00148</td>
+    </tr>
+    <tr>
+      <td>CTM</td>
+      <td>0.00858</td>
+      <td>0.00491</td>
+      <td>0.00256</td>
+      <td>0.00901</td>
+      <td>0.00535</td>
+      <td>0.00282</td>
+    </tr>
+    <tr>
+      <td>Skew Normal</td>
+      <td>0.00479</td>
+      <td>0.00277</td>
+      <td>0.00148</td>
+      <td>0.00461</td>
+      <td>0.00255</td>
+      <td>0.00132</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+### Regression models with non-linear effects
+
+- Case (a): $\mu_{i} = \boldsymbol{x}_{i}^{\top}\boldsymbol{\beta} + f_1(z_{i1})$; 
+- Case (b): $\mu_{i} = \boldsymbol{x}_{i}^{\top}\boldsymbol{\beta} + f_1(z_{i1}) + f_2(z_{i2})$;
+- Case (c): $\mu_{i} = \boldsymbol{x}_{i}^{\top}\boldsymbol{\beta} + f(z_{i3},z_{i4})$.
+
+where  $f_1(z_1) = sin(5\pi z_1), f_2(z_2) = z_2 + z_2^2,$ and $f(z_3,z_4) = (z_3 + 2z_3^2)exp(z_4/2)$
+
+- Samples sizes $n = 500,1000,2000$; two distinct $\boldsymbol{\beta}$ vectors of length $p =2$ and 4, $\boldsymbol{\beta} = (\beta_0, \beta_1) = (0.5,2)$, $\boldsymbol{\beta} = (\beta_0, \beta_1, \beta_2,\beta_3, \beta_4) = (0.5,-1.5,-0.2,1)$. Moreover, $\sigma = 1$, $\lambda= -2$ and 2. 
+
+- For the case (c) we assumed the same scenarios, but only $p = 4$.
+
+- The covariates $x_{i1}$ and $x_{i3}$ are sampled from standard Normal distributions, and $x_{i2}$ from a binomial distributions with probabilities 0.3. 
+
+- The covariates $z_{i1}$ and $z_{i2}$ are sampled from an uniform distribution in (0,1), and $z_{i3}$, $z_{i4}$ are sampled from standard Normal distributions.
+---
+
+
+$$\begin{align}
+    h(Y|\boldsymbol{x}, z, \boldsymbol{\beta}) & = \boldsymbol{a}(Y)^\top \boldsymbol{\gamma} + \boldsymbol{b}(z)^{\top}\boldsymbol{\beta}_1 + \boldsymbol{x}^\top \boldsymbol{\beta}_2, \nonumber \\
+    Z & \overset{d}{=} h(Y|\boldsymbol{x}, \boldsymbol{\beta}) \sim N(0,1), \nonumber \\
+    Y|\boldsymbol{x} & \overset{d}{=} h^{-1}(Z), \nonumber \\
+    \log(\boldsymbol{\gamma}) & \sim N\left(0, \frac{1}{\tau_1} \bfs{K_1}\right), \nonumber \\
+    \boldsymbol{\beta}_1 & \sim N\left(0, \frac{1}{\tau_2} \bfs{K_2}\right), \nonumber\\
+    \boldsymbol{\beta}_2 & \sim N(0, 10^{-6} \times I_4), \nonumber \\
+    \tau_l & =  \exp(\theta_l), l = 1, 2, \nonumber\\
+     \exp(\theta_l) & \sim \text{Inv-Gamma}(1,0.001), l = 1, 2, \nonumber
+\end{align}$$
+
+- We benchmark this model against the one defined in \ref{model_simu_original}, with $\mu$ specified as in case (a),  fitted by the \texttt{gamlss} R package. 
+
+- The \texttt{gamlss} package enables the fitting of additive models that account for non-linear effects of explanatory variables through cubic splines, implemented with the \texttt{s()} function with $k$ knots. 
+
+- This model is not currently supported by the \texttt{mlt} package.
+
+---
+<html>
+<head>
+    <title>Estimated Average KLD Table</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.9em;
+        }
+        th, td {
+            border-top: 1px solid #000;
+            text-align: center;
+            padding: 8px;
+        }
+        th {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <h2>Estimated Average KLD Table</h2>
+    <p>Estimated average &macr;KLD for BCTM and Skew Normal models across different sample sizes, basis dimension, and parameter settings, case (a), with p = 4, considering 100 replicas in simulation study for the non-linear regression model.</p>
+
+    <table>
+        <tr>
+            <th></th>
+            <th colspan="6">σ = 1, λ = 2</th>
+        </tr>
+        <tr>
+            <th>Model</th>
+            <th colspan="3">k = 10</th>
+            <th colspan="3">k = 15</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>500</th><th>1000</th><th>2000</th>
+            <th>500</th><th>1000</th><th>2000</th>
+        </tr>
+        <tr>
+            <td>BCTM</td>
+            <td>0.03818</td><td>0.02705</td><td>0.02108</td>
+            <td>0.03984</td><td>0.02839</td><td>0.02245</td>
+        </tr>
+            <td>Skew Normal</td>
+            <td>0.03452</td><td>0.02665</td><td>0.02293</td>
+            <td>0.03919</td><td>0.02874</td><td>0.02382</td>
+        </tr>
+        <tr>
+            <th></th>
+            <th colspan="6">σ = 1, λ = -2</th>
+        </tr>
+        <tr>
+            <th>Model</th>
+            <th colspan="3">k = 10</th>
+            <th colspan="3">k = 15</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>500</th><th>1000</th><th>2000</th>
+            <th>500</th><th>1000</th><th>2000</th>
+        </tr>
+        <tr>
+            <td>BCTM</td>
+            <td>0.03781</td><td>0.02693</td><td>0.02145</td>
+            <td>0.04001</td><td>0.02882</td><td>0.02266</td>
+        </tr>
+            <td>Skew Normal</td>
+            <td>0.03459</td><td>0.02660</td><td>0.02292</td>
+            <td>0.03930</td><td>0.02867</td><td>0.02377</td>
+        </tr>
+        <tr>
+    </table>
+</body>
+</html>
+
+
+
+---
+
+$$\begin{align}
+    h(Y|\boldsymbol{x}, z, \boldsymbol{\beta}) & = \boldsymbol{a}(Y)^\top \boldsymbol{\gamma} + \boldsymbol{b}(z_1)^{\top}\boldsymbol{\beta}_1 + \boldsymbol{b}(z_2)^{\top}\boldsymbol{\beta}_2 + \boldsymbol{x}^\top \boldsymbol{\beta}_3, \nonumber \\
+    Z & \overset{d}{=} h(Y|\boldsymbol{x}, \boldsymbol{\beta}) \sim N(0,1), \nonumber \\
+    Y|\boldsymbol{x} & \overset{d}{=} h^{-1}(Z), \nonumber \\
+    \log(\boldsymbol{\gamma}) & \sim N\left(0, \frac{1}{\tau_1} K_1\right), \nonumber \\
+    \boldsymbol{\beta}_1 & \sim N\left(0, \frac{1}{\tau_2} K_2\right), \nonumber\\
+    \boldsymbol{\beta}_2 & \sim N\left(0, \frac{1}{\tau_3} K_2\right), \nonumber\\
+    \boldsymbol{\beta}_3 & \sim N(0, 10^{-6} \times I_4), \nonumber \\
+    \tau_l & =  \exp(\theta_l), l = 1, 2,3, \nonumber\\
+     \exp(\theta_l) & \sim \text{Inv-Gamma}(1,0.001), l = 1, 2,3. \nonumber
+\end{align}$$
+
+- We benchmark this model against the one defined in \ref{model_simu_original}, with $\mu$ specified as in case (b),  fitted by the \texttt{gamlss} R package. 
+
+- This model is not currently supported by the \texttt{mlt} package.
+
+---
+<html>
+<head>
+    <title>Estimated Average KLD Table</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.9em;
+        }
+        th, td {
+            border-top: 1px solid #000;
+            text-align: center;
+            padding: 8px;
+        }
+        th {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <h2>Estimated Average KLD Table</h2>
+    <p>Estimated average &macr;KLD for BCTM and Skew Normal models across different sample sizes, basis dimension, and parameter settings, case (b), with p = 2, considering 100 replicas in simulation study for the non-linear regression model.</p>
+
+    <table>
+        <tr>
+            <th></th>
+            <th colspan="6">σ = 1, λ = 2</th>
+        </tr>
+        <tr>
+            <th>Model</th>
+            <th colspan="3">k = 10</th>
+            <th colspan="3">k = 15</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>500</th><th>1000</th><th>2000</th>
+            <th>500</th><th>1000</th><th>2000</th>
+        </tr>
+        <tr>
+            <td>BCTM</td>
+            <td>0.05227</td><td>0.03102</td><td>0.02445</td>
+            <td>0.08246</td><td>0.03744</td><td>0.02869</td>
+        </tr>
+        <tr>
+            <td>Skew Normal</td>
+            <td>0.04298</td><td>0.03016</td><td>0.02507</td>
+            <td>0.05101</td><td>0.03408</td><td>0.02661</td>
+        </tr>
+        <tr>
+            <th></th>
+            <th colspan="6">σ = 1, λ = -2</th>
+        </tr>
+        <tr>
+            <th>Model</th>
+            <th colspan="3">k = 10</th>
+            <th colspan="3">k = 15</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>500</th><th>1000</th><th>2000</th>
+            <th>500</th><th>1000</th><th>2000</th>
+        </tr>
+        <tr>
+            <td>BCTM</td>
+            <td>0.05271</td><td>0.03103</td><td>0.02456</td>
+            <td>0.08593</td><td>0.03745</td><td>0.02898</td>
+        </tr>
+        <tr>
+            <td>Skew Normal</td>
+            <td>0.04316</td><td>0.02997</td><td>0.02501</td>
+            <td>0.05118</td><td>0.03393</td><td>0.02657</td>
+        </tr>
+    </table>
+</body>
+</html>
+---
+
 ### Application 1 
 ___
 
