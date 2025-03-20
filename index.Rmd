@@ -149,9 +149,9 @@ ___
 
 - The Box-Cox transformation is a classic example, where a parameter $\lambda$ is used to adjust the variable in such a way that the variance is stabilized and the distribution becomes closer to normal.
 
-- The CTM extend the transformation models class by allowing the transformation functions depending on a set of M explanatory variables $\bfs{X} \in \mathbb{R}^{M}$.
+- The CTM extend the transformation models class by allowing the transformation functions depending on a set of M explanatory variables $\boldsymbol{X} \in \mathbb{R}^{M}$.
 
-- These new transformation functions from CTM are univariate functions of the response variable, conditional on fixed values of explanatory variables $\bfs{X} = \boldsymbol{x}$:
+- These new transformation functions from CTM are univariate functions of the response variable, conditional on fixed values of explanatory variables $\boldsymbol{X} = \boldsymbol{x}$:
 
 $$h(Y|\boldsymbol{x}): \mathbb{R} \rightarrow \mathbb{R}$$
 
@@ -168,7 +168,7 @@ $$
 Thus,
 
 \begin{equation}\label{ctm}
-    F_{Y|\bfs{X} = \bfs{x}}(y) = P(Y \leq y|\boldsymbol{X} = \boldsymbol{x})= P(Y \leq y|\boldsymbol{X} = \boldsymbol{x}) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
+    F_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = P(Y \leq y|\boldsymbol{X} = \boldsymbol{x})= P(Y \leq y|\boldsymbol{X} = \boldsymbol{x}) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
 \end{equation}
 
 \noindent where $F_Z(\cdot)$ is a continuous baseline cumulative distribution function (cdf) of the Gaussian distribution.
@@ -177,22 +177,22 @@ Thus,
 
 - Besides that, right continuous and differentiable (Third assumption).
 
-- At the end of the day, The task of obtaining $F_{Y|\bfs{X} = \bfs{x}}$ reduces to estimating the transformation function $h$.
+- At the end of the day, The task of obtaining $F_{Y|\boldsymbol{X} = \boldsymbol{x}}$ reduces to estimating the transformation function $h$.
 
 ---
 #### More about $h(Y \mid \boldsymbol{x})$
 
-- We have assumed that the transformation function $h(y \mid \bfs{x})$ is strictly monotonic, right-continuous, and differentiable.
+- We have assumed that the transformation function $h(y \mid \boldsymbol{x})$ is strictly monotonic, right-continuous, and differentiable.
 
-- The construction of $h(y|\bfs{x})$ must account for all the characteristics and objectives of the proposed model (Monotonic on $y$).
+- The construction of $h(y|\boldsymbol{x})$ must account for all the characteristics and objectives of the proposed model (Monotonic on $y$).
 
-- It is convenient to decompose the transformation function $h$ additively into $J$ partial transformation functions, defined for all $\bfs{x} \in \mathbb{R}^M $.
+- It is convenient to decompose the transformation function $h$ additively into $J$ partial transformation functions, defined for all $\boldsymbol{x} \in \mathbb{R}^M $.
 
 \begin{equation}\label{decomp_h}
     h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x}).
 \end{equation}
 
-- The transformation functions $h_j(y|\bfs{x})$ from (\ref{decomp_h}) can range from low-parameterized forms to complex structures with many parameters.
+- The transformation functions $h_j(y|\boldsymbol{x})$ from (\ref{decomp_h}) can range from low-parameterized forms to complex structures with many parameters.
 
 
 ---
@@ -218,10 +218,10 @@ $$\begin{aligned}
 
 ---
 
-- See that in the example we have a linear combination of function where $\bfs{c}(y|\bfs{x})^{\top} = (1,y, y \cdot x,x)$, with $\bfs{\gamma} = (\gamma_0, \gamma_1, \gamma_2, \gamma_3)$
+- See that in the example we have a linear combination of function where $\boldsymbol{c}(y|\boldsymbol{x})^{\top} = (1,y, y \cdot x,x)$, with $\boldsymbol{\gamma} = (\gamma_0, \gamma_1, \gamma_2, \gamma_3)$
 
 $$
-h(y|\boldsymbol{x}) = \bfs{c}(y|\bfs{x})^{\top} \boldsymbol{\gamma}
+h(y|\boldsymbol{x}) = \boldsymbol{c}(y|\boldsymbol{x})^{\top} \boldsymbol{\gamma}
 $$
 
 - Essa parametrizacao como uma combinacao linear de funcoes proposta por () facilita uma definicao mais 
@@ -229,13 +229,13 @@ $$
 - Abre caminho para utilizarmos basis functions
 
 $$
-\bfs{a}: \mathbb{R} \rightarrow \mathbb{R}^v,
+\boldsymbol{a}: \mathbb{R} \rightarrow \mathbb{R}^v,
 $$
 
 such that
 
 $$
-h(y) = \bfs{a(y)}^T \gamma$, $\gamma \in \mathbb{R}^v
+h(y) = \boldsymbol{a(y)}^T \gamma$, $\gamma \in \mathbb{R}^v
 $$
 
 ---
@@ -245,22 +245,22 @@ $$
 - First, let us parameterize the transformation function as a linear function of evaluated basis of $y$,
 
 $$
-\bfs{a}: \mathbb{R} \rightarrow \mathbb{R}^v,
+\boldsymbol{a}: \mathbb{R} \rightarrow \mathbb{R}^v,
 $$
 - The choice of the basis has to attend to the monotonically increasing restriction, and the first derivative $a(y)'$ must be available. 
-- Let $\bfs{b}: \mathbb{R} \rightarrow \mathbb{R}^m$ denote a basis for explanatory variables.
+- Let $\boldsymbol{b}: \mathbb{R} \rightarrow \mathbb{R}^m$ denote a basis for explanatory variables.
 
-- The joint basis is $\bfs{c}: \mathbb{R}^v \times \mathbb{R}^m  \rightarrow \mathbb{R}^{d(v, m)}$, such that $h(y|\bfs{x}) = c(y, \bfs{x})^T\bfs{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^{d(v,m)}$, and its dimension $d(v, m)$ depends on the combination of the $\bfs{b}$ and $\bfs{a}$ basis functions.
+- The joint basis is $\boldsymbol{c}: \mathbb{R}^v \times \mathbb{R}^m  \rightarrow \mathbb{R}^{d(v, m)}$, such that $h(y|\boldsymbol{x}) = c(y, \boldsymbol{x})^T\boldsymbol{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^{d(v,m)}$, and its dimension $d(v, m)$ depends on the combination of the $\boldsymbol{b}$ and $\boldsymbol{a}$ basis functions.
 such that
 
--  The conditional transformation function $h(Y|\bfs{x})$ is parameterized as  a linear function of joint evaluate basis of $Y$ and $\bfs{x}$.
+-  The conditional transformation function $h(Y|\boldsymbol{x})$ is parameterized as  a linear function of joint evaluate basis of $Y$ and $\boldsymbol{x}$.
 
- $$\bfs{c}: \mathbb{R}^v \times \mathbb{R}^m  \rightarrow \mathbb{R}^{d(v, m)}$$
+ $$\boldsymbol{c}: \mathbb{R}^v \times \mathbb{R}^m  \rightarrow \mathbb{R}^{d(v, m)}$$
 is parameterized as a linear function of joint evaluate basis of $Y$ and $\boldsymbol{x}$ denoted as $\boldsymbol{c}(y,\boldsymbol{x}): \Xi \times \mathcal{X}  \rightarrow \mathbb{R}^{d(P, Q)}$.
 
-such that $h(y|\bfs{x}) = c(y, \bfs{x})^T\bfs{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^{d(v,m)}$
+such that $h(y|\boldsymbol{x}) = c(y, \boldsymbol{x})^T\boldsymbol{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^{d(v,m)}$
 
-- For an evaluated basis and a vector of coefficients, we estimate the $F_{Y|\bfs{X} = \bfs{x}}$ distribution through the decomposition $F_Z \circ \bfs{c(y,\bfs{x})}^T \bfs{\gamma}$.
+- For an evaluated basis and a vector of coefficients, we estimate the $F_{Y|\boldsymbol{X} = \boldsymbol{x}}$ distribution through the decomposition $F_Z \circ \boldsymbol{c(y,\boldsymbol{x})}^T \boldsymbol{\gamma}$.
 ---
 
 - Assuming linear transformation of the response variable, like $h(y) = y \cdot \gamma$ or even $h(y|x) = y \cdot x \cdot \gamma$, will only give us Gaussian models. 
@@ -395,12 +395,12 @@ bscols(
 - So, with a B-spline basis of degree $k = 3$ we can represent a particular $h_j$ as
 
 $$h_j(y) = \sum_{i = 1}^q B_{i,3,\boldsymbol{t}}(y) \gamma_{j,i} =  \boldsymbol{a}(y)^{\top} \boldsymbol{\gamma}_j,$$
-with $\bfs{a}(y) = (B_{1,3,\bfs{t}}(y), B_{2,3,\bfs{t}}(y) \hdots, B_{q,3,\bfs{t}}(y))^{\top}$, and $\bfs{\gamma}_j = (\gamma_{j,1},\gamma_{j,2}, \hdots, \gamma_{j,q})^{\top}$.
+with $\boldsymbol{a}(y) = (B_{1,3,\boldsymbol{t}}(y), B_{2,3,\boldsymbol{t}}(y) \hdots, B_{q,3,\boldsymbol{t}}(y))^{\top}$, and $\boldsymbol{\gamma}_j = (\gamma_{j,1},\gamma_{j,2}, \hdots, \gamma_{j,q})^{\top}$.
 
 - But this construction does not cover only monotonic functions. 
 - A positive and increasing sequence of all parameters $\gamma_i$ produces a monotonically increasing spline function. 
 - We consider an alternative parameterization of the spline parameters to produce monotonically increasing spline function `r Citep(myBib,"pya2015shape")`. 
--  The vector $\bfs{\gamma}_j = (\gamma_{j,1}, \hdots, \gamma_{j,q})^{\top}$ is defined in terms of unconstrained parameters $\bfs{\beta}_j$ as
+-  The vector $\boldsymbol{\gamma}_j = (\gamma_{j,1}, \hdots, \gamma_{j,q})^{\top}$ is defined in terms of unconstrained parameters $\boldsymbol{\beta}_j$ as
 
 $$\begin{equation}\label{beta_mono}
   \gamma_{j,1} = \beta_{j,1}, \hspace{0.1cm} \text{and} \hspace{0.1cm} \gamma_{j,l} = \beta_{j,1} + \sum_{i = 2}^l \exp(\beta_{j,i}), \hspace{0.1cm} \text{for} \hspace{0.1cm} l = 2, \hdots, q, 
@@ -441,7 +441,7 @@ $$\begin{align}\label{bctm_model}
 - Now, the restriction of monotonicity is necessary only in the $y$ direction. In the matrix notation $\boldsymbol{\gamma}_j = \Sigma \boldsymbol{\tilde{\beta}}_j$ with $\Sigma = \Sigma_1 \otimes I_2$ and
 
 $$\begin{equation}\label{betatilde}
-    \bfs{\tilde{\beta}}_j = (\beta_{j,1,1}, \beta_{j,1,2}, \hdots, \beta_{j,1,L_2}, \exp(\beta_{j,2,1}), \exp(\beta_{j,2,2}), \hdots, \exp{(\beta_{j,2,L_2})}, \hdots, \exp(\beta_{j,L_1,L_2}))^{\top} 
+    \boldsymbol{\tilde{\beta}}_j = (\beta_{j,1,1}, \beta_{j,1,2}, \hdots, \beta_{j,1,L_2}, \exp(\beta_{j,2,1}), \exp(\beta_{j,2,2}), \hdots, \exp{(\beta_{j,2,L_2})}, \hdots, \exp(\beta_{j,L_1,L_2}))^{\top} 
 \end{equation}$$
 
 ---
@@ -452,7 +452,7 @@ ___
 - `r Citep(myBib,"eilers1996flexible")` proposes an appealing penalty based on the finite difference of adjacent basis coefficients, called P-splines to addresses the overfitting problem of unregularized splines.
 - In the Bayesian context, smoothness and regularization are achieved through shrinkage priors distributions.
 - In the Bayesian P-Splines approach `r Citep(myBib,"lang2004bayesian")`, we assign multivariate normal distributions with a zero vector mean and a precision matrix $\boldsymbol{Q}$ to the parameter models
-- For the case $h_j(y) = \sum_{i = 1}^q B_{i,3,\bfs{t}}(y) \gamma_{j, i} =  \boldsymbol{a}(y)^T \bfs{\gamma}_j$, see (\ref{spline}),  we set $\bfs{\beta}_j \sim N_q(0, \bfs{Q}_j(\tau_j))$, which $\bfs{Q}_j(\tau_j) = \frac{1}{\tau_j}\bfs{K}_1$.
+- For the case $h_j(y) = \sum_{i = 1}^q B_{i,3,\boldsymbol{t}}(y) \gamma_{j, i} =  \boldsymbol{a}(y)^T \boldsymbol{\gamma}_j$, see (\ref{spline}),  we set $\boldsymbol{\beta}_j \sim N_q(0, \boldsymbol{Q}_j(\tau_j))$, which $\boldsymbol{Q}_j(\tau_j) = \frac{1}{\tau_j}\boldsymbol{K}_1$.
 ---
 
 
@@ -475,8 +475,8 @@ $$\begin{equation}\label{ordem1}
 - In the tensor product model for $h_j(y|\boldsymbol{x})$, we maintain a Gaussian prior distribution for $\boldsymbol{\beta}_j$ parameters. Although the precision matrix controls the smoothness in two directions
 
 $$\begin{equation}\label{priori_K_2}
-    Q_j(\bfs{\tau}_j) = \frac{1}{\tau_{j1}} \left(\bfs{K_1} \otimes I_{L_2}\right) +
-    \frac{1}{\tau_{j2}}\left(I_{L_1} \otimes \bfs{K_2}\right),
+    Q_j(\boldsymbol{\tau}_j) = \frac{1}{\tau_{j1}} \left(\boldsymbol{K_1} \otimes I_{L_2}\right) +
+    \frac{1}{\tau_{j2}}\left(I_{L_1} \otimes \boldsymbol{K_2}\right),
 \end{equation}$$
 
 - The hyperparameter $\tau_j$ is represented internally on the log scale, that is, $\theta_j = \log(\tau_j)$.
@@ -522,36 +522,47 @@ $$\begin{equation}\label{bern_transf}
 - But how to construct monotonic Bernstein?
 ---
 
-** Proposition ** Let $h_j(y)$ be the transformation function defined in (\ref{bern_transf}) with Bernstein basis representation. Let $\boldsymbol{\gamma}_j = \boldsymbol{\Sigma}_j \boldsymbol{\Tilde{\beta}}_j$ with $\boldsymbol{\Tilde{\beta}}_j$ as in (\ref{beta_tilde}) and $\Sigma$ defined in (\ref{Sigma_mono}). Then, $h_j(y)$ is monotonically increasing, that is for all $y_1, y_2 \in \mathbb{R}$ with $y_1 < y_2$ we have $h(y_1) \leq h(y_2)$.
+** Proposition ** Let $h_j(y)$ be the transformation function defined in (\ref{bern_transf}) with Bernstein basis representation. Let $\boldsymbol{\gamma}_j = \boldsymbol{\Sigma}_j \boldsymbol{\tilde{\beta}}_j$ with $\boldsymbol{\tilde{\beta}}_j$ as in (\ref{beta_tilde}) and $\Sigma$ defined in (\ref{Sigma_mono}). Then, $h_j(y)$ is monotonically increasing, that is for all $y_1, y_2 \in \mathbb{R}$ with $y_1 < y_2$ we have $h(y_1) \leq h(y_2)$.
 
 colocar a matri Sigma aqui
 ---
 ### Properties of the BCTM
 
-- Let us assume the transformation function $h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x})$, and a set of explanatory variables represented by $\boldsymbol{x} = (x_1, x_2, \hdots, x_m)$. The marginal impact of a particular covariate $x_l \in \bfs{x}, l =1, \hdots, m$ is the expected rate of change on the expected value of $Y$ for a one-unit variation in the covariate $x_l$, keeping all other variables constant is defined by
+- Quando começamos a tratar de trransformacoes mais complexas, como o uso bases B-splines ou Bernstein, o avaliar a relacao entre x e y? Isto é, como x impacta o valr eperao
+
+- Isso não é um problema exclusivo dos BCTM. Muitod modelos ue enolvem relações não lineares entre variaveis explicativas e a variavel resposta tambem enfrentam esse desafio. 
+
+- Aqui a relacao é um pouco diferente, porque a relacao de x com y nao é nada direta.
+
+- Baseado na ideia de Marginal effect (GLM) vamos propor algo similar aqui. 
+
+- O marginal effect refere-se à taxa de variação esperada na resposta (variável dependente) associada a uma mudança unitária em uma variável explicativa, mantendo todas as outras variáveis constantes
+
+---
+
+- Let us assume the transformation function $h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x})$, and a set of explanatory variables represented by $\boldsymbol{x} = (x_1, x_2, \hdots, x_m)$. The marginal impact of a particular covariate $x_l \in \boldsymbol{x}, l =1, \hdots, m$ is is defined by
 
 
 $$\begin{align}\label{rate_of_chane_ey}
-    \frac{\mathbb{E}(Y|\bfs{X} = \bfs{x})}{\partial x_l}  = &\int_{\mathbb{R}} y \frac{\partial }{\partial x_l} f_Z(h(y|\boldsymbol{x}))h'(y|\boldsymbol{x}) dy  \nonumber \\
-     = & \int_{\mathbb{R}} y \left[ f_Z(h(y|\boldsymbol{x}))\left( 2 h(y|\boldsymbol{x}) \frac{\partial h(y|\boldsymbol{x})}{\partial x_l}h'(y|\boldsymbol{x}) + \frac{\partial h'(y|\boldsymbol{x})}{\partial x_l} \right)\right] dy
+    \frac{\mathbb{E}(Y|\boldsymbol{X} = \boldsymbol{x})}{\partial x_l}  = &\int_{\mathbb{R}} y \frac{\partial }{\partial x_l} f_Z(h(y|\boldsymbol{x}))h'(y|\boldsymbol{x}) dy  \nonumber \\
+     = & \int_{\mathbb{R}} y \left[ f_Z(h(y|\boldsymbol{x}))\left( 2 h(y|\boldsymbol{x}) \frac{\partial h(y|\boldsymbol{x})}{\partial x_l}h'(y|\boldsymbol{x}) + \frac{\partial h'(y|\boldsymbol{x})}{\partial x_l} \right)\right] dy  \nonumber 
 \end{align}$$
 
 - If there is no interaction between $y$ and $x_l$ in the terms of $h(y|\boldsymbol{x})$ the expression in (\ref{rate_of_chane_ey}) simplifies to
 
 $$\begin{align}\label{impact_EY_nointeraction}
-    & = \int_{\mathbb{R}} y \left[ f_Z(h(y|\boldsymbol{x}))\left( 2 h(y|\boldsymbol{x}) \frac{\partial h(y|\boldsymbol{x})}{\partial x_1}h'(y|\boldsymbol{x}) \right)\right] dy \nonumber \\
-    & =  2 \frac{\partial h(y|\boldsymbol{x})}{\partial x_1} \mathbb{E}(Yh(Y|\boldsymbol{x})).
+     \frac{\mathbb{E}(Y|\boldsymbol{X} = \boldsymbol{x})}{\partial x_l} = \int_{\mathbb{R}} y \left[ f_Z(h(y|\boldsymbol{x}))\left( 2 h(y|\boldsymbol{x}) \frac{\partial h(y|\boldsymbol{x})}{\partial x_1}h'(y|\boldsymbol{x}) \right)\right] dy =  2 \frac{\partial h(y|\boldsymbol{x})}{\partial x_1} \mathbb{E}(Yh(Y|\boldsymbol{x})). \nonumber
 \end{align}$$
 
----
-- If even the term of $x_l$ in the transformation function $h(y|\boldsymbol{x})$ is linear, that is, $h_j(x_l) = x_l\beta_j$ for some $j$ from 1 to $J$, and the coefficient $\beta_j \in \mathbb{R}$ the effect of $x_l$ is not linear on the expected value of $Y$
+- If $h_j(x_l) = x_l\beta_j$ for some $j$ from 1 to $J$, and the coefficient $\beta_j \in \mathbb{R}$ the effect of $x_l$ is not linear on the expected value of $Y$
 
 
 
 $$\begin{align}
-    \frac{E(Y|\bfs{X} = \bfs{x})}{\partial x_l} = &  2\beta_j \int y h(y|\boldsymbol{x}) \left[ f_{Y|\boldsymbol{x}}(y) \right] dy \nonumber \\
-    & =  2\beta_j \mathbb{E}(Yh(Y|\boldsymbol{x})). \nonumber   
+    \frac{E(Y|\boldsymbol{X} = \boldsymbol{x})}{\partial x_l} = &  2\beta_j \int y h(y|\boldsymbol{x}) \left[ f_{Y|\boldsymbol{x}}(y) \right] dy =  2\beta_j \mathbb{E}(Yh(Y|\boldsymbol{x})). \nonumber   
 \end{align}$$
+
+---
 
 **Property** Let $Q_p$ be the p-quantile of the random variable $Y|\boldsymbol{X} = \boldsymbol{x}$. Then,
 
@@ -559,7 +570,7 @@ $$\begin{equation}
     Q_p = h^{-1}(\Phi^{-1}(p)|\boldsymbol{x})
 \end{equation}$$
 
-- Let us assume the transformation function $h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x})$, and a set of explanatory variables represented by $\boldsymbol{x} = (x_1, x_2, \hdots, x_p)$. The marginal impact of a particular covariate $x_l \in \bfs{x}, l =1, \hdots, m$ is the expected rate of change on the quantile $Q_p$ of $Y|\bfs{X} = \bfs{x}$ for a one-unit variation in the covariate $x_l$, keeping all other variables constant
+- Let us assume the transformation function $h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x})$, and a set of explanatory variables represented by $\boldsymbol{x} = (x_1, x_2, \hdots, x_p)$. The marginal impact of a particular covariate $x_l \in \boldsymbol{x}, l =1, \hdots, m$ is the expected rate of change on the quantile $Q_p$ of $Y|\boldsymbol{X} = \boldsymbol{x}$ for a one-unit variation in the covariate $x_l$, keeping all other variables constant
 
 
 $$\begin{align}\label{rate_of_chane_qp}
@@ -567,7 +578,6 @@ $$\begin{align}\label{rate_of_chane_qp}
     = & \left[ \sum_{j = 1}^J \frac{\partial h_j(y \mid \boldsymbol{x})}{\partial x_l} \right] \left[ \frac{\partial h(q_p \mid \boldsymbol{x})}{\partial q_p} \right]^{-1}.
 \end{align}$$
 
----
 If even the term of $x_l$ in the transformation function $h(y|\boldsymbol{x})$ is linear, that is, $h_j(x_l) = x_l\beta_j$ for some $j$ from 1 to $J$, and the coefficient $\beta_j \in \mathbb{R}$ the effect of $x_l$ is not linear on the quantile $p$ of $Y$
 
 $$\begin{equation}
@@ -578,88 +588,60 @@ $$\begin{equation}
 ---
 ### Bayesian Count CTM
 
-- The primary goal of the proposed model is to directly estimate the discrete conditional probability distribution $F_{Y \mid \bfs{X} = \bfs{x}}$, where now $Y \in \{ 0, 1, 2, \dots \}$
+- The primary goal of the proposed model is to directly estimate the discrete conditional probability distribution $F_{Y \mid \boldsymbol{X} = \boldsymbol{x}}$, where now $Y \in \{ 0, 1, 2, \dots \}$
 
-- The Bayesian count transformation model specifies the conditional distribution function $F_{Y|\bfs{X} = \bfs{x}}$ of a count response $Y$ given $x$ as follows:  
+- The Bayesian count CTM specifies the conditional distribution function $F_{Y|\boldsymbol{X} = \boldsymbol{x}}$ of a count response $Y$ given $x$ as follows:  
 
 $$\begin{equation}\label{count_BCTM}
-F_{Y|X = x}(y) = P(Y \leq y \mid x) = F_Z(h(y|\boldsymbol{x}) = F_Z(\alpha( \lfloor y \rfloor) + h(\bfs{x})), \quad y \in \mathbb{R}^+,
+F_{Y|X = x}(y) = P(Y \leq y \mid x) = F_Z(h(y|\boldsymbol{x}) = F_Z(\alpha( \lfloor y \rfloor) + h(\boldsymbol{x})), \quad y \in \mathbb{R}^+,
 \end{equation}$$
 
-- where $\alpha$ is a smooth, continuous, and monotonically increasing function applied to the greatest integer $\lfloor y \rfloor$ less than or equal to $y$. The function $\alpha$ can be written in terms of basis functions $\bfs{a}: \mathbb{R} \rightarrow \mathbb{R}^q $, such that
+- where $\alpha$ is a smooth, continuous, and monotonically increasing function applied to the greatest integer $\lfloor y \rfloor$ less than or equal to $y$. The function $\alpha$ can be written in terms of basis functions $\boldsymbol{a}: \mathbb{R} \rightarrow \mathbb{R}^q$, such that
 
 
 \begin{equation}
-    \alpha(y) = \bfs{a}(y)^{\top} \boldsymbol{\gamma}, \bfs{\gamma} \in \mathbb{R}^q,
+    \alpha(y) = \boldsymbol{a}(y)^{\top} \boldsymbol{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^q,
 \end{equation}
  
-\noindent where $\bfs{a}(y)$ is a vector of evaluated Bernstein or B-spline basis functions. The restrictions on $\bfs{\gamma}$ are those already presented. As a consequence, the function $\alpha(y)$ is monotonically increasing in $y$.
+\noindent where $\boldsymbol{a}(y)$ is a vector of evaluated Bernstein or B-spline basis functions. The restrictions on $\boldsymbol{\gamma}$ are those already presented. As a consequence, the function $\alpha(y)$ is monotonically increasing in $y$.
 
 ---
-- For this count model, we restrict the transformation function to $h(y \mid \bfs{x}) = \alpha(y) + h(\bfs{x})$, where $h(\boldsymbol{x})$ can be decomposed as
-- The functions in (\ref{hx}) could include linear fixed effects, $h_j(x_i) = x_i\beta_j$, for some $i = 1,\hdots, p$, and $j = 1, \hdots, J$, or $h_j(x_i) = \sum \boldsymbol{b}(x_i)\bfs{\beta}_j$ for some evaluated basis (B-spline or Bernstein) of $x_i$. 
-
-$$\begin{equation}\label{hx}
-  h(\bfs{x}) = \sum_{j = 1}^J h_j(\boldsymbol{x}). 
-\end{equation}$$
 
 - The construction in (\ref{count_BCTM}) is identical to the continuous BCTM; however, the floor function applied to \( y \) makes the transformation function stepwise, with jumps at the integers \( 0, 1, 2, \dots \).
 
-$$\begin{equation}\label{count_BCTM}
-F_{Y \mid \bfs{X} = \bfs{x}}(y) = F(\alpha(\lfloor y \rfloor) + \bfs{x}^\top \bfs{\beta})
-\end{equation}$$
-
----
-
+$$
+F_{Y \mid \boldsymbol{X} = \boldsymbol{x}}(y) = F(\alpha(\lfloor y \rfloor) + \boldsymbol{x}^\top \boldsymbol{\beta})
+$$
 ```{r, echo=FALSE,  out.width = "75%", dpi = 300 , fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/count_model.png")
 ```
 
-Count transformation model. Illustration of a cumulative distribution function (F, left panel) and of a
-transformation function ($h(y|\bfs{x})$, right panel) of a count response ($\lfloor y \rfloor$, red) and a corresponding continuous variable ($y$, blue) both functions coinciding for counts $0,1,2,\hdots$. 
-
-- An important technical detail is that the function $\alpha$ is specified in terms of basis functions of $a(y)$, $a(y+1)$, or even on the log-scale: $a(\log(y))$ or $a(\log(y + 1))$. 
-
 ---
 ### Posterior Inference
 ___
-- From the transformation functions defined so far, we have the parameter models, $\boldsymbol{\gamma}$, both for linear and B-spline transformation functions, and the hyperparameters $\boldsymbol{\tau}$, for B-spline transformation.
+- From the transformation functions defined so far, we have the parameter models, $\boldsymbol{\gamma}$, and the hyperparameters $\boldsymbol{\tau}$, for B-spline transformation.
 - To obtain posterior estimates of the BCTM, `r Citet(myBib,"carlan2023bayesian")` proposed an MCMC method based on No-U-Turn-Sample and Gibbs sampling to sample values from the posterior distribution of model parameters.
-- We present an alternative estimation method based on the Integrated Nested Laplace Approximation (INLA) given by `r Citet(myBib,"rue2009approximate")`.
-- The contribution is to provide an alternative way to the MCMC methods to implement Bayesian inference on these models.
 
-- In this context, we aim to contribute to the BCTM class by proposing an algorithm that is more computationally efficient than traditional MCMC approaches. This chapter introduces two alternative estimation methods for this class of models, both based on approximation techniques, including Laplace approximation and variational inference.
+- We aim to contribute to the BCTM class by proposing an algorithm that is more computationally efficient than traditional MCMC approaches. This chapter introduces two alternative estimation methods for this class of models, both based on approximation techniques, including Laplace approximation and variational Bayes
 
 ---
 
 ### Integrated Laplace with Bayesian Conditional Transformation Models
 ___
 
-- In the BCTM, we have the vector of constrained parameters $\bfs{\gamma}$, which are functions the unconstrained vector of parameters $\bfs{\beta}$. 
--  Additionally, we have the vector of hyperparameters $\boldsymbol{\tau} = (\bfs{\tau}_1, \dots, \bfs{\tau}_J)^{\top}$.
-- Ultimately, we have the following quantities to estimate: $\bfs{\beta} = (\bfs{\beta}_1, \dots, \bfs{\beta}_J)^{\top}$, and $\boldsymbol{\tau} = (\bfs{\tau}_1, \dots, \bfs{\tau}_J)^{\top}$.
-- To obtain posterior estimates of the BCTM, we propose an estimation method based on the Integrated Nested Laplace Approximation (INLA) presented by \citet{rue2009approximate}.
-Let $\bfs{y} = (y_1, \ldots, y_n)^{\top}$ be a random sample of the random variable $Y$, which is independently distributed given $\bfs{x}$ with distribution $F_{Y|\bfs{X} = \bfs{x}}$. Then, the joint posterior distribution of the parameters $\boldsymbol{\beta}$ and $\bfs{\tau}$ is
+- In the BCTM, we have the vector of some constrained parameters $\boldsymbol{\gamma}$, which are functions the unconstrained vector of parameters $\boldsymbol{\beta}$. 
+- Ultimately, we have the following quantities to estimate: $\boldsymbol{\beta} = (\boldsymbol{\beta}_1, \dots, \boldsymbol{\beta}_J)^{\top}$, and $\boldsymbol{\tau} = (\boldsymbol{\tau}_1, \dots, \boldsymbol{\tau}_J)^{\top}$.
+- Let $\boldsymbol{y} = (y_1, \ldots, y_n)^{\top}$ be a random sample of the random variable $Y$, which is independently distributed given $\boldsymbol{x}$ with distribution $F_{Y|\boldsymbol{X} = \boldsymbol{x}}$. Then, the joint posterior distribution of the parameters $\boldsymbol{\beta}$ and $\boldsymbol{\tau}$ is
 
 $$\begin{equation}\label{joint_prior}
-\pi(\bfs{\beta}, \bfs{\tau}|\bfs{y}) \propto \left[ f_{\bfs{Y}|\bfs{X} = \bfs{x}}(\bfs{y}|\bfs{x}, \bfs{\beta})\right] 
-    \phi(\bfs{\beta}|\bfs{\mu}, \bfs{Q}(\bfs{\tau})) \pi(\bfs{\tau}), 
+\pi(\boldsymbol{\beta}, \boldsymbol{\tau}|\boldsymbol{y}) \propto \left[ f_{\boldsymbol{Y}|\boldsymbol{X} = \boldsymbol{x}}(\boldsymbol{y}|\boldsymbol{x}, \boldsymbol{\beta})\right] 
+    \phi(\boldsymbol{\beta}|\boldsymbol{\mu}, \boldsymbol{Q}(\boldsymbol{\tau})) \pi(\boldsymbol{\tau}), 
 \end{equation}$$
-
-
-
----
-
-- We are interested in the marginal distribution of the unconstrained parameters $\beta_r$, which are components of vector $\bfs{\beta}_j = (\beta_1, \hdots, \beta_{I_j})^{\top}$ from the vector $\boldsymbol{\beta} = (\bfs{\beta}_1, \hdots, \bfs{\beta}_J)^{\top}$, where $j \in \lbrace 1, \dots, J\rbrace$,
+- We are interested in the marginal distribution of the unconstrained parameters $\beta_r$, which are components of vector $\boldsymbol{\beta}_j = (\beta_1, \hdots, \beta_{I_j})^{\top}$ from the vector $\boldsymbol{\beta} = (\boldsymbol{\beta}_1, \hdots, \boldsymbol{\beta}_J)^{\top}$, where $j \in \lbrace 1, \dots, J\rbrace$,
 
 $$\begin{equation}\label{marginal_app}
-    \pi(\beta_r|\bfs{y}) = \int \pi(\beta_r|\bfs{\tau},\bfs{y}) \pi(\bfs{\tau}|\bfs{y})d\bfs{\tau}.
+    \pi(\beta_r|\boldsymbol{y}) = \int \boxed{\pi(\beta_r|\boldsymbol{\tau},\boldsymbol{y})} \hspace{0.3cm}\boxed{\pi(\boldsymbol{\tau}|\boldsymbol{y})}, d\boldsymbol{\tau}.
 \end{equation}$$
-
-- The marginal $\pi(\beta_i|\boldsymbol{y})$ involves
-  - approximation of $\pi(\boldsymbol{\tau}|\boldsymbol{y})$.
-  - approximation of $\pi(\beta_{r}|\boldsymbol{\tau},\boldsymbol{y})$.
-  - a numerical integration.
 
 
 ---
@@ -673,32 +655,17 @@ $$\begin{equation}\label{hyper_dist}
 
 $$\begin{align}\label{condi_beta}
     \pi(\boldsymbol{\beta}|\boldsymbol{\tau}, \boldsymbol{y}) = & \frac{\pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})}{\int \pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y}) d\boldsymbol{\beta}} \nonumber \\    
-    = & \frac{\exp(p(\boldsymbol{y}|\boldsymbol{\beta}) + p(\boldsymbol{\beta}| \boldsymbol{\tau}) + p(\tau))}{\int \exp(p(\boldsymbol{y}|\boldsymbol{\beta}) + p(\boldsymbol{\beta}| \boldsymbol{\tau}) + p(\tau))d\boldsymbol{\beta}} \nonumber \\
-    = & \frac{\exp(p(\boldsymbol{\beta}))}{\int \exp(p(\boldsymbol{\beta})) d\boldsymbol{\beta}}
+    = & \frac{\exp(\log \pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y}))}{\int \exp(\log \pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})) d\boldsymbol{\beta}} \nonumber \\
+    = & \frac{\exp(\log \pi(\boldsymbol{y}|\boldsymbol{\beta}) + \log \pi(\boldsymbol{\beta}| \boldsymbol{\tau}) + \log \pi(\boldsymbol{\tau}))}
+             {\int \exp( \underbrace{\log \pi(\boldsymbol{y}|\boldsymbol{\beta}) + \log \pi(\boldsymbol{\beta}|\boldsymbol{\tau}) + \log \pi(\boldsymbol{\tau})}_{p(\boldsymbol{\beta})}) d\boldsymbol{\beta}}.
 \end{align}$$
 
-- We write $p(\bfs{\beta}) = \log \pi(\bfs{\beta}, \bfs{\tau}, \bfs{y}) $ (the conditional on $\bfs{\tau}$ and $\bfs{y}$ is implicit). 
+- The integral in the denominator of $\pi(\boldsymbol{\beta}|\boldsymbol{\tau}, \boldsymbol{y})$ can be approximated by **Laplace method**
 
-$$\begin{align}\label{pbeta}
-    p(\bfs{\beta}) = & \log \pi(\bfs{y}|\bfs{\beta}) + \log \pi(\bfs{\beta}| \bfs{\tau}) + \log \pi(\bfs{\tau}) \nonumber \\
-    p(\bfs{\beta}) = & \sum_{i = 1}^n \left[ \log f_Z(\bfs{c}(y_i,\bfs{x}_i)^{\top}\bfs{\gamma(\beta)}) + \log (\bfs{c}'(y_i,\bfs{x}_i)^{\top}\bfs{\gamma(\beta)})\right] \nonumber \\
-    & -0.5 \bfs{\beta}^{\top} \bfs{Q}(\bfs{\tau}) \bfs{\beta} + \sum_{j = 1}^J\sum_{l \in \mathcal{L}_j} \beta_{lj} + \log \pi(\bfs{\tau}).
-\end{align}$$
+$$\int \exp(p(\boldsymbol{\beta})) d\boldsymbol{\beta} \approx  \exp(p(\boldsymbol{\beta}^{*}))(2\pi)^{I/2} 
+    | -H_p(\boldsymbol{\beta}^{*}(\boldsymbol{\tau}))|^{-1/2}.$$
 
 ---
-
-- The integral in the denominator of $\pi(\boldsymbol{\beta}|\boldsymbol{\tau}, \boldsymbol{y})$ can be approximated by Laplace  method
-
-$$\begin{equation}
-    \int \exp(p(\boldsymbol{\beta})) d\boldsymbol{\beta} \approx  \exp(p(\boldsymbol{\beta}^{*}))(2\pi)^{I/2} 
-    | -H_p(\boldsymbol{\beta}^{*}(\boldsymbol{\tau}))|^{-1/2}
-\end{equation}$$
-where $\boldsymbol{\beta}^{*}(\boldsymbol{\tau})$ is the mode of $p(\boldsymbol{\beta})$ for a given $\boldsymbol{\tau}$, and $H_p(\boldsymbol{\boldsymbol{\beta}^{*}(\boldsymbol{\tau})})$ is the Hessian matrix of $p(\boldsymbol{\beta})$ evaluated at the mode. 
-
----
-
-- The gradient and Hessian matrix have a analytical expressions!
-- To evaluate the approximation in (\ref{laplace_approx}), we have to optimize $p(\bfs{\beta})$ to find the mode $\bfs{\beta^*(\tau)}$ for a given $\bfs{\tau}$. We applied the following Newton-Raphson method. 
 - The final approximation of log density of full conditional evaluated at the mode $\boldsymbol{\beta}^{*}(\boldsymbol{\tau})$  is
 $$\begin{equation}
     \log( \tilde{\pi}(\boldsymbol{\beta}^{*}(\boldsymbol{\tau})|\boldsymbol{y}, \boldsymbol{\tau})) \approx -\frac{n}{2} \log(2\pi) + \frac{1}{2} \log \left| -H_p(\boldsymbol{\beta}^{*}(\boldsymbol{\tau})) \right |
@@ -712,15 +679,11 @@ $$\begin{equation}
 
 - The difficult is that the evaluation of this distribution require the optimization of $p(\boldsymbol{\beta})$.
 
-
----
-
-### Exploring hyper-parameter distribution
-___
 - Locate the $\boldsymbol{\tau}^{*}$ mode by using the quasi-Newton L-BFGS-B method to optimize the $\log \pi(\boldsymbol{\tau}|\boldsymbol{y})$ density concerning $\boldsymbol{\tau}$.
 
 - Select and evaluate a grid of points around $\boldsymbol{\tau}^{*}$, like $\boldsymbol{\tau}^{*} \pm \delta$, where $\delta$ parameter can be customized. We adopted small values like 1.
 
+---
 .pull-left[
 ```{r, echo=FALSE,  out.width = "70%", dpi = 300 , fig.cap="Approximated distribution for one hyperparameter.", fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/Hyper_uni_den.png")
@@ -734,101 +697,83 @@ knitr::include_graphics("figuras/Den_hyper.png")
 ```
 ]
 ---
-#### Approximating $\pi(\beta_r|\bfs{\tau}, \bfs{y})$
-
-- The next step is to approximate the posterior marginals for the $\beta_r$'s from $\bfs{\beta}$ vector, conditioned on $\bfs{\tau}$.
-- Using the same logical of the approximation in (\ref{hyperdist1}) we got the following equation 
+#### Approximating $\pi(\beta_r|\boldsymbol{\tau}, \boldsymbol{y})$
 
 $$\begin{equation}\label{beta_marginais}
-    \Tilde{\pi}({\beta}_r| \bfs{\tau}, \bfs{y}) \propto \frac{\pi(\bfs{\beta}, \bfs{\tau}, \bfs{y})}{\Tilde{\pi}(\bfs{\beta_{-r}} |\beta_r, \bfs{\tau}, \bfs{y})} \bigg|_{\bfs{\beta}_{-r} = \bfs{\beta}_{-r}^{*}(\beta_r, \bfs{\tau})},
+    \tilde{\pi}({\beta}_r| \boldsymbol{\tau}, \boldsymbol{y}) \propto \frac{\pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})}{\tilde{\pi}(\boldsymbol{\beta_{-r}} |\beta_r, \boldsymbol{\tau}, \boldsymbol{y})} \bigg|_{\boldsymbol{\beta}_{-r} = \boldsymbol{\beta}_{-r}^{*}(\beta_r, \boldsymbol{\tau})},
 \end{equation}$$
- where $\bfs{\beta}_{-r}^{*}(\beta_r, \bfs{\tau})$ maximizes $p(\bfs{\beta}) \propto \log(\pi(\bfs{\beta}, \bfs{\tau},\bfs{y}))$ given the constraint $\beta^*(\bfs{\tau})_r = \beta_r$ (the r-th component of the mode vector $\beta^*(\bfs{\tau})$ is equal to $\beta_r$), and $\Tilde{\pi}(\beta_{-r} |\beta_r, \bfs{\tau}, \bfs{y})$ is an approximation to $\beta_{-r} |\beta_r, \bfs{\tau}, \bfs{y}$ evaluated at $\bfs{\beta}_{-r}^{*}(\beta_r, \bfs{\tau})$.
+ where $\boldsymbol{\beta}_{-r}^{*}(\beta_r, \boldsymbol{\tau})$ maximizes $p(\boldsymbol{\beta}) \propto \log(\pi(\boldsymbol{\beta}, \boldsymbol{\tau},\boldsymbol{y}))$ given the constraint $\beta^*(\boldsymbol{\tau})_r = \beta_r$ (the r-th component of the mode vector $\beta^*(\boldsymbol{\tau})$ is equal to $\beta_r$).
  
- 
-- The denominator in \ref{beta_marginais} is a approximation from 
+
+- The denominator in (\ref{beta_marginais}) is a 
 
 $$\begin{equation}\label{beta_marginais2}
-    \pi(\boldsymbol{\beta}_{-i}|{\beta}_{i}, \boldsymbol{\tau},\boldsymbol{y}) = \frac{\pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})}{\int \pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})d\boldsymbol{\beta}_{-i}}
+    \pi(\boldsymbol{\beta}_{-r}|{\beta}_{r}, \boldsymbol{\tau},\boldsymbol{y}) = \frac{\pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})}{\int \pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})d\boldsymbol{\beta}_{-r}}
 \end{equation}$$
-- The computational cost to approximate (\ref{beta_marginais2}) is massive since the Laplace method for the integral in the denominator involves a constrained optimization of $\bfs{\beta}_r$ for a set of values of $\beta_r$ for all $r = 1, \hdots I_j \times J$, with $I_j$ being the number of parameters of a particular transformation $j = 1, \hdots, J$.
+
+- Another **Laplace approximation**? Yes! But.
+
+- The integral in the denominator involves a constrained optimization of $\boldsymbol{\beta}_{-r}$ for a set of values of $\beta_r$ for all $r = 1, \dots I_j \times J$, with $I_j$ being the number of parameters of a particular transformation $j = 1, \dots, J$.
 
 ---
-- A computational cheaper option is to base this approximation on a conditional density implied by the Gaussian approximation, $\tilde{\pi}_G(\boldsymbol{\beta}| \boldsymbol{\tau}, \boldsymbol{y})$, for $\boldsymbol{\beta}| \boldsymbol{\tau}, \boldsymbol{y}$ distribution.
-- The mode $\boldsymbol{\beta}_{-i}$ now would be the conditional mean of a multivariate normal distribution given by
+#### So...
+
+- Using the fact that we can approximate $\tilde{\pi}_G(\boldsymbol{\beta}| \boldsymbol{\tau}, \boldsymbol{y})$ by a Normal distribution (we already evaluated the mode and Hessian), it is useful to change the mode $\boldsymbol{\beta}_{-r}$ by the conditional mean of a multivariate normal distribution given by
+
 $$\begin{equation}\label{mode_condi}
-    \boldsymbol{\beta}_{-i}^{*}(\beta_i, \boldsymbol{\tau}) = E_{\tilde{\pi}_G(\boldsymbol{\beta}_{-i} |\beta_i)} = \boldsymbol{\beta}(\boldsymbol{\tau})_{-i} + (H_{-i,i})^{-1}H_{i,i}\left[\beta_i -  \boldsymbol{\beta}(\boldsymbol{\tau})_{i}\right].
+    \bfs{\beta}_{-r}^{*}(\beta_r, \bfs{\tau}) = E_{\Tilde{\pi}_G(\bfs{\beta}_{-r} |\beta_r)} = \bfs{\beta}^{*}(\bfs{\tau})_{-r} + (H_{-r,r})^{-1}H_{r,r}\left[\beta_r -  \bfs{\beta}^{*}(\bfs{\tau})_{r}\right].
 \end{equation}$$
 where $\boldsymbol{\beta}(\boldsymbol{\tau})$ is the mode vector of $p(\boldsymbol{\beta})$ distribution, and $\boldsymbol{\beta}(\boldsymbol{\tau})_{-i}$ is the vector without the ith component. The conditional Hessian is given by
+
 $$\begin{equation}
-    H_{\tilde{\pi}_G(\boldsymbol{\beta}_{-i} |\beta_i)} = H_{-i,-i} - (H_{-i,i})^{-1}H_{i,i}(H_{i,-i}),
+    H_{\tilde{\pi}_G(\bfs{\beta}_{-r} |\beta_r)} = H_{-r,-r} - (H_{-r,r})^{-1}H_{r,r}(H_{r,-r}),
 \end{equation}$$
-where $H$ is the Hessian from $p(\boldsymbol{\beta})$ applied to $\boldsymbol{\beta}(\boldsymbol{\tau})$, it is constant since is independent of $\beta_i$.
-- Since the Hessian matrix is independent of $\beta_i$ then $\pi(\beta_i| \boldsymbol{\tau}, \boldsymbol{y}) \propto \pi(\tilde{\boldsymbol{\beta}}, \boldsymbol{y}, \boldsymbol{\tau})$. 
-- The benefits of this approximation are immediate since we do not evaluate the integral in (\ref{beta_marginais2}) for each $i$ but only to find the mode of $p(\boldsymbol{\beta})$ and by Normal distribution properties find the conditional expected value.
 
-
----
-
+- Since the Hessian matrix is independent of $\beta_r$ then $\pi(\beta_r| \boldsymbol{\tau}, \boldsymbol{y}) \propto \pi(\tilde{\boldsymbol{\beta}}, \boldsymbol{y}, \boldsymbol{\tau})$. 
 
 - The last step is to integrate $\boldsymbol{\tau}$ from $\pi(\beta_i| \boldsymbol{\tau}, \boldsymbol{y})$ numerically as 
 
 $$\begin{equation}
-  \int \pi(\beta_i| \boldsymbol{\tau}, \boldsymbol{y}) d\boldsymbol{\tau} = \sum_{j = 1}^{J} \pi(\beta_i| \boldsymbol{\tau}^{(j)}, \boldsymbol{y}) \Delta_j.   
+\tilde{\pi}(\beta_r|\bfs{y}) = \sum_{p = 1}^P \tilde{\pi}(\beta_r|\bfs{\tau}^{(p)}, \bfs{y}) \tilde{\pi}(\bfs{\tau}^{(p)}|\bfs{y})\Delta \bfs{\tau}_p.
 \end{equation}$$
-- Finally, we get a approximation of the marginal by getting a set of evaluated density points.
-- The challenge of the algorithm is that the whole process of evaluated $\beta$ marginal's has to be repeated for each $\tau$ value.
-- For multivariate case we have a lot of points.
+
 
 ---
 ### Variational Bayes
 ___
 
-- an alternative approach for posterior inference in the Bayesian Conditional Transformation models based on Variational Bayes (VB).
+- VB is an approximate inference technique used to estimate posterior distributions in complex Bayesian models. It is particularly useful when the exact posterior distribution is intractable or computationally expensive to obtain.
 
-- Variational Bayes (VB) é uma técnica de inferência aproximada usada para estimar distribuições a posteriori em modelos bayesianos complexos. Ele é especialmente útil quando a distribuição a posteriori exata é intratável ou computacionalmente cara de obter.
+- VB gained popularity due to the increasing complexity of Bayesian models and the massive amount of analyzed data.
 
-- Há muitos algoritmos de VB disponiveis. O algoritmo apresentado \citet{HaavardVBC} é uma proposta da classe de algoritmos VB. A proposta original tem como objetivo ser uma alternativa ao INLA para a classe de Latent Gaussian Models (LGM).
+- There are many available VB algorithms. The algorithm presented by `r Citet(myBib,"HaavardVBC")` is a proposal within the class of VB algorithms. The original proposal aims to be an alternative to INLA for the class of Latent Gaussian Models (LGM).
 
-- O algoritmo foi nomeado de "", pois unknown density function using a Gaussian approximation via the Laplace method, followed by a variational correction applied to the mode of this Gaussian approximation.
+- This algorithm is named "Variational Bayes correction to the Laplace method".
 
-- Nossa proposta é adaptar esse algortimo para a classe BCTM. Isso é plausivel visto que nossa primeira proposta já envolvia aproximações normais para as posterioris de interesse.
+- Our proposal is to adapt this algorithm for the BCTM class. This is plausible since our initial approach already involved normal approximations for the posteriors of interest.
 
 ---
-- VB gained popularity due to the increasing complexity of Bayesian models, the massive amount of analyzed data,  and the growing need for computationally efficient alternatives to exact and sampling-based methods.
 
 - The VB methods optimize an objective function over a specific family of distributions to approximate the true posterior distribution in Bayesian inference.
 
-- Unlike Gaussian approximations, VB methods are more general, as the chosen family of distributions is not limited to Gaussian ones. If the selected family includes the true posterior, the VB approximation can recover the exact posterior.
-
- **A ideia central do VB é transformar o problema da inferência bayesiana em um problema de otimização.**
+ **The central idea of Variational Bayes (VB) is to transform the Bayesian inference problem into an optimization problem.**
  
- - Dada uma distribuição a posteriori p(θ∣D), que geralmente é complexa, o VB busca encontrar uma aproximação q(θ) que esteja próxima de p(θ∣D)
+The best posterior from a parametric family $\mathcal{Q}$ is the solution of equation (\ref{pract_opt})
+
+$$\begin{equation}\label{pract_opt}
+    \pi_{{\small VB}}^*(\boldsymbol{\theta}|\boldsymbol{y}) = \underset{q(\boldsymbol{\theta}|\boldsymbol{k}) \in \mathcal{Q}}{\textrm{arg min}} \left\lbrace E_{q(\boldsymbol{\theta})} \left[\sum_{i = 1}^n l(\boldsymbol{\theta};y_i) \right] + \textrm{KLD}(q(\boldsymbol{\theta})||\pi(\boldsymbol{\theta})) \right\rbrace,
+\end{equation}$$
+
+where $\pi_{{\small VB}}^*(\boldsymbol{\theta}|\boldsymbol{y}) = q(\boldsymbol{\theta}|\boldsymbol{k}^*)$ for some optimal parameter $\boldsymbol{k}^* \in \mathcal{K}$.
+
+
+- The posterior found in (\ref{pract_opt}) is the same as:
+  - The one that minimizes the KL divergence between the true posterior and the estimated one.
+  - The one that maximizes the ELBO (Evidence Lower Bound).
 
 ---
 
-- This posterior (\( \pi(\bfs{\theta}|y) \)) can be defined through the minimization of the following specific objective function
-
-
-\begin{equation}\label{opt_principal}
-    \pi^*(\boldsymbol{\theta}|\bfs{y})= \underset{q(\boldsymbol{\theta}) \in \mathcal{P}(\boldsymbol{\Theta)}}{\textrm{arg min}} \left\lbrace E_{q(\boldsymbol{\theta})} \left[\sum_{i = 1}^n l(\boldsymbol{\theta};y_i) \right] + \textrm{KLD}(q(\boldsymbol{\theta})||\pi(\boldsymbol{\theta})) \right\rbrace,
-\end{equation}
-
-- A posteriori encontrada em () é a mesma que:
-  - Minimiza a divergência de KL entre a posteriori verdadeira e a estimada.
-  - A que maximiza a ELBO (Evidence Lower BOund)
-- However, working on an infinite domain is impractical. Therefore, the VB methods constrain the posterior distribution to a parametric form, $q(\boldsymbol{\theta}) \in \mathcal{Q}$, where $\mathcal{Q} = \lbrace q(\boldsymbol{\theta}| \boldsymbol{\kappa}): \boldsymbol{\kappa} \in \mathcal{K}\rbrace $ is a family of distributions on $\boldsymbol{\Theta}$ parameterized by $\boldsymbol{\kappa}$.
--  We call $\mathcal{Q}$ as Variational family, and it is the space where the best approximated posterior distribution is searched.
-
----
-This best posterior from this parametric family is the solution of equation (\ref{opt_principal}), but $\mathcal{Q}$ instead of $\mathcal{P}(\Theta)$, that is 
-
-\begin{equation}\label{pract_opt}
-    \pi_{{\small VB}}^*(\boldsymbol{\theta}|\bfs{y}) = \underset{q(\boldsymbol{\theta}|\boldsymbol{k}) \in \mathcal{Q}}{\textrm{arg min}} \left\lbrace E_{q(\boldsymbol{\theta})} \left[\sum_{i = 1}^n l(\boldsymbol{\theta};y_i) \right] + \textrm{KLD}(q(\boldsymbol{\theta})||\pi(\boldsymbol{\theta})) \right\rbrace,
-\end{equation}
-
-where $\pi_{{\small VB}}^*(\boldsymbol{\theta}|\bfs{y}) = q(\boldsymbol{\theta}|\boldsymbol{k}^*)$ for some optimal parameter $\boldsymbol{k}^* \in \mathcal{K}$.
-
-```{r, echo=FALSE,  out.width = "35%", , dpi = 300 , fig.cap="Approximated distribution for two hyperparameter.", fig.retina = 2,fig.align='center'}
+```{r, echo=FALSE,  out.width = "50%", , dpi = 300 ,  fig.retina = 2,fig.align='center'}
 knitr::include_graphics("figuras/interpretacao2VB.png")
 ```
 
@@ -837,49 +782,31 @@ knitr::include_graphics("figuras/interpretacao2VB.png")
 
 - A recent contribution to VB is the variational correction, where the VB is not employed as an approximation for an unknown posterior, but as a correction to the Gaussian approximation of the posterior distribution obtained from the Laplace method.
 
-- The Gaussian approximation of the log posterior distribution, $\pi(\boldsymbol{\theta}|\boldsymbol{y})$, derived from the Laplace method \citep{tierney1986accurate} is given by
+- The Gaussian approximation of a posterior distribution, $\pi(\boldsymbol{\theta}|\boldsymbol{y})$ is
 
-\begin{equation}
-    \ln(\pi(\boldsymbol{\theta}|\boldsymbol{y})) = \ln \pi(\boldsymbol{\theta}_0) - \frac{1}{2} (\boldsymbol{\theta}- \boldsymbol{\theta}_0)^{\top} \boldsymbol{H}_0(\boldsymbol{\theta}- \boldsymbol{\theta}_0) + \textrm{high order terms,}
-\end{equation}
+$$
+    \tilde{\pi}_{G}(\boldsymbol{\theta}|\boldsymbol{y}) \propto \exp\left( - \frac{1}{2} (\boldsymbol{\theta}- \boldsymbol{\theta}_0)^{\top} \boldsymbol{H}_0(\boldsymbol{\theta}- \boldsymbol{\theta}_0) \right),
+$$
 
-\noindent where $\boldsymbol{\theta}_0$ is the mode of $\ln(\pi(\boldsymbol{\theta}|\boldsymbol{y}))$ and $\boldsymbol{H}_0$ is the negative Hessian matrix of $\ln(\pi(\boldsymbol{\theta}|\boldsymbol{y}))$ evaluated at $\boldsymbol{\theta}_0$. Then the approximation of the posterior distribution is
-
-\begin{equation}\label{gaussian_implied_lm}
-    \Tilde{\pi}_{G}(\boldsymbol{\theta}|\boldsymbol{y}) \propto \exp\left( - \frac{1}{2} (\boldsymbol{\theta}- \boldsymbol{\theta}_0)^{\top} \boldsymbol{H}_0(\boldsymbol{\theta}- \boldsymbol{\theta}_0) \right),
-\end{equation}
-
-
-\noindent so that $\boldsymbol{\theta}|\boldsymbol{y} \approx N(\boldsymbol{\theta}_0, \boldsymbol{H}_0^{-1})$
----
+so that $\boldsymbol{\theta}|\boldsymbol{y} \approx N(\boldsymbol{\theta}_0, \boldsymbol{H}_0^{-1})$
 
 - The variational correction proposal is to correct only the mean of this Normal approximation $\pi_{G}(\boldsymbol{\theta}|\boldsymbol{y})$ to achieve a more accurate estimate.
 
-The updated mean is given by $\boldsymbol{\theta}_1 = \boldsymbol{\theta}_0 + \boldsymbol{\delta}$,  where $\boldsymbol{\delta}$ is the correction to the mean. The posterior of $\boldsymbol{\theta}$ is now given by
+---
+
+- The updated mean is given by $\boldsymbol{\theta}_1 = \boldsymbol{\theta}_0 + \boldsymbol{\delta}$,  where $\boldsymbol{\delta}$ is the correction to the mean. The posterior of $\boldsymbol{\theta}$ is now given by
 
 $$\tilde{\pi}_{G}(\boldsymbol{\theta}|\boldsymbol{y}) \propto \exp\left( - \frac{1}{2} (\boldsymbol{\theta}- \boldsymbol{\theta}_1)^{T} \boldsymbol{H}_0(\boldsymbol{\theta}- \boldsymbol{\theta}_1) \right).$$
 
-- In summary, we need to find a vector $\boldsymbol{\delta}$ of length $m$ that produce a more accurate mean, while fixing the precision matrix based on the Hessian of $\ln(\pi(\bfs{\theta}|\bfs{y}))$. 
+- The proposal search for a vector $\boldsymbol{\delta}$ of length $m$ that produces a more accurate mean, while fixing the precision matrix based on the Hessian of $\ln(\pi(\boldsymbol{\theta}|\boldsymbol{y}))$. 
 
-- The parametric family $\mathcal{Q}$ for this problem is the multivariate Normal, with known covariance matrix $\bfs{H}_0^{-1}$, and a mean vector $\boldsymbol{\theta}_0 + \boldsymbol{\delta}$.
+- The parametric family $\mathcal{Q}$ for this problem is the multivariate Normal, with known covariance matrix $\boldsymbol{H}_0^{-1}$, and a mean vector $\boldsymbol{\theta}_0 + \boldsymbol{\delta}$.
 
 - To get the best approximation for the posterior distribution from the family $\mathcal{Q}$
 
 $$
     \tilde{\boldsymbol{\delta}} = \underset{\boldsymbol{\delta}} {\textrm{arg min}}\left\lbrace E_{\boldsymbol{\theta} \sim N(\boldsymbol{\theta}_0 + \boldsymbol{\delta}, \boldsymbol{H}^{-1}_0)} \left[-\log \pi(\boldsymbol{y}|\boldsymbol{\theta}) \right] + \textrm{KLD}(\phi(\boldsymbol{\theta}|\boldsymbol{\theta}_0 + \boldsymbol{\delta},\boldsymbol{H}_0^{-1})||\pi(\boldsymbol{\theta})) \right\rbrace,
 $$
----
-
--The proposed approach to approximate the posterior can be summarized as follows:
-
-  -Find the mode $\bfs{\theta}_0$ of $\ln \pi(\boldsymbol{\theta}|\boldsymbol{y})$.
-
-  -Produces the approximation $\boldsymbol{\theta}|\boldsymbol{y} \approx N(\boldsymbol{\theta}_0, \boldsymbol{H}_0^{-1})$, where $\boldsymbol{H}_0$ is the negative Hessian matrix of $\ln(\pi(\boldsymbol{\theta}|\boldsymbol{y}))$ evaluated at $\boldsymbol{\theta}_0$.
-
-  - Solve for $\boldsymbol{\delta}$ the objective function in (\ref{delta_correction1}).
-
-  - The approximated posterior $\boldsymbol{\theta}$ is a multivariate Normal with mean $\boldsymbol{\theta}_1 = \boldsymbol{\theta}_0 + \boldsymbol{\delta}$ and precision matrix $\boldsymbol{Q}_0 = \boldsymbol{H}_0$.
-
 
 **It is important to note that we are not producing approximate posterior marginals or marginal corrections. Instead, this proposal ensures a joint improvement of the posterior distribution.**
 
@@ -888,43 +815,36 @@ $$
 
 - Our general definition of BCTM involves hyperparameters.
 
-- The variational correction defined up to now does not introduce any hyperparameters into the posterior.
+- The proposal utilizes the variational correction within the joint Normal posterior $\tilde{\pi}_G(\boldsymbol{\beta}|\boldsymbol{\tau}, \boldsymbol{y})$.
 
-$$\begin{equation}\label{joint_prior2}
-  \pi(\bfs{\beta}, \bfs{\tau}|\bfs{y}) \propto \left[ f_{\bfs{Y}|\bfs{X} = \bfs{x}}(\bfs{y}|\bfs{x})\right] 
-    \prod_{j = 1}^J \phi_j(\bfs{\beta}_j|\bfs{\mu}_j, \bfs{Q}_j(\bfs{\tau}_j)) \pi(\bfs{\tau}_j).    
-\end{equation}$$
-
-- The proposal utilizes the variational correction within the joint Normal posterior $\Tilde{\pi}_G(\boldsymbol{\beta}|\boldsymbol{\tau}, \boldsymbol{y})$.
-
-- Conditional on the hyperparameters, $\boldsymbol{\tau}$,  the corrected posterior mean of the joint distribution is given by $\boldsymbol{\beta}_1(\bfs{\tau}) = \boldsymbol{\beta}_0(\bfs{\tau}) + \boldsymbol{\delta}$, where $\boldsymbol{\delta}$ is the correction term.
+- Conditional on the hyperparameters, $\boldsymbol{\tau}$,  the corrected posterior mean of the joint distribution is given by $\boldsymbol{\beta}_1(\boldsymbol{\tau}) = \boldsymbol{\beta}_0(\boldsymbol{\tau}) + \boldsymbol{\delta}$, where $\boldsymbol{\delta}$ is the correction term.
 
 - So, now we solve the following (conditionally on $\boldsymbol{\tau}$)
 
 $$\begin{align}\label{delta_correction}
-    \Tilde{\boldsymbol{\delta}} &= \underset{\boldsymbol{\delta}} {\textrm{agr min}}\left\lbrace E_{\boldsymbol{\beta}|\boldsymbol{\tau} \sim N(\boldsymbol{\theta}_0 + \boldsymbol{\delta}, \boldsymbol{H}^{-1}_0)} \left[-\log \pi(\boldsymbol{y}|\boldsymbol{\beta},\boldsymbol{\tau} ) \right] + \textrm{KLD}(\phi(\boldsymbol{\beta}|\boldsymbol{\beta}_0 + \boldsymbol{\tau},\boldsymbol{H}_0^{-1})||\phi(\boldsymbol{\beta}| \boldsymbol{0},\boldsymbol{Q}_0)) \right\rbrace, \nonumber \\
+    \tilde{\boldsymbol{\delta}} &= \underset{\boldsymbol{\delta}} {\textrm{agr min}}\left\lbrace E_{\boldsymbol{\beta}|\boldsymbol{\tau} \sim N(\boldsymbol{\theta}_0 + \boldsymbol{\delta}, \boldsymbol{H}^{-1}_0)} \left[-\log \pi(\boldsymbol{y}|\boldsymbol{\beta},\boldsymbol{\tau} ) \right] + \textrm{KLD}(\phi(\boldsymbol{\beta}|\boldsymbol{\beta}_0 + \boldsymbol{\tau},\boldsymbol{H}_0^{-1})||\phi(\boldsymbol{\beta}| \boldsymbol{0},\boldsymbol{Q}_0)) \right\rbrace, \nonumber \\
     & = \underset{\boldsymbol{\delta}} {\textrm{agr min}}\left\lbrace E_{\boldsymbol{\beta}|\boldsymbol{\tau} \sim N(\boldsymbol{\beta}_0 + \boldsymbol{\delta}, \boldsymbol{H}^{-1}_0)} \left[-\log \pi(\boldsymbol{y}|\boldsymbol{\beta},\boldsymbol{\tau} ) \right] + \frac{1}{2}(\boldsymbol{\beta}_0 + \boldsymbol{\delta})^T \boldsymbol{Q}_0(\boldsymbol{\beta}_0 + \boldsymbol{\delta}) \right\rbrace.
 \end{align}$$
 
 ---
 
-- hus, the improved Normal approximation to $\pi(\boldsymbol{\beta}|\boldsymbol{y}, \boldsymbol{\tau})$, that we will denote as $\Tilde{\pi}_{VBC}$, has mean $\bfs{\beta}_1$ and precision matrix $\boldsymbol{Q}_0$.
+- Thus, the improved Normal approximation to $\pi(\boldsymbol{\beta}|\boldsymbol{y}, \boldsymbol{\tau})$, that we will denote as $\tilde{\pi}_{VBC}$, has mean $\boldsymbol{\beta}_1$ and precision matrix $\boldsymbol{Q}_0$.
 
--  From this multivariate improved Normal distribution the marginals distributions, $\Tilde{\pi}_{VBC}(\beta_r|\boldsymbol{y}, \boldsymbol{\tau})$, are Gaussian densities with mean $\beta_{1,r}$ and precision $Q_0^{r,r}$
+-  From this multivariate improved Normal distribution the marginals distributions, $\tilde{\pi}_{VBC}(\beta_r|\boldsymbol{y}, \boldsymbol{\tau})$, are Gaussian densities with mean $\beta_{1,r}$ and precision $Q_0^{r,r}$
 
 - Finally, the marginal posteriors of the parameters $\boldsymbol{\beta}$ are calculated as 
 
 $$\begin{equation}
-    \Tilde{\pi}_{VBC}(\beta_r|\boldsymbol{y}) = \sum_{p = 1}^P \Tilde{\pi}_{VBC}(\beta_r|\boldsymbol{\tau}^{(p)}, \boldsymbol{y})\Tilde{\pi}(\boldsymbol{\tau}^{(p)}|\bfs{y}) \Delta \bfs{\tau}^{(p)}, 
+    \tilde{\pi}_{VBC}(\beta_r|\boldsymbol{y}) = \sum_{p = 1}^P \tilde{\pi}_{VBC}(\beta_r|\boldsymbol{\tau}^{(p)}, \boldsymbol{y})\tilde{\pi}(\boldsymbol{\tau}^{(p)}|\boldsymbol{y}) \Delta \boldsymbol{\tau}^{(p)}, 
 \end{equation}$$
 
 where $\lbrace \boldsymbol{\tau}^{[1]}, \hdots, \boldsymbol{\tau}^{[P]} \rbrace$ is a set of points of $\boldsymbol{\tau}$.
 
-\begin{align}
+$$\begin{align}
     \pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y}) & = \prod_{i =1}^n \pi(y_i|\boldsymbol{\beta}, \boldsymbol{\tau})\pi(\boldsymbol{\beta}|\boldsymbol{\tau}) \nonumber \\
-    \Tilde{\pi}(\bfs{\tau}|\bfs{y}) & \propto  \frac{\pi(\bfs{\beta}, \bfs{\tau}, \bfs{y})}{\Tilde{\pi}_{G}(\bfs{\beta}| \bfs{\tau}, \bfs{y})}\bigg|_{\bfs{\beta} = \bfs{\beta}^{*}(\bfs{\tau})} \nonumber \\
-    \Tilde{\pi}(\beta_r|\boldsymbol{y}) & = \int \Tilde{\pi}_{\small{VBC}}(\beta_r |\boldsymbol{\tau}, \boldsymbol{y})\Tilde{\pi}(\boldsymbol{\tau}|\boldsymbol{y})d\boldsymbol{\tau}
-\end{align}
+    \tilde{\pi}(\boldsymbol{\tau}|\boldsymbol{y}) & \propto  \frac{\pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})}{\tilde{\pi}_{G}(\boldsymbol{\beta}| \boldsymbol{\tau}, \boldsymbol{y})}\bigg|_{\boldsymbol{\beta} = \boldsymbol{\beta}^{*}(\boldsymbol{\tau})} \nonumber \\
+    \tilde{\pi}(\beta_r|\boldsymbol{y}) & = \int \tilde{\pi}_{\small{VBC}}(\beta_r |\boldsymbol{\tau}, \boldsymbol{y})\tilde{\pi}(\boldsymbol{\tau}|\boldsymbol{y})d\boldsymbol{\tau}
+\end{align}$$
 
 ---
 ### Low-rank correction
@@ -934,20 +854,20 @@ where $\lbrace \boldsymbol{\tau}^{[1]}, \hdots, \boldsymbol{\tau}^{[P]} \rbrace$
 - The mean \(\boldsymbol{\beta}_0\), prior to correction, is the solution to the following linear system:
 
 \begin{equation}\label{linear_system_beta0}
- H_p(\bfs{\beta}_0) = \nabla p(\bfs{\beta}_0) + H_p(\bfs{\beta}_0) \bfs{\beta}_0,
+ H_p(\boldsymbol{\beta}_0) = \nabla p(\boldsymbol{\beta}_0) + H_p(\boldsymbol{\beta}_0) \boldsymbol{\beta}_0,
 \end{equation}
 
 - To simplify the notation, let us define $Q_0 = H_p(\boldsymbol{\beta}_0) \quad \text{and} \quad b_0 = \nabla p(\boldsymbol{\beta}_0) + H_p(\boldsymbol{\beta}_0) \boldsymbol{\beta}_0.$
 
 \begin{equation}
-    Q_0 \bfs{\beta}_0 = \bfs{b}_0.
+    Q_0 \boldsymbol{\beta}_0 = \boldsymbol{b}_0.
 \end{equation}
 
 - Given that the number of parameters can grow substantially in some applications, such as random effects models, \citet{HaavardVBC} proposes an implicit correction of the mean term \(\boldsymbol{\beta}_0\) by explicitly correcting the estimated gradient, such that the improved posterior mean \(\boldsymbol{\beta}_1\) satisfies the new linear system:
 
 
 \begin{equation}
-    Q_0 \boldsymbol{\beta}_1 = \boldsymbol{b}_0 + \bfs{\lambda} = \boldsymbol{b}_1,
+    Q_0 \boldsymbol{\beta}_1 = \boldsymbol{b}_0 + \boldsymbol{\lambda} = \boldsymbol{b}_1,
 \end{equation}
 
 - where \(\boldsymbol{\lambda}\) is the implicit correction term applied to \(\boldsymbol{b}_0 = \nabla p(\boldsymbol{\beta}_0) + H_p(\boldsymbol{\beta}_0) \boldsymbol{\beta}_0\). This implies that the mean \(\boldsymbol{\beta}_0\) is no longer explicitly corrected.
@@ -977,13 +897,13 @@ where \(Q_0^{.,j}\) denotes the \(j\)-th column of the matrix \(Q_0\).
 
 
 $$\begin{equation}
-    \boldsymbol{\beta}_1 = \boldsymbol{\beta}_0 + \bfs{Q}_I^{-1}\boldsymbol{\lambda}
+    \boldsymbol{\beta}_1 = \boldsymbol{\beta}_0 + \boldsymbol{Q}_I^{-1}\boldsymbol{\lambda}
 \end{equation}$$
 
 - Now, we can optimize (\ref{delta_correction}), but for the $\boldsymbol{\lambda}$ instead of $\boldsymbol{\delta}$ as follows
 
 \begin{equation}
-    \Tilde{\bfs{\lambda}} = \underset{\boldsymbol{\lambda}} {\textrm{agr min}}\left\lbrace E_{\boldsymbol{\beta}|\boldsymbol{\tau} \sim N(\boldsymbol{\beta}_0 + \bfs{Q}_I^{-1}\boldsymbol{\lambda}, \boldsymbol{Q}^{-1}_0)} \left[-\log \pi(\boldsymbol{y}|\boldsymbol{\beta},\boldsymbol{\tau} ) \right] + \frac{1}{2}(\boldsymbol{\beta}_0 + \bfs{Q}_I^{-1}\boldsymbol{\lambda})^T \boldsymbol{Q}_0(\boldsymbol{\beta}_0 + \bfs{Q}_I^{-1}\boldsymbol{\lambda}) \right\rbrace.
+    \tilde{\boldsymbol{\lambda}} = \underset{\boldsymbol{\lambda}} {\textrm{agr min}}\left\lbrace E_{\boldsymbol{\beta}|\boldsymbol{\tau} \sim N(\boldsymbol{\beta}_0 + \boldsymbol{Q}_I^{-1}\boldsymbol{\lambda}, \boldsymbol{Q}^{-1}_0)} \left[-\log \pi(\boldsymbol{y}|\boldsymbol{\beta},\boldsymbol{\tau} ) \right] + \frac{1}{2}(\boldsymbol{\beta}_0 + \boldsymbol{Q}_I^{-1}\boldsymbol{\lambda})^T \boldsymbol{Q}_0(\boldsymbol{\beta}_0 + \boldsymbol{Q}_I^{-1}\boldsymbol{\lambda}) \right\rbrace.
 \end{equation}
 
 
@@ -1023,143 +943,14 @@ ___
 - A simulation study was conducted to evaluate the performance of the ILBCTM algorithm in recovering the parameters for some particular cases of BCTM. We restricted ourselves into 3 differents models. 
 
   - Model 1: $\textrm{P}(Y \leq y) =         \Phi(\boldsymbol{a}(y)^{\top} \boldsymbol{\gamma})$.
-  - Model 2: $\textrm{P}(Y \leq y | \bfs{X} = \bfs{x}) = \Phi(\bfs{a}(y)^{\top}\bfs{\gamma} + \bfs{x}^{\top} \bfs{\beta})$.
+  - Model 2: $\textrm{P}(Y \leq y | \boldsymbol{X} = \boldsymbol{x}) = \Phi(\boldsymbol{a}(y)^{\top}\boldsymbol{\gamma} + \boldsymbol{x}^{\top} \boldsymbol{\beta})$.
   - Model 3: $\textrm{P}(Y \leq y | \boldsymbol{X} = \boldsymbol{x}) = \Phi(\boldsymbol{a}(y)^{\top}\boldsymbol{\gamma} + \boldsymbol{x}^{\top} \boldsymbol{\beta} + \boldsymbol{z}^{\top} \boldsymbol{b})$
-
-- The basis parameters are obtained by simulating from the prior distribution, this means that we simulated a random sample from a multivariate Normal distribution with mean zero and precision matrix $K(\tau) = (1/\tau) \bfs{K}_1$, where $\bfs{K}_1$ is defined in (\ref{ordem1}), and $\tau = \exp(15)$.
 
 - We have a total of 9 scenarios with different models and sample sizes. In every scenario, we simulated $R = 500$ replicas of the model considered.
 
 -  For the random effects model, we have considered 10, 20 and 30 observations from the same individual i, denoted by $n_{rep}$.
 
 -  We calculated the posterior mean, and the root-mean-square error (RMSE), given by RMSE($\hat{\beta}$) = $\sqrt{\frac{1}{R} \sum_{r = 1}^R (\hat{\beta}_r - \beta)}$.
----
-<style type="text/css">
-.tg  {border:none;border-collapse:collapse;border-color:#aaa;border-spacing:0;}
-.tg td{background-color:#fff;border-color:#aaa;border-style:solid;border-width:0px;color:#333;
-  font-family:Arial, sans-serif;font-size:10px;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{background-color:#fff;border-color:#aaa;border-style:solid;border-width:0px;color:#000;
-  font-family:Arial, sans-serif;font-size:10px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-baqh{text-align:center;vertical-align:top}
-.tg .tg-ao2g{border-color:#fff;text-align:center;vertical-align:top}
-.tg .tg-0pky{border-color:fff;text-align:center;vertical-align:top}
-.tg .tg-eqm3{border-color:fff;font-size:10px;text-align:left;vertical-align:top}
-</style>
-
-<font size="3">
-<table class="tg">
- <caption>Posterior mean and root-mean-squared-error of the parameters for Model 1: $\Phi(\boldsymbol{a}(y)^T \boldsymbol{\gamma})$ using ILBCTM algorithm, considering 500 replicas, in the simulating study 1.</caption>
-<thead>
-  <tr>
-    <th class="tg-ao2g" rowspan="2"><br>True parameter ($\beta$)<br></th>
-    <th class="tg-baqh" colspan="3">n = 200</th>
-    <th class="tg-baqh" colspan="3">n = 500</th>
-    <th class="tg-baqh" colspan="3">n = 2000</th>
-  </tr>
-  <tr>
-    <th class="tg-0pky">Estimate</th>
-    <th class="tg-0pky">RMSE</th>
-    <th class="tg-0pky">Estimate</th>
-    <th class="tg-0pky">RMSE</th>
-    <th class="tg-0pky">Estimate</th>
-    <th class="tg-0pky">RMSE</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td class="tg-0pky">3.0342</td>
-    <td class="tg-0pky">3.0870</td>
-    <td class="tg-0pky">0.1667</td>
-    <td class="tg-0pky">3.0750</td>
-    <td class="tg-0pky">0.1388</td>
-    <td class="tg-0pky">3.0205</td>
-    <td class="tg-0pky">0.0559</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">-0.2977</td>
-    <td class="tg-0pky">-0.2883</td>
-    <td class="tg-0pky">0.0522</td>
-    <td class="tg-0pky">-0.2852</td>
-    <td class="tg-0pky">0.0402</td>
-    <td class="tg-0pky">-0.2981</td>
-    <td class="tg-0pky">0.0174</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">-0.2970</td>
-    <td class="tg-0pky">-0.2993</td>
-    <td class="tg-0pky">0.0478</td>
-    <td class="tg-0pky">-0.2977</td>
-    <td class="tg-0pky">0.0313</td>
-    <td class="tg-0pky">-0.2995</td>
-    <td class="tg-0pky">0.0175</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">-0.3015</td>
-    <td class="tg-0pky">-0.2997</td>
-    <td class="tg-0pky">0.0449</td>
-    <td class="tg-0pky">-0.3015</td>
-    <td class="tg-0pky">0.0322</td>
-    <td class="tg-0pky">-0.3000</td>
-    <td class="tg-0pky">0.0166</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">-0.2987</td>
-    <td class="tg-0pky">-0.3011</td>
-    <td class="tg-0pky">0.0454</td>
-    <td class="tg-0pky">-0.3014</td>
-    <td class="tg-0pky">0.0300</td>
-    <td class="tg-0pky">-0.2993</td>
-    <td class="tg-0pky">0.0140</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">-0.2948</td>
-    <td class="tg-0pky">-0.3002</td>
-    <td class="tg-0pky">0.0439</td>
-    <td class="tg-0pky">-0.3025</td>
-    <td class="tg-0pky">0.0309</td>
-    <td class="tg-0pky">-0.2988</td>
-    <td class="tg-0pky">0.0141</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">-0.2964</td>
-    <td class="tg-0pky">-0.3020</td>
-    <td class="tg-0pky">0.0468</td>
-    <td class="tg-0pky">-0.3061</td>
-    <td class="tg-0pky">0.0346</td>
-    <td class="tg-0pky">-0.2992</td>
-    <td class="tg-0pky">0.0156</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">-0.2980</td>
-    <td class="tg-0pky">-0.2920</td>
-    <td class="tg-0pky">0.0484</td>
-    <td class="tg-0pky">-0.2995</td>
-    <td class="tg-0pky">0.0332</td>
-    <td class="tg-0pky">-0.2992</td>
-    <td class="tg-0pky">0.0168</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">-0.2961</td>
-    <td class="tg-0pky">-0.2594</td>
-    <td class="tg-0pky">0.0709</td>
-    <td class="tg-0pky">-0.2809</td>
-    <td class="tg-0pky">0.0486</td>
-    <td class="tg-0pky">-0.2978</td>
-    <td class="tg-0pky">0.0180</td>
-  </tr>
-  <tr>
-    <td class="tg-0pky">-0.2954</td>
-    <td class="tg-0pky">-0.2139</td>
-    <td class="tg-0pky">0.1161</td>
-    <td class="tg-0pky">-0.2344</td>
-    <td class="tg-0pky">0.0960</td>
-    <td class="tg-0pky">-0.2961</td>
-    <td class="tg-0pky">0.0196</td>
-  </tr>
-</tbody>
-</table>
-</font>
-
 
 ---
 
@@ -1176,7 +967,7 @@ ___
 </style>
 <font size="3">
 <table class="tg">
- <caption>Posterior mean and root-mean-squared-error of the parameters for Model 2: $\Phi(\boldsymbol{a}(y)^T \boldsymbol{\gamma} + \bfs{x}^T \bfs{\beta} )$ using ILBCTM algorithm, considering 500 replicas, in the simulating study 1.</caption>
+ <caption>Posterior mean and root-mean-squared-error of the parameters for Model 2: $\Phi(\boldsymbol{a}(y)^T \boldsymbol{\gamma} + \boldsymbol{x}^T \boldsymbol{\beta} )$ using ILBCTM algorithm, considering 500 replicas, in the simulating study 1.</caption>
 <thead>
   <tr>
     <th class="tg-ao2g" rowspan="2">True Parameter ($\beta$)</th>
@@ -1323,7 +1114,7 @@ ___
 </style>
 <font size="3">
 <table class="tg">
- <caption>Posterior mean and root-mean-squared-error of the parameters for Model 2: $\Phi(\boldsymbol{a}(y)^T \boldsymbol{\gamma} + \bfs{x}^T \bfs{\beta} )$ using ILBCTM algorithm, considering 500 replicas, in the simulating study 1.</caption>
+ <caption>Posterior mean and root-mean-squared-error of the parameters for Model 2: $\Phi(\boldsymbol{a}(y)^T \boldsymbol{\gamma} + \boldsymbol{x}^T \boldsymbol{\beta} )$ using ILBCTM algorithm, considering 500 replicas, in the simulating study 1.</caption>
 <thead>
   <tr>
     <th class="tg-ao2g" rowspan="2">True Parameter ($\beta$)</th>
@@ -1490,7 +1281,7 @@ Y_{i}| \boldsymbol{x}_i &\sim SN(\mu_{i}, \sigma, \lambda) \\
 \end{align}$$
 
 \begin{equation}
-    F_{Y_i|\bfs{X}_i = \bfs{x}_i}(Y_i \leq y_i | \bfs{X}_i = \bfs{x}_i) = \Phi(\boldsymbol{a}(y_i)^{\top}\boldsymbol{\gamma} + \boldsymbol{x}_i^{\top}\boldsymbol{\beta})
+    F_{Y_i|\boldsymbol{X}_i = \boldsymbol{x}_i}(Y_i \leq y_i | \boldsymbol{X}_i = \boldsymbol{x}_i) = \Phi(\boldsymbol{a}(y_i)^{\top}\boldsymbol{\gamma} + \boldsymbol{x}_i^{\top}\boldsymbol{\beta})
 \end{equation}
 
 
@@ -1501,7 +1292,7 @@ $$\begin{align}\label{model1_simu}
     h(Y|\boldsymbol{x}, \boldsymbol{\beta}) & = \boldsymbol{a}(Y)^\top \boldsymbol{\gamma} + \boldsymbol{x}^\top \boldsymbol{\beta}, \nonumber \\
     Z & \overset{d}{=} h(Y|\boldsymbol{x}, \boldsymbol{\beta}) \sim N(0,1), \nonumber \\
     Y|\boldsymbol{x} & \overset{d}{=} h^{-1}(Z), \nonumber \\
-    \log(\boldsymbol{\gamma}) & \sim N\left(0, \frac{1}{\tau_1} \bfs{K_1}\right), \nonumber \\
+    \log(\boldsymbol{\gamma}) & \sim N\left(0, \frac{1}{\tau_1} \boldsymbol{K_1}\right), \nonumber \\
     \boldsymbol{\beta} & \sim N_4(0, 10^{-6} \times I_4), \nonumber \\
     \tau_1 & =  \exp(\theta_1),\\
      \exp(\theta_1) & \sim \text{Inv-Gamma}(1,0.001), \nonumber
@@ -1630,8 +1421,8 @@ $$\begin{align}
     h(Y|\boldsymbol{x}, z, \boldsymbol{\beta}) & = \boldsymbol{a}(Y)^\top \boldsymbol{\gamma} + \boldsymbol{b}(z)^{\top}\boldsymbol{\beta}_1 + \boldsymbol{x}^\top \boldsymbol{\beta}_2, \nonumber \\
     Z & \overset{d}{=} h(Y|\boldsymbol{x}, \boldsymbol{\beta}) \sim N(0,1), \nonumber \\
     Y|\boldsymbol{x} & \overset{d}{=} h^{-1}(Z), \nonumber \\
-    \log(\boldsymbol{\gamma}) & \sim N\left(0, \frac{1}{\tau_1} \bfs{K_1}\right), \nonumber \\
-    \boldsymbol{\beta}_1 & \sim N\left(0, \frac{1}{\tau_2} \bfs{K_2}\right), \nonumber\\
+    \log(\boldsymbol{\gamma}) & \sim N\left(0, \frac{1}{\tau_1} \boldsymbol{K_1}\right), \nonumber \\
+    \boldsymbol{\beta}_1 & \sim N\left(0, \frac{1}{\tau_2} \boldsymbol{K_2}\right), \nonumber\\
     \boldsymbol{\beta}_2 & \sim N(0, 10^{-6} \times I_4), \nonumber \\
     \tau_l & =  \exp(\theta_l), l = 1, 2, \nonumber\\
      \exp(\theta_l) & \sim \text{Inv-Gamma}(1,0.001), l = 1, 2, \nonumber
@@ -1902,7 +1693,7 @@ $$\begin{equation}
 - The prior precision matrix for the splines parameters $\boldsymbol{\gamma}_1$ and $\boldsymbol{\gamma}_2$ considers one hyper-parameter
 
 $$\begin{equation}\label{vcm_matrix}
-\bfs{Q}(\bfs{\tau}) = \begin{pmatrix}
+\boldsymbol{Q}(\boldsymbol{\tau}) = \begin{pmatrix}
  \frac{1}{\tau_1} \boldsymbol{K_1} & 0\\
  0 & \frac{1}{\tau_2}\boldsymbol{K_1}$$
 
@@ -2208,7 +1999,7 @@ $$\begin{equation}
    \textrm{LPML} =  \sum_i \log \textrm{CPO}_i.
 \end{equation}$$
 
-where $\text{CPO}_i = \pi(y_i | \bfs{y}_{-i})$ is the posterior predictive density of each observation $y_i$ given $\boldsymvol{y}_{-i}$.
+where $\text{CPO}_i = \pi(y_i | \boldsymbol{y}_{-i})$ is the posterior predictive density of each observation $y_i$ given $\boldsymvol{y}_{-i}$.
 
 - The LPML of the model with Bernstein basis is -863.7924, while the LPML with B-spline is -844.707.
 
@@ -2243,7 +2034,7 @@ Probability Integral Transform (PIT) \citep{PIT} as
 
 
 $$\begin{equation}
-    \text{PIT} = P(Y_i \leq y_i^{obs}| \bfs{y}_{-i})
+    \text{PIT} = P(Y_i \leq y_i^{obs}| \boldsymbol{y}_{-i})
 \end{equation}$$
 
 ---
