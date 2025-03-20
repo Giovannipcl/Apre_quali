@@ -1,9 +1,9 @@
 ---
-title: "Bayesian Conditional Transformation Models using Laplace approximation"
+title: "New perspectives for the Bayesian Conditional Transformation Model"
 author: 
   - Giovanni Pastori Piccirilli
   - Márcia D'Elia Branco
-date: "21 September 2023"
+date: "25 March 2025"
 output:
   xaringan::moon_reader:
     css: ["default", "assets/sydney-fonts.css", "assets/sydney2.css"]
@@ -59,11 +59,13 @@ ___
 
 - Properties of the Bayesian Conditional Transformation Models
 
+- Bayesian count CTM
+
 - Posterior inference
   - Integrated Laplace with Bayesian Conditional
 Transformation Models
   - Variational Bayes correction to BCTM
-  - Posterior predictive check
+
 
 
 
@@ -74,6 +76,7 @@ Transformation Models
   - Study 2: BCTM with Bernstein polynomials
 
 - Applications 
+  - Head circumference
   - Framingham heart study
   - Sleep deprivation study
 
@@ -92,58 +95,77 @@ Paulo
 ___
 
 - The primary objective of regression models is to estimate the conditional probability distribution $F_{Y|X=x}$ of a random variable $Y$, given an explanatory variable $X$ with an observed value $x$.
-- Many regression models focus exclusively on the conditional expected value $E(Y|X=x)$, assuming that other moments of the distribution remain fixed or are only indirectly influenced by the explanatory variables.
-- As a result, model inference often relies on strong assumptions, such as homoscedasticity and symmetry.
+- Many regression models focus exclusively on the conditional expected value $E(Y|X=x)$, assuming that other moments of the distribution remain fixed.
+
+```{r, echo=FALSE,  out.width = "50%", dpi = 300 , fig.retina = 2,fig.align='center'}
+knitr::include_graphics("figuras/Imagem-4-1.png")
+```
+
+---
+
+#### Alternatives
 - An approach that guarantees the flexibilization of some assumptions in the class of regression models is the Generalized additive model for the location, scale, and shape (GAMLSS) class.
-- The class includes a broad family of distributions for continuous and discrete responses incorporating highly skew or kurtotic distributions, however, choosing a parametric distribution on a large family of distributions has to be done carefully since it imposes assumptions on the model.
----
-
 - To move beyond the parametric framework, quantile regression models `r Citep(myBib,"koenker2001quantile")` provide a flexible alternative to regression models. In quantile regression, each conditional quantile is modeled independently as a function of linear or smooth terms of the explanatory variables.
-- Conditional Transformation Models (CTM) `r Citep(myBib,"hothorn2014conditional")` address the direct estimation of the conditional distribution function of a random variable $Y$ conditional on a set of covariates $X = x$.
--  The approach involves applying a transformation function $h(Y|x)$ to the random variable $Y$, where $x$ is a fixed and known value, in conjunction with a baseline distribution function.
-- `r Citet(myBib,"carlan2023bayesian")` presented the Bayesian Conditional Transformation Model (BCTM) Building on the same definition as the CTM, this approach proposed a different parameterization for the transformation function $h(y|\boldsymbol{X})$ and utilized a Markov Chain Monte Carlo (MCMC) simulation algorithm to generate inferences about the parameters.
-- We present an alternative estimation procedure based on the Laplace approximation, motivated by the Integrated Nested Laplace Approximation (INLA) approach `r Citep(myBib,"rue2009approximate")`.
-- We tested our proposed algorithm to some models already fitted with other approaches (MCMC and Maximum likelihood).
+
 
 ---
+#### If we go further?
+
+- Conditional Transformation Models (CTM) `r Citep(myBib,"hothorn2014conditional")` address the direct estimation of the conditional distribution function of a random variable $Y$ conditional on a set of covariates $X = x$.
+
+```{r, echo=FALSE,  out.width = "50%", dpi = 300 , fig.retina = 2,fig.align='center'}
+knitr::include_graphics("figuras/Imagem-5-1.png")
+```
+
+---
+#### But how?
+
+- Fully Nonparametric? No! Conditional Transformation models!
+
+- The idea is to find $F_{y|x}$, but indirectly using a variable transformation.
+
+- **Conditional** on $x$, the approach applies a **Transformation** function $h(Y|x)$ to the random variable $Y$; by composing this transformation with a base distribution, we obtain a model for the variable $Y$ given $x$.
+
+- Formally, the CTM was first introduced by `r Citet(myBib,"hothorn2014conditional")`. The definition involves only concepts of conditional probability and random variable transformation.
+
+- `r Citet(myBib,"carlan2023bayesian")` presented the Bayesian Conditional Transformation Model (BCTM) Building on the same definition as the CTM, this approach proposed a different parameterization for the transformation function $h(y|\boldsymbol{X})$.
+
+
+---
+#### What about this work?
+
 - In this work, we aim to contribute to the CTM class and, more specifically, to the BCTM. We present two alternative and efficient Bayesian estimation procedures for the BCTM.
-- The first is based on the Laplace approximation, inspired by the Integrated Nested Laplace Approximation (INLA). 
-
-- However, applying these proposed algorithms requires some restrictions on the construction of the transformation function$h(y|\boldsymbol{X}) $. Despite this, these restrictions are minimal and do not affect the model's applicability in various scenarios.
-- we also propose an alternative parameterization for the transformation functions $h(y|x) $, distinct from the one presented in \citet{carlan2023bayesian}. In this proposal, we utilize Bernstein bases, which allow us to express nonlinear functions as linear combinations of these bases.
-- of this work is related to the interpretability of the effects of the explanatory variables $x$ on the distribution of the response variable $y $. The BCTM class of models suffers from a lack of interpretability due to its construction. In this work, we propose two different results that enable us to evaluate how a particular variable $x$ impacts both the expected value of $Y$ and the quantiles of the distribution of $Y $.
-
-
+- The first approach is based on the Laplace approximation, inspired by the Integrated Nested Laplace Approximation (INLA). The second approach relies on the Variational Bayes. 
+- We also propose an alternative parameterization for the transformation functions $h(y|x)$, distinct from the one presented in `r Citet(myBib,"carlan2023bayesian")` . In our proposal,  we employ Bernstein bases, which allow us to express nonlinear functions as linear combinations of these bases.
+- The CTM class of models suffers from a lack of interpretability due to its construction. In this work, we propose two different results that enable us to evaluate how a particular variable $x$ impacts both the expected value of $Y$ and the quantiles of the distribution of $Y$.
+- Finally, we illustrate our methods using real data applications.
 
 ---
 ### Conditional Transformation Models
 
 ___
 
-- A ideia de transformacao de variaveis aleatorias já é muito popular na área de modelagem. A trnasformacao Box-Cox é um exemplo
-$$
-Y(\lambda) = 
-\begin{cases}
-\frac{Y^\lambda - 1}{\lambda} & \text{if } \lambda \neq 0, \\
-\log(Y) & \text{if } \lambda = 0,
-\end{cases}
-$$
-- These transformations help reframe the distribution of the response variable, making it easier to model and analyze.
+- The transformation of random variables is a widely used technique in statistical modeling to adjust the distribution of a dependent variable.
 
-- The Conditional Transformation Model (CTM) extends the transformation models class by allowing the transformation functions depending on a set of M explanatory variables $\bfs{X} \in \mathbb{R}^{M}$.
-- These new transformation functions from CTM are univariate functions of the response variable, conditional on fixed values of explanatory variables $\bfs{X} = \boldsymbol{x}$.
+- The Box-Cox transformation is a classic example, where a parameter $\lambda$ is used to adjust the variable in such a way that the variance is stabilized and the distribution becomes closer to normal.
 
-The functions are denoted by $h(Y|\boldsymbol{x}): \mathbb{R} \rightarrow \mathbb{R}$
+- The CTM extend the transformation models class by allowing the transformation functions depending on a set of M explanatory variables $\bfs{X} \in \mathbb{R}^{M}$.
+
+- These new transformation functions from CTM are univariate functions of the response variable, conditional on fixed values of explanatory variables $\bfs{X} = \boldsymbol{x}$:
+
+$$h(Y|\boldsymbol{x}): \mathbb{R} \rightarrow \mathbb{R}$$
 
 ---
 
-- These conditional transformation models aim to estimate the conditional distribution function of a response variable $Y$, given an observed explanatory vector $\bfs{X} = \bfs{x}$, denoted as $F_{Y|\bfs{X} = \bfs{x}}$.
+- But we have a transformation on an unkwnown random variable. What's next?
 
-- It is achieved by estimating the transformation function $h(Y| \bfs{x})$ rather than assuming a fixed form and selecting a baseline distribution without parameters to be estimated.
+- Assuming that $h(Y|\boldsymbol{x})$ follows a known probability distribution (First assumption)
 
-- In the CTMs context exist a conditional transformation function $h(Y \mid \mathbf{x})$ such that the transformed variable follows a known probability distribution (baseline distribution).
+$$
+h(Y|\boldsymbol{x}) + F_Z = \text{CTM}
+$$
 
-- The conditional distribution function of a random variable $Y $, given a set of observed explanatory variables $\mathbf{x} $, is defined as follows:
+Thus,
 
 \begin{equation}\label{ctm}
     F_{Y|\bfs{X} = \bfs{x}}(y) = P(Y \leq y|\boldsymbol{X} = \boldsymbol{x})= P(Y \leq y|\boldsymbol{X} = \boldsymbol{x}) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
@@ -151,27 +173,20 @@ The functions are denoted by $h(Y|\boldsymbol{x}): \mathbb{R} \rightarrow \mathb
 
 \noindent where $F_Z(\cdot)$ is a continuous baseline cumulative distribution function (cdf) of the Gaussian distribution.
 
-- The conditional transformation function $h(Y \mid \boldsymbol{x})$ is defined on the real line $\mathbb{R}$ and is monotonically increasing in $y \in \mathbb{R} $, conditional on $\boldsymbol{X} = \boldsymbol{x} $.
+- The conditional transformation function $h(Y \mid \boldsymbol{x})$ is monotonically increasing in $y \in \mathbb{R}$, conditional on $\boldsymbol{X} = \boldsymbol{x}$ (Second assumption).
+
+- Besides that, right continuous and differentiable (Third assumption).
+
+- At the end of the day, The task of obtaining $F_{Y|\bfs{X} = \bfs{x}}$ reduces to estimating the transformation function $h$.
 
 ---
+#### More about $h(Y \mid \boldsymbol{x})$
 
-$$
-    F_{Y|\bfs{X} = \bfs{x}}(y) = P(Y \leq y|\boldsymbol{X} = \boldsymbol{x})= P(Y \leq y|\boldsymbol{X} = \boldsymbol{x}) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
-$$
+- We have assumed that the transformation function $h(y \mid \bfs{x})$ is strictly monotonic, right-continuous, and differentiable.
 
-- The second equation holds because $h(Y \mid X = x)$ is monotonic in $y $. This ensures that $Y \leq y$ if and only if $h(Y) \leq h(y) $.
-
-\textit{For all random variables $Y$ conditional on $\bfs{X} = \bfs{x}$, and for any random variable $Z $, there exists a unique strictly monotonically increasing transformation $g_x$ such that $F_{Y|\bfs{X} = \bfs{x}} = F_{g_x \circ Z}$ for a given value $\bfs{x}$ of $\bfs{X}$.}
-
-For $Y$ conditional on $\bfs{X} = \bfs{x}$ a continuous random variable, there exists $g_x = h^{-1}(\cdot|\bfs{x}) $, such that $h(\cdot|\bfs{x}) = F_Z^{-1} \circ F_{Y|\bfs{X} = \bfs{x} }$ is strictly monotonic and right-continuous, with a well-defined first derivative.
-
----
-- The task of obtaining $F_{Y|\bfs{X} = \bfs{x}}$ reduces to estimating the transformation function $h $.
-
-- The construction of $h(y|\bfs{x})$ must account for all the characteristics and objectives of the proposed model.
+- The construction of $h(y|\bfs{x})$ must account for all the characteristics and objectives of the proposed model (Monotonic on $y$).
 
 - It is convenient to decompose the transformation function $h$ additively into $J$ partial transformation functions, defined for all $\bfs{x} \in \mathbb{R}^M $.
-
 
 \begin{equation}\label{decomp_h}
     h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x}).
@@ -179,56 +194,11 @@ For $Y$ conditional on $\bfs{X} = \bfs{x}$ a continuous random variable, there e
 
 - The transformation functions $h_j(y|\bfs{x})$ from (\ref{decomp_h}) can range from low-parameterized forms to complex structures with many parameters.
 
--  we have assumed that the transformation function $h(y \mid \bfs{x})$ is strictly monotonic, right-continuous, differentiable, and additively decomposed as in (\ref{decomp_h}).
-
-- we parameterize the transformation function, making the definition of conditional transformation models more general. This parameterization is achieved using basis functions. A basis, in this context, refers to a set of functions that can be used to express other functions as linear combinations.
 
 ---
-
-### Transformation function of random variables
-___
-
-- Now, from the corollaries we write $F_Y$ distribution as a function of a transformation function $h$ that belongs to space of function $\mathcal{H}$ defined as $\mathcal{H} = \lbrace h: \Xi \rightarrow \mathbb{R} \hspace{0.1cm} | \hspace{0.1cm} h(y_1) < h(y_2) \hspace{0.1cm} ,\forall \hspace{0.1cm} y_1 < y_2 \in \Xi \rbrace$.
-- For now, we write the transformation as a linear function of its basis-transformed argument $y$ using basis function.
-- First, let us parameterize the transformation function as a linear function of evaluated basis of $y$,
-$$
-\bfs{a}: \mathbb{R} \rightarrow \mathbb{R}^v,
-$$
-such that
-
-$$
-h(y) = \bfs{a(y)}^T \gamma$, $\gamma \in \mathbb{R}^v
-$$
-- The choice of the basis has to attend to the monotonically increasing restriction, and the first derivative $a(y)'$ must be available. 
-- For an evaluated basis and a vector of coefficients, we estimate the $F_Y$ distribution through the decomposition $F_Z \circ \boldsymbol{a}(y)^T \boldsymbol{\gamma}$.
-- To abroad the class of transformation functions, $h$ may depend on explanatory variables $\boldsymbol{X} \in \mathbb{R}^m$. 
--Let
-$$\mathbb{R} \rightarrow \mathbb{R}^m$$
-be a basis for explanatory variables.
--  The conditional transformation function $h(Y|\bfs{x})$ is parameterized as  a linear function of joint evaluate basis of $Y$ and $\bfs{x}$.
-
- $$\bfs{c}: \mathbb{R}^v \times \mathbb{R}^m  \rightarrow \mathbb{R}^{d(v, m)}$$
-is parameterized as a linear function of joint evaluate basis of $Y$ and $\boldsymbol{x}$ denoted as $\boldsymbol{c}(y,\boldsymbol{x}): \Xi \times \mathcal{X}  \rightarrow \mathbb{R}^{d(P, Q)}$.
-
-such that $h(y|\bfs{x}) = c(y, \bfs{x})^T\bfs{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^{d(v,m)}$
-
-- The choice of the basis $\bfs{c}$ has to attend to the monotonically increasing restriction on $y$
-
-- For an evaluated basis and a vector of coefficients, we estimate the $F_{Y|\bfs{X} = \bfs{x}}$ distribution through the decomposition $F_Z \circ \bfs{c(y,\bfs{x})}^T \bfs{\gamma}$.
----
-
-- The monotonically increasing restriction has to be attend only on $y$ direction.
-- All characteristics and objectives of the constructed model should be considered in $h(y|\boldsymbol{x})$ construction.
-- The BCTM is based on additive decomposition of the transformation function $h$ into $J$ partial transformation function for all $\boldsymbol{x} \in \mathcal{X}$. 
-
-$$\begin{equation}\label{decomp_h}
-    h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x}).
-\end{equation}$$
-- Monotonically of $h_j$ is sufficient for $h$ being monotone.
----
-
 ### Example of a simple CTM
- We assume $J = 3$ in (\ref{decomp_h}) and
+
+We assume $J = 3$ in (\ref{decomp_h}) and
     \begin{equation}
         h(y \mid x) = h_1(y) + h_2(y \mid x) + h_3(x) = \gamma_0 + \gamma_1 \cdot y + \gamma_2 \cdot x \cdot y + \gamma_3 \cdot x.
     \end{equation}
@@ -239,27 +209,59 @@ $$\begin{equation}\label{decomp_h}
 
 $$\begin{aligned}
      E(\gamma_0 + \gamma_1 \cdot Y + \gamma_2\cdot x \cdot Y + \gamma_3 \cdot x|\boldsymbol{x}) = E(Z) \\
-     E(Y|\boldsymbol{x})(\gamma_1 + \gamma_2\cdot x)  = - (\gamma_0  + \gamma_3 \cdot x)\\
      E(Y|\boldsymbol{x}) = \frac{ -(\gamma_0  + \gamma_3 \cdot x) }{\gamma_1  + \gamma_2\cdot x}.\\
      V(\gamma_0 + \gamma_1 \cdot Y + \gamma_2\cdot x \cdot Y + \gamma_3 \cdot x|\boldsymbol{x}) = 1 \\
-     V(Y(\gamma_1 + \gamma_2\cdot x)|\boldsymbol{x}) = 1 \\
      V(Y|\boldsymbol{x}) = \frac{1}{  (\gamma_1 + \gamma_2\cdot x)^2}. \\
     \end{aligned}$$
----
-- The joint basis for this model is given by $\bfs{c}(y|\bfs{x})^{\top} = (1,y, y \cdot x,x)$, with $\bfs{\gamma} = (\gamma_0, \gamma_1, \gamma_2, \gamma_3)$.
-
-\begin{equation}\label{constrainA}
-    \frac{\partial h(y|\bfs{x})}{\partial y} = \frac{\partial \bfs{c}(y|\bfs{x})^{\top}\bfs{\gamma}}{\partial y} \geq 0.
-\end{equation}
-
-We have that $\bfs{c}'(y|\bfs{x})^{\top} = \frac{\partial \bfs{c}(y|\bfs{x})^{\top}\bfs{\gamma}}{\partial y} = (1, x, 0,0)$, so the constrain in (\ref{constrainA}) is 
-
-$$\bfs{c}'(y|\bfs{x})^T \bfs{\gamma}  = \gamma_1 + x \cdot \gamma2 \geq 0$$.
-
-
+    
+- If Z is normal, linear combination of $Y$ would be Normal too.
 
 ---
 
+- See that in the example we have a linear combination of function where $\bfs{c}(y|\bfs{x})^{\top} = (1,y, y \cdot x,x)$, with $\bfs{\gamma} = (\gamma_0, \gamma_1, \gamma_2, \gamma_3)$
+
+$$
+h(y|\boldsymbol{x}) = \bfs{c}(y|\bfs{x})^{\top} \boldsymbol{\gamma}
+$$
+
+- Essa parametrizacao como uma combinacao linear de funcoes proposta por () facilita uma definicao mais 
+
+- Abre caminho para utilizarmos basis functions
+
+$$
+\bfs{a}: \mathbb{R} \rightarrow \mathbb{R}^v,
+$$
+
+such that
+
+$$
+h(y) = \bfs{a(y)}^T \gamma$, $\gamma \in \mathbb{R}^v
+$$
+
+---
+
+- For now, we write the transformation as a linear function of its basis-transformed argument $y$ using basis function.
+
+- First, let us parameterize the transformation function as a linear function of evaluated basis of $y$,
+
+$$
+\bfs{a}: \mathbb{R} \rightarrow \mathbb{R}^v,
+$$
+- The choice of the basis has to attend to the monotonically increasing restriction, and the first derivative $a(y)'$ must be available. 
+- Let $\bfs{b}: \mathbb{R} \rightarrow \mathbb{R}^m$ denote a basis for explanatory variables.
+
+- The joint basis is $\bfs{c}: \mathbb{R}^v \times \mathbb{R}^m  \rightarrow \mathbb{R}^{d(v, m)}$, such that $h(y|\bfs{x}) = c(y, \bfs{x})^T\bfs{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^{d(v,m)}$, and its dimension $d(v, m)$ depends on the combination of the $\bfs{b}$ and $\bfs{a}$ basis functions.
+such that
+
+-  The conditional transformation function $h(Y|\bfs{x})$ is parameterized as  a linear function of joint evaluate basis of $Y$ and $\bfs{x}$.
+
+ $$\bfs{c}: \mathbb{R}^v \times \mathbb{R}^m  \rightarrow \mathbb{R}^{d(v, m)}$$
+is parameterized as a linear function of joint evaluate basis of $Y$ and $\boldsymbol{x}$ denoted as $\boldsymbol{c}(y,\boldsymbol{x}): \Xi \times \mathcal{X}  \rightarrow \mathbb{R}^{d(P, Q)}$.
+
+such that $h(y|\bfs{x}) = c(y, \bfs{x})^T\bfs{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^{d(v,m)}$
+
+- For an evaluated basis and a vector of coefficients, we estimate the $F_{Y|\bfs{X} = \bfs{x}}$ distribution through the decomposition $F_Z \circ \bfs{c(y,\bfs{x})}^T \bfs{\gamma}$.
+---
 
 - Assuming linear transformation of the response variable, like $h(y) = y \cdot \gamma$ or even $h(y|x) = y \cdot x \cdot \gamma$, will only give us Gaussian models. 
 - To leave the class of Gaussian models, we have to increase the $h(y)$ complexity. 
@@ -283,9 +285,7 @@ ___
 
 - The first presentation of BCTMs was given by \citet{carlan2023bayesian}, where the author proposed the use of monotonic B-spline bases \citep{pya2015shape} to model conditional transformation functions. 
 
-- Additionally, an MCMC algorithm based on the No-U-Turn Sampler (NUTS) \citep{hoffman2014no} was employed to sample from the posterior distributions of the model parameters.
-
-- The construction of BCTMs follows the same principles as CTMs. However, the Bayesian framework naturally introduces penalization and smoothness in the B-spline bases through the choice of prior distributions on the basis coefficients. 
+- The Bayesian framework naturally introduces penalization and smoothness in the B-spline bases through the choice of prior distributions on the basis coefficients. 
 
 - Consequently, inferences about model parameters can be conducted using Highest Posterior Density (HPD) intervals and posterior probability calculations.
 
@@ -392,12 +392,12 @@ bscols(
 ```
 
 ---
-
-- We will represent our transformation function as a linear combination of B-spline basis of degree $k = 3$ and a vector of parameters $\boldsymbol{\gamma}$
+- So, with a B-spline basis of degree $k = 3$ we can represent a particular $h_j$ as
 
 $$h_j(y) = \sum_{i = 1}^q B_{i,3,\boldsymbol{t}}(y) \gamma_{j,i} =  \boldsymbol{a}(y)^{\top} \boldsymbol{\gamma}_j,$$
 with $\bfs{a}(y) = (B_{1,3,\bfs{t}}(y), B_{2,3,\bfs{t}}(y) \hdots, B_{q,3,\bfs{t}}(y))^{\top}$, and $\bfs{\gamma}_j = (\gamma_{j,1},\gamma_{j,2}, \hdots, \gamma_{j,q})^{\top}$.
-- But it is not necessary monotonic on $y$. But, it is sufficient for the derivative of the function with respect to $y$ to be greater than zero for all $y $.
+
+- But this construction does not cover only monotonic functions. 
 - A positive and increasing sequence of all parameters $\gamma_i$ produces a monotonically increasing spline function. 
 - We consider an alternative parameterization of the spline parameters to produce monotonically increasing spline function `r Citep(myBib,"pya2015shape")`. 
 -  The vector $\bfs{\gamma}_j = (\gamma_{j,1}, \hdots, \gamma_{j,q})^{\top}$ is defined in terms of unconstrained parameters $\bfs{\beta}_j$ as
@@ -431,7 +431,6 @@ $$\begin{equation}
 ---
 
 - A further case that contemplates $y$ and $x$ non-linear interaction is achieved by considering the tensor product of B-splines bases.
-- We use two distinct B-spline bases for $y$ and $x $, each one with of degree $k$ with knot vectors $\mathbf{t}_1$ and $\mathbf{t}_2 $, respectively
 - Let us take two distinct B-spline basis for $y$ and $x$ of degree $k$ with knots vector $\boldsymbol{l}_1$ and $\boldsymbol{l}_2$. 
 -  The transformation function formed by the tensor product of these bases as $h_j(y|x)$ and express it as
 
@@ -453,8 +452,9 @@ ___
 - `r Citep(myBib,"eilers1996flexible")` proposes an appealing penalty based on the finite difference of adjacent basis coefficients, called P-splines to addresses the overfitting problem of unregularized splines.
 - In the Bayesian context, smoothness and regularization are achieved through shrinkage priors distributions.
 - In the Bayesian P-Splines approach `r Citep(myBib,"lang2004bayesian")`, we assign multivariate normal distributions with a zero vector mean and a precision matrix $\boldsymbol{Q}$ to the parameter models
+- For the case $h_j(y) = \sum_{i = 1}^q B_{i,3,\bfs{t}}(y) \gamma_{j, i} =  \boldsymbol{a}(y)^T \bfs{\gamma}_j$, see (\ref{spline}),  we set $\bfs{\beta}_j \sim N_q(0, \bfs{Q}_j(\tau_j))$, which $\bfs{Q}_j(\tau_j) = \frac{1}{\tau_j}\bfs{K}_1$.
 ---
-- For the case $h_j(y) = \sum_{i = 1}^q B_{i,3,\bfs{t}}(y) \gamma_{j, i} =  \boldsymbol{a}(y)^T \bfs{\gamma}_j$, see (\ref{spline}),  we set $\bfs{\beta}_j \sim N_q(0, \bfs{Q}_j(\tau_j))$, which $\bfs{Q}_j(\tau_j) = \frac{1}{\tau_j}\bfs{K}_1$, and
+
 
 
 $$\begin{equation}\label{ordem1}
@@ -469,21 +469,8 @@ $$\begin{equation}\label{ordem1}
 \end{bmatrix}_{q \times q}
 \end{equation}$$
 
-\noindent which is $q - 1$ rank. Then the prior distribution for $\bfs{\beta}$ is improper. To guarantee that the prior for $\bfs{\beta}_j$ will be proper, we sum $10^{-6}$ in diagonal elements to ensure the positive definiteness of $\bfs{K}_1$.
-- The penalty matrix $\bfs{K}_1$ enforces that the unconstrained parameters stay close to each other. promoting smoothness in the estimated function.
 - By penalizing differences between adjacent parameters, it helps prevent overfitting and ensures a more stable and regularized solution.
 
----
-- The hyperparameter $\tau_j$ is represented internally on the log scale, that is, $\theta_j = \log(\tau_j)$. This representation is computationally convenient because the parameter is not bounded on this scale.
-
--  We set a Half-Cauchy distribution with location parameter $x_0 = 0$ and scale $\varphi = 25$ as the prior distribution for $\tau_j$.
-
-$$\begin{equation}
-    \pi(\theta) = \pi_{\tau}(\exp(\theta)) \left| \frac{\partial g^{-1}(\theta)}{\partial\theta} \right| \\
-    =\pi_{\tau}(\exp(\theta)) \exp(\theta) 
-\end{equation}$$
-
-- The amount of smoothness induced by the precision matrix (\ref{ordem1}) is controlled by the hyperparameter.
 
 - In the tensor product model for $h_j(y|\boldsymbol{x})$, we maintain a Gaussian prior distribution for $\boldsymbol{\beta}_j$ parameters. Although the precision matrix controls the smoothness in two directions
 
@@ -492,67 +479,25 @@ $$\begin{equation}\label{priori_K_2}
     \frac{1}{\tau_{j2}}\left(I_{L_1} \otimes \bfs{K_2}\right),
 \end{equation}$$
 
----
+- The hyperparameter $\tau_j$ is represented internally on the log scale, that is, $\theta_j = \log(\tau_j)$.
+- We set a Half-Cauchy distribution with location parameter $x_0 = 0$ and scale $\varphi = 25$ as the prior distribution for $\tau_j$.
 
-THe $\bfs{K}_2$ matrix considered here \citep{carlan2023bayesian}
-can be represented as $\bfs{K}_2 = \bfs{P}^T \bfs{P}$, where
-
-$$\begin{equation}\label{matrixP}
-\bfs{P} = \left(
-    \begin{array}{ccccc}
-        \bfs{P}_{u} & \bfs{0} & \bfs{0} & \dots & \bfs{0} \\
-         \bfs{0} & \bfs{P}_s & \bfs{0} & \dots & \bfs{0} \\
-         \bfs{0} & \bfs{0} & \bfs{P}_{s} & \dots & \bfs{0} \\
-         \dots & \dots & \dots & \ddots & \vdots \\
-          \bfs{0} & \bfs{0} & \bfs{0} & \dots & \bfs{P}_s
-    \end{array} \right),
-\end{equation}$$
-
-\noindent $\bfs{0}$ are null matrices of the corresponding dimensions. The $\boldsymbol{P}_u$ and $\boldsymbol{P}_s$ matrices are the $(L_2 - 2)\times L_2$ and $(L_2 - 1)\times L_2$ matrices given by
-
-
-$$\begin{equation} \bfs{P}_u = \left(
-    \begin{array}{cccccc}
-        1 & -2 & 1 & 0 & \dots & 0 \\
-        0 & 1 & -2 & 1 &  \dots & 0 \\
-        0 & 0 & 1 & -2 &  \dots & 0 \\
-        \dots & \dots & \dots  & \dots &  \ddots & \vdots \\
-        0 & 0& 0 & 0&  \dots & 0 \\
-    \end{array}\right), \bfs{P}_s = \left(\begin{array}{ccccc}
-        -1 & 1 & 0 & \dots & 0 \\
-         0 & -1 & 1 & \dots & 0 \\
-         \dots & \dots& \dots& \ddots &\vdots \\
-         0 & 0 & 0 & \dots & 1 \\
-    \end{array}\right).
-\end{equation}$$
-
-
-
-- For the vector $\boldsymbol{\tau} = (\tau_1, \tau_2)$ we set independent prior distributions considering then $\pi(\boldsymbol{\tau}) = \pi(\tau_1)\pi(\tau_2)$.
 ---
 ### Bernstein polynomial basis
 ___
 
 **Definition:** Let $k$ be a non-negative integer and $t \in [0,1]$, the Bernstein polynomials of degree $k$ are defined by
 
-\begin{equation}\label{bern_def}
+$$\begin{equation}\label{bern_def}
     B_{r,k}(t) = \binom{k}{r} t^r(1 - t)^{k -r},
-\end{equation}
+\end{equation}$$
 
-\noindent for $r = 0, \hdots, k$,  where 
-
-$$
-\binom{k}{r} = \frac{k!}{r!(k-r)!}.
-$$
-
- The Bernstein polynomials of degree 1 are represented by the following equations:  
+The Bernstein polynomials of degree 1 are represented by the following equations:  
 
 $$\begin{align}
     B_{0,1}(t) & = 1 - t, \\
     B_{1,1}(t) & = t,
 \end{align}$$
-
-\noindent for $t \in [0,1]$.  
 
 The Bernstein polynomials of degree 2 are given by:  
 
@@ -562,31 +507,24 @@ $$\begin{align}
     B_{2,2}(t) & = t^2,
 \end{align}$$
 
-\noindent also for $t \in [0,1]$. 
+for $t \in [0,1]$. 
 
 ---
 
-- These polynomials can be combined to approximate or represent a function as follows:  
 
-$$\begin{equation}\label{func_asbern}
-    f(x) = \sum_{r=0}^k B_{r,k}(x) \beta_r,
-\end{equation}$$
 
-\noindent where $\beta_r$, $r = 1, \dots, k,$ are the Bernstein coefficients. 
-
-- The domain of the Bernstein basis can be redefined over an arbitrary interval $[a, b]$ by changing the variable $y = (b-a)t + a$ for $t \in [0,1]$, resulting in:  
-   $$B_{r,k}(y) = \binom{k}{r} \left(\frac{y-a}{b-a}\right)^r \left(1 - \frac{y-a}{b-a}\right)^{k-r}, \quad y \in [a,b].$$  
-    
 - We propose to represent the transformation function $h_j(y)$, independent of explanatory variables, $\boldsymbol{x}$, for some $j = 1, \hdots, J$ as a Bernstein polynomial of degree $k$
 
 $$\begin{equation}\label{bern_transf}
     h_j(y) = \sum_{r = 0}^p B_{r,k}(y) \gamma_{j,k+1} = \boldsymbol{a}_j(y)^{\top} \boldsymbol{\gamma}_j
 \end{equation}$$
+
+- But how to construct monotonic Bernstein?
 ---
 
 ** Proposition ** Let $h_j(y)$ be the transformation function defined in (\ref{bern_transf}) with Bernstein basis representation. Let $\boldsymbol{\gamma}_j = \boldsymbol{\Sigma}_j \boldsymbol{\Tilde{\beta}}_j$ with $\boldsymbol{\Tilde{\beta}}_j$ as in (\ref{beta_tilde}) and $\Sigma$ defined in (\ref{Sigma_mono}). Then, $h_j(y)$ is monotonically increasing, that is for all $y_1, y_2 \in \mathbb{R}$ with $y_1 < y_2$ we have $h(y_1) \leq h(y_2)$.
 
-
+colocar a matri Sigma aqui
 ---
 ### Properties of the BCTM
 
@@ -2259,14 +2197,74 @@ Z_i & \overset{d}{=} h(Y_i|\boldsymbol{x}_i, \boldsymbol{b}_i,\boldsymbol{\beta}
     W & \sim \text{Wishart} (4, I_2, I_2,I_2) \nonumber \\
     \exp(\theta_l) & \sim \text{Inv-Gamma(1,0.001)}, l=1,2,3,
 \end{align}$$
-
+---
 - In this application, we consider the monotonic Bernstein polynomials and the monotonic B-splines for the function $\boldsymbol{a}(y)^{\top} \boldsymbol{\gamma}$. 
 
 - The model was fitted using the algorithm proposed in \ref{VBC_BCTM}. The number of parameters in the model is moderate, as it includes only one fixed effect and a small number of individuals. For this reason, we propose a full-rank correction. 
 
 - We compare the models using the Logarithm of the Pseudo-Marginal Likelihood (LPML) 
 
+$$\begin{equation}
+   \textrm{LPML} =  \sum_i \log \textrm{CPO}_i.
+\end{equation}$$
 
+where $\text{CPO}_i = \pi(y_i | \bfs{y}_{-i})$ is the posterior predictive density of each observation $y_i$ given $\boldsymvol{y}_{-i}$.
+
+- The LPML of the model with Bernstein basis is -863.7924, while the LPML with B-spline is -844.707.
+
+---
+- The posterior mean of the estimated distribution $\beta_1|\boldsymbol{y}$ is -0.443. This result is not directly comparable with the coefficient from the linear mixed model ();
+
+- Let the median of the $i$-th individual, conditional on the number of days of sleep deprivation, be denoted as $m_i$. Then, 
+
+
+$$\begin{align}
+     \frac{\partial h(m_i|\text{Days}_{ij}, \boldsymbol{b}_i)}{\partial \text{Days}_{ij}} & = \beta_1 + b_{i2} \nonumber\\
+     \frac{\partial h(m_i|\text{Days}_{ij}, \boldsymbol{b}_i)}{\partial m_i} & = \boldsymbol{a}'(m)^{\top} \boldsymbol{\gamma} \nonumber \\
+     \frac{\partial m_i}{\partial \text{Days}_{ij}} & = \frac{ -(\beta_1 + b_{i2})}{\boldsymbol{a}'(m)^{\top} \boldsymbol{\gamma}}
+\end{align}$$
+
+- The expression in \ref{marginal_effect_app5} is evaluated by the following
+
+$$\begin{equation}
+    \text{marginal impact} = \frac{1}{R}\sum_{r= 1}^R\frac{-(\beta_1^{(r)} + b_{2i}^{(r)})}{\boldsymbol{a}(m)^{\top}\boldsymbol{\gamma}^{(r)}}
+\end{equation}$$
+
+for a particular $m$.
+
+---
+
+---
+
+
+---
+Probability Integral Transform (PIT) \citep{PIT} as
+
+
+
+$$\begin{equation}
+    \text{PIT} = P(Y_i \leq y_i^{obs}| \bfs{y}_{-i})
+\end{equation}$$
+
+---
+### Application 6.2 - Analysis of vehicle theft incident in the city of São Paulo 
+
+- São Paulo is the largest economy in Brazil and has the highest number of automobiles, accounting for over 10\% of the entire national fleet.
+
+- Analyzing vehicle theft incidents (VTI) in São Paulo is critical for understanding the underlying patterns and trends that drive this crime. 
+
+- All Vehicle Theft Incidents (involving only robbery) recorded by the police in the city between 2017-01-01 and 2023-01-31 were obtained from the website of the Public Security Secretariat of São Paulo (\url{https://www.ssp.sp.gov.br/estatistica/consultas}).
+
+- The raw data consists of detailed records of each reported VTI in the City of São Paulo, including the specific date (year, month and day) and the hour of occurrence.
+
+- Under-reporting is not a concern, as a police report is mandatory for any car insurance claim in Brazil. Moreover, the possibility of the vehicle being recovered by the owner is more likely with an official police record.
+
+---
+- For the purposes of this analysis, we aggregate the number of Vehicle Theft Incidents (VTIs) into pre-defined time intervals.
+
+- his aggregation facilitates the identification of broader temporal patterns and trends that might not be apparent when analyzing each hour individually.
+
+``night am" [00:00 - 04:00], ``pre-morning" [04:00 - 06:00], ``morning" [06:00 - 08:00], ``day am" [08:00 - 12:00], ``day pm" [12:00 - 16:00], ``pre night" [16:00 - 18:00], ``night" [18:00 - 20:00], and ``night pm" [20:00 - 24:00].
 ---
 ### Final remarks
 ___

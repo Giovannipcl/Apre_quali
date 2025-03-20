@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Bayesian Conditional Transformation Models using Laplace approximation</title>
+    <title>New perspectives for the Bayesian Conditional Transformation Model</title>
     <meta charset="utf-8" />
     <meta name="author" content="Giovanni Pastori Piccirilli" />
     <meta name="author" content="Márcia D’Elia Branco" />
-    <meta name="date" content="2023-09-21" />
+    <meta name="date" content="2025-03-25" />
     <script src="index_files/header-attrs-2.29/header-attrs.js"></script>
     <link href="index_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <script src="index_files/jquery-3.5.1/jquery.min.js"></script>
@@ -39,7 +39,7 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# Bayesian Conditional Transformation Models using Laplace approximation
+# New perspectives for the Bayesian Conditional Transformation Model
 ]
 .author[
 ### Giovanni Pastori Piccirilli
@@ -48,7 +48,7 @@ class: center, middle, inverse, title-slide
 ### Márcia D’Elia Branco
 ]
 .date[
-### 21 September 2023
+### 25 March 2025
 ]
 
 ---
@@ -75,11 +75,13 @@ ___
 
 - Properties of the Bayesian Conditional Transformation Models
 
+- Bayesian count CTM
+
 - Posterior inference
   - Integrated Laplace with Bayesian Conditional
 Transformation Models
   - Variational Bayes correction to BCTM
-  - Posterior predictive check
+
 
 
 
@@ -90,6 +92,7 @@ Transformation Models
   - Study 2: BCTM with Bernstein polynomials
 
 - Applications 
+  - Head circumference
   - Framingham heart study
   - Sleep deprivation study
 
@@ -108,58 +111,73 @@ Paulo
 ___
 
 - The primary objective of regression models is to estimate the conditional probability distribution `\(F_{Y|X=x}\)` of a random variable `\(Y\)`, given an explanatory variable `\(X\)` with an observed value `\(x\)`.
-- Many regression models focus exclusively on the conditional expected value `\(E(Y|X=x)\)`, assuming that other moments of the distribution remain fixed or are only indirectly influenced by the explanatory variables.
-- As a result, model inference often relies on strong assumptions, such as homoscedasticity and symmetry.
+- Many regression models focus exclusively on the conditional expected value `\(E(Y|X=x)\)`, assuming that other moments of the distribution remain fixed.
+
+&lt;img src="figuras/Imagem-4-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+#### Alternatives
 - An approach that guarantees the flexibilization of some assumptions in the class of regression models is the Generalized additive model for the location, scale, and shape (GAMLSS) class.
-- The class includes a broad family of distributions for continuous and discrete responses incorporating highly skew or kurtotic distributions, however, choosing a parametric distribution on a large family of distributions has to be done carefully since it imposes assumptions on the model.
----
-
 - To move beyond the parametric framework, quantile regression models (Koenker and Hallock, 2001) provide a flexible alternative to regression models. In quantile regression, each conditional quantile is modeled independently as a function of linear or smooth terms of the explanatory variables.
-- Conditional Transformation Models (CTM) (Hothorn, Kneib, and Bühlmann, 2014) address the direct estimation of the conditional distribution function of a random variable `\(Y\)` conditional on a set of covariates `\(X = x\)`.
--  The approach involves applying a transformation function `\(h(Y|x)\)` to the random variable `\(Y\)`, where `\(x\)` is a fixed and known value, in conjunction with a baseline distribution function.
-- Carlan, Kneib, and Klein (2023) presented the Bayesian Conditional Transformation Model (BCTM) Building on the same definition as the CTM, this approach proposed a different parameterization for the transformation function `\(h(y|\boldsymbol{X})\)` and utilized a Markov Chain Monte Carlo (MCMC) simulation algorithm to generate inferences about the parameters.
-- We present an alternative estimation procedure based on the Laplace approximation, motivated by the Integrated Nested Laplace Approximation (INLA) approach (Rue, Martino, and Chopin, 2009).
-- We tested our proposed algorithm to some models already fitted with other approaches (MCMC and Maximum likelihood).
+
 
 ---
+#### If we go further?
+
+- Conditional Transformation Models (CTM) (Hothorn, Kneib, and Bühlmann, 2014) address the direct estimation of the conditional distribution function of a random variable `\(Y\)` conditional on a set of covariates `\(X = x\)`.
+
+&lt;img src="figuras/Imagem-5-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+#### But how?
+
+- Fully Nonparametric? No! Conditional Transformation models!
+
+- The idea is to find `\(F_{y|x}\)`, but indirectly using a variable transformation.
+
+- **Conditional** on `\(x\)`, the approach applies a **Transformation** function `\(h(Y|x)\)` to the random variable `\(Y\)`; by composing this transformation with a base distribution, we obtain a model for the variable `\(Y\)` given `\(x\)`.
+
+- Formally, the CTM was first introduced by Hothorn, Kneib, and Bühlmann (2014). The definition involves only concepts of conditional probability and random variable transformation.
+
+- Carlan, Kneib, and Klein (2024) presented the Bayesian Conditional Transformation Model (BCTM) Building on the same definition as the CTM, this approach proposed a different parameterization for the transformation function `\(h(y|\boldsymbol{X})\)`.
+
+
+---
+#### What about this work?
+
 - In this work, we aim to contribute to the CTM class and, more specifically, to the BCTM. We present two alternative and efficient Bayesian estimation procedures for the BCTM.
-- The first is based on the Laplace approximation, inspired by the Integrated Nested Laplace Approximation (INLA). 
-
-- However, applying these proposed algorithms requires some restrictions on the construction of the transformation function$h(y|\boldsymbol{X}) $. Despite this, these restrictions are minimal and do not affect the model's applicability in various scenarios.
-- we also propose an alternative parameterization for the transformation functions $h(y|x) $, distinct from the one presented in \citet{carlan2023bayesian}. In this proposal, we utilize Bernstein bases, which allow us to express nonlinear functions as linear combinations of these bases.
-- of this work is related to the interpretability of the effects of the explanatory variables `\(x\)` on the distribution of the response variable $y $. The BCTM class of models suffers from a lack of interpretability due to its construction. In this work, we propose two different results that enable us to evaluate how a particular variable `\(x\)` impacts both the expected value of `\(Y\)` and the quantiles of the distribution of $Y $.
-
-
+- The first approach is based on the Laplace approximation, inspired by the Integrated Nested Laplace Approximation (INLA). The second approach relies on the Variational Bayes. 
+- We also propose an alternative parameterization for the transformation functions `\(h(y|x)\)`, distinct from the one presented in Carlan, Kneib, and Klein (2024) . In our proposal,  we employ Bernstein bases, which allow us to express nonlinear functions as linear combinations of these bases.
+- The CTM class of models suffers from a lack of interpretability due to its construction. In this work, we propose two different results that enable us to evaluate how a particular variable `\(x\)` impacts both the expected value of `\(Y\)` and the quantiles of the distribution of `\(Y\)`.
+- Finally, we illustrate our methods using real data applications.
 
 ---
 ### Conditional Transformation Models
 
 ___
 
-- A ideia de transformacao de variaveis aleatorias já é muito popular na área de modelagem. A trnasformacao Box-Cox é um exemplo
-$$
-Y(\lambda) = 
-\begin{cases}
-\frac{Y^\lambda - 1}{\lambda} &amp; \text{if } \lambda \neq 0, \\
-\log(Y) &amp; \text{if } \lambda = 0,
-\end{cases}
-$$
-- These transformations help reframe the distribution of the response variable, making it easier to model and analyze.
+- The transformation of random variables is a widely used technique in statistical modeling to adjust the distribution of a dependent variable.
 
-- The Conditional Transformation Model (CTM) extends the transformation models class by allowing the transformation functions depending on a set of M explanatory variables `\(\bfs{X} \in \mathbb{R}^{M}\)`.
-- These new transformation functions from CTM are univariate functions of the response variable, conditional on fixed values of explanatory variables `\(\bfs{X} = \boldsymbol{x}\)`.
+- The Box-Cox transformation is a classic example, where a parameter `\(\lambda\)` is used to adjust the variable in such a way that the variance is stabilized and the distribution becomes closer to normal.
 
-The functions are denoted by `\(h(Y|\boldsymbol{x}): \mathbb{R} \rightarrow \mathbb{R}\)`
+- The CTM extend the transformation models class by allowing the transformation functions depending on a set of M explanatory variables `\(\bfs{X} \in \mathbb{R}^{M}\)`.
+
+- These new transformation functions from CTM are univariate functions of the response variable, conditional on fixed values of explanatory variables `\(\bfs{X} = \boldsymbol{x}\)`:
+
+`$$h(Y|\boldsymbol{x}): \mathbb{R} \rightarrow \mathbb{R}$$`
 
 ---
 
-- These conditional transformation models aim to estimate the conditional distribution function of a response variable `\(Y\)`, given an observed explanatory vector `\(\bfs{X} = \bfs{x}\)`, denoted as `\(F_{Y|\bfs{X} = \bfs{x}}\)`.
+- But we have a transformation on an unkwnown random variable. What's next?
 
-- It is achieved by estimating the transformation function `\(h(Y| \bfs{x})\)` rather than assuming a fixed form and selecting a baseline distribution without parameters to be estimated.
+- Assuming that `\(h(Y|\boldsymbol{x})\)` follows a known probability distribution (First assumption)
 
-- In the CTMs context exist a conditional transformation function `\(h(Y \mid \mathbf{x})\)` such that the transformed variable follows a known probability distribution (baseline distribution).
+$$
+h(Y|\boldsymbol{x}) + F_Z = \text{CTM}
+$$
 
-- The conditional distribution function of a random variable $Y $, given a set of observed explanatory variables $\mathbf{x} $, is defined as follows:
+Thus,
 
 \begin{equation}\label{ctm}
     F_{Y|\bfs{X} = \bfs{x}}(y) = P(Y \leq y|\boldsymbol{X} = \boldsymbol{x})= P(Y \leq y|\boldsymbol{X} = \boldsymbol{x}) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
@@ -167,27 +185,20 @@ The functions are denoted by `\(h(Y|\boldsymbol{x}): \mathbb{R} \rightarrow \mat
 
 \noindent where `\(F_Z(\cdot)\)` is a continuous baseline cumulative distribution function (cdf) of the Gaussian distribution.
 
-- The conditional transformation function `\(h(Y \mid \boldsymbol{x})\)` is defined on the real line `\(\mathbb{R}\)` and is monotonically increasing in $y \in \mathbb{R} $, conditional on $\boldsymbol{X} = \boldsymbol{x} $.
+- The conditional transformation function `\(h(Y \mid \boldsymbol{x})\)` is monotonically increasing in `\(y \in \mathbb{R}\)`, conditional on `\(\boldsymbol{X} = \boldsymbol{x}\)` (Second assumption).
+
+- Besides that, right continuous and differentiable (Third assumption).
+
+- At the end of the day, The task of obtaining `\(F_{Y|\bfs{X} = \bfs{x}}\)` reduces to estimating the transformation function `\(h\)`.
 
 ---
+#### More about `\(h(Y \mid \boldsymbol{x})\)`
 
-$$
-    F_{Y|\bfs{X} = \bfs{x}}(y) = P(Y \leq y|\boldsymbol{X} = \boldsymbol{x})= P(Y \leq y|\boldsymbol{X} = \boldsymbol{x}) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
-$$
+- We have assumed that the transformation function `\(h(y \mid \bfs{x})\)` is strictly monotonic, right-continuous, and differentiable.
 
-- The second equation holds because `\(h(Y \mid X = x)\)` is monotonic in $y $. This ensures that `\(Y \leq y\)` if and only if $h(Y) \leq h(y) $.
-
-\textit{For all random variables `\(Y\)` conditional on `\(\bfs{X} = \bfs{x}\)`, and for any random variable $Z $, there exists a unique strictly monotonically increasing transformation `\(g_x\)` such that `\(F_{Y|\bfs{X} = \bfs{x}} = F_{g_x \circ Z}\)` for a given value `\(\bfs{x}\)` of `\(\bfs{X}\)`.}
-
-For `\(Y\)` conditional on `\(\bfs{X} = \bfs{x}\)` a continuous random variable, there exists $g_x = h^{-1}(\cdot|\bfs{x}) $, such that `\(h(\cdot|\bfs{x}) = F_Z^{-1} \circ F_{Y|\bfs{X} = \bfs{x} }\)` is strictly monotonic and right-continuous, with a well-defined first derivative.
-
----
-- The task of obtaining `\(F_{Y|\bfs{X} = \bfs{x}}\)` reduces to estimating the transformation function $h $.
-
-- The construction of `\(h(y|\bfs{x})\)` must account for all the characteristics and objectives of the proposed model.
+- The construction of `\(h(y|\bfs{x})\)` must account for all the characteristics and objectives of the proposed model (Monotonic on `\(y\)`).
 
 - It is convenient to decompose the transformation function `\(h\)` additively into `\(J\)` partial transformation functions, defined for all $\bfs{x} \in \mathbb{R}^M $.
-
 
 \begin{equation}\label{decomp_h}
     h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x}).
@@ -195,56 +206,11 @@ For `\(Y\)` conditional on `\(\bfs{X} = \bfs{x}\)` a continuous random variable,
 
 - The transformation functions `\(h_j(y|\bfs{x})\)` from (\ref{decomp_h}) can range from low-parameterized forms to complex structures with many parameters.
 
--  we have assumed that the transformation function `\(h(y \mid \bfs{x})\)` is strictly monotonic, right-continuous, differentiable, and additively decomposed as in (\ref{decomp_h}).
-
-- we parameterize the transformation function, making the definition of conditional transformation models more general. This parameterization is achieved using basis functions. A basis, in this context, refers to a set of functions that can be used to express other functions as linear combinations.
 
 ---
-
-### Transformation function of random variables
-___
-
-- Now, from the corollaries we write `\(F_Y\)` distribution as a function of a transformation function `\(h\)` that belongs to space of function `\(\mathcal{H}\)` defined as `\(\mathcal{H} = \lbrace h: \Xi \rightarrow \mathbb{R} \hspace{0.1cm} | \hspace{0.1cm} h(y_1) &lt; h(y_2) \hspace{0.1cm} ,\forall \hspace{0.1cm} y_1 &lt; y_2 \in \Xi \rbrace\)`.
-- For now, we write the transformation as a linear function of its basis-transformed argument `\(y\)` using basis function.
-- First, let us parameterize the transformation function as a linear function of evaluated basis of `\(y\)`,
-$$
-\bfs{a}: \mathbb{R} \rightarrow \mathbb{R}^v,
-$$
-such that
-
-$$
-h(y) = \bfs{a(y)}^T \gamma$, $\gamma \in \mathbb{R}^v
-$$
-- The choice of the basis has to attend to the monotonically increasing restriction, and the first derivative `\(a(y)'\)` must be available. 
-- For an evaluated basis and a vector of coefficients, we estimate the `\(F_Y\)` distribution through the decomposition `\(F_Z \circ \boldsymbol{a}(y)^T \boldsymbol{\gamma}\)`.
-- To abroad the class of transformation functions, `\(h\)` may depend on explanatory variables `\(\boldsymbol{X} \in \mathbb{R}^m\)`. 
--Let
-`$$\mathbb{R} \rightarrow \mathbb{R}^m$$`
-be a basis for explanatory variables.
--  The conditional transformation function `\(h(Y|\bfs{x})\)` is parameterized as  a linear function of joint evaluate basis of `\(Y\)` and `\(\bfs{x}\)`.
-
- `$$\bfs{c}: \mathbb{R}^v \times \mathbb{R}^m  \rightarrow \mathbb{R}^{d(v, m)}$$`
-is parameterized as a linear function of joint evaluate basis of `\(Y\)` and `\(\boldsymbol{x}\)` denoted as `\(\boldsymbol{c}(y,\boldsymbol{x}): \Xi \times \mathcal{X}  \rightarrow \mathbb{R}^{d(P, Q)}\)`.
-
-such that `\(h(y|\bfs{x}) = c(y, \bfs{x})^T\bfs{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^{d(v,m)}\)`
-
-- The choice of the basis `\(\bfs{c}\)` has to attend to the monotonically increasing restriction on `\(y\)`
-
-- For an evaluated basis and a vector of coefficients, we estimate the `\(F_{Y|\bfs{X} = \bfs{x}}\)` distribution through the decomposition `\(F_Z \circ \bfs{c(y,\bfs{x})}^T \bfs{\gamma}\)`.
----
-
-- The monotonically increasing restriction has to be attend only on `\(y\)` direction.
-- All characteristics and objectives of the constructed model should be considered in `\(h(y|\boldsymbol{x})\)` construction.
-- The BCTM is based on additive decomposition of the transformation function `\(h\)` into `\(J\)` partial transformation function for all `\(\boldsymbol{x} \in \mathcal{X}\)`. 
-
-`$$\begin{equation}\label{decomp_h}
-    h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x}).
-\end{equation}$$`
-- Monotonically of `\(h_j\)` is sufficient for `\(h\)` being monotone.
----
-
 ### Example of a simple CTM
- We assume `\(J = 3\)` in (\ref{decomp_h}) and
+
+We assume `\(J = 3\)` in (\ref{decomp_h}) and
     \begin{equation}
         h(y \mid x) = h_1(y) + h_2(y \mid x) + h_3(x) = \gamma_0 + \gamma_1 \cdot y + \gamma_2 \cdot x \cdot y + \gamma_3 \cdot x.
     \end{equation}
@@ -255,27 +221,59 @@ such that `\(h(y|\bfs{x}) = c(y, \bfs{x})^T\bfs{\gamma}, \boldsymbol{\gamma} \in
 
 `$$\begin{aligned}
      E(\gamma_0 + \gamma_1 \cdot Y + \gamma_2\cdot x \cdot Y + \gamma_3 \cdot x|\boldsymbol{x}) = E(Z) \\
-     E(Y|\boldsymbol{x})(\gamma_1 + \gamma_2\cdot x)  = - (\gamma_0  + \gamma_3 \cdot x)\\
      E(Y|\boldsymbol{x}) = \frac{ -(\gamma_0  + \gamma_3 \cdot x) }{\gamma_1  + \gamma_2\cdot x}.\\
      V(\gamma_0 + \gamma_1 \cdot Y + \gamma_2\cdot x \cdot Y + \gamma_3 \cdot x|\boldsymbol{x}) = 1 \\
-     V(Y(\gamma_1 + \gamma_2\cdot x)|\boldsymbol{x}) = 1 \\
      V(Y|\boldsymbol{x}) = \frac{1}{  (\gamma_1 + \gamma_2\cdot x)^2}. \\
     \end{aligned}$$`
----
-- The joint basis for this model is given by `\(\bfs{c}(y|\bfs{x})^{\top} = (1,y, y \cdot x,x)\)`, with `\(\bfs{\gamma} = (\gamma_0, \gamma_1, \gamma_2, \gamma_3)\)`.
-
-\begin{equation}\label{constrainA}
-    \frac{\partial h(y|\bfs{x})}{\partial y} = \frac{\partial \bfs{c}(y|\bfs{x})^{\top}\bfs{\gamma}}{\partial y} \geq 0.
-\end{equation}
-
-We have that `\(\bfs{c}'(y|\bfs{x})^{\top} = \frac{\partial \bfs{c}(y|\bfs{x})^{\top}\bfs{\gamma}}{\partial y} = (1, x, 0,0)\)`, so the constrain in (\ref{constrainA}) is 
-
-`$$\bfs{c}'(y|\bfs{x})^T \bfs{\gamma}  = \gamma_1 + x \cdot \gamma2 \geq 0$$`.
-
-
+    
+- If Z is normal, linear combination of `\(Y\)` would be Normal too.
 
 ---
 
+- See that in the example we have a linear combination of function where `\(\bfs{c}(y|\bfs{x})^{\top} = (1,y, y \cdot x,x)\)`, with `\(\bfs{\gamma} = (\gamma_0, \gamma_1, \gamma_2, \gamma_3)\)`
+
+$$
+h(y|\boldsymbol{x}) = \bfs{c}(y|\bfs{x})^{\top} \boldsymbol{\gamma}
+$$
+
+- Essa parametrizacao como uma combinacao linear de funcoes proposta por () facilita uma definicao mais 
+
+- Abre caminho para utilizarmos basis functions
+
+$$
+\bfs{a}: \mathbb{R} \rightarrow \mathbb{R}^v,
+$$
+
+such that
+
+$$
+h(y) = \bfs{a(y)}^T \gamma$, $\gamma \in \mathbb{R}^v
+$$
+
+---
+
+- For now, we write the transformation as a linear function of its basis-transformed argument `\(y\)` using basis function.
+
+- First, let us parameterize the transformation function as a linear function of evaluated basis of `\(y\)`,
+
+$$
+\bfs{a}: \mathbb{R} \rightarrow \mathbb{R}^v,
+$$
+- The choice of the basis has to attend to the monotonically increasing restriction, and the first derivative `\(a(y)'\)` must be available. 
+- Let `\(\bfs{b}: \mathbb{R} \rightarrow \mathbb{R}^m\)` denote a basis for explanatory variables.
+
+- The joint basis is `\(\bfs{c}: \mathbb{R}^v \times \mathbb{R}^m  \rightarrow \mathbb{R}^{d(v, m)}\)`, such that `\(h(y|\bfs{x}) = c(y, \bfs{x})^T\bfs{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^{d(v,m)}\)`, and its dimension `\(d(v, m)\)` depends on the combination of the `\(\bfs{b}\)` and `\(\bfs{a}\)` basis functions.
+such that
+
+-  The conditional transformation function `\(h(Y|\bfs{x})\)` is parameterized as  a linear function of joint evaluate basis of `\(Y\)` and `\(\bfs{x}\)`.
+
+ `$$\bfs{c}: \mathbb{R}^v \times \mathbb{R}^m  \rightarrow \mathbb{R}^{d(v, m)}$$`
+is parameterized as a linear function of joint evaluate basis of `\(Y\)` and `\(\boldsymbol{x}\)` denoted as `\(\boldsymbol{c}(y,\boldsymbol{x}): \Xi \times \mathcal{X}  \rightarrow \mathbb{R}^{d(P, Q)}\)`.
+
+such that `\(h(y|\bfs{x}) = c(y, \bfs{x})^T\bfs{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^{d(v,m)}\)`
+
+- For an evaluated basis and a vector of coefficients, we estimate the `\(F_{Y|\bfs{X} = \bfs{x}}\)` distribution through the decomposition `\(F_Z \circ \bfs{c(y,\bfs{x})}^T \bfs{\gamma}\)`.
+---
 
 - Assuming linear transformation of the response variable, like `\(h(y) = y \cdot \gamma\)` or even `\(h(y|x) = y \cdot x \cdot \gamma\)`, will only give us Gaussian models. 
 - To leave the class of Gaussian models, we have to increase the `\(h(y)\)` complexity. 
@@ -299,9 +297,7 @@ ___
 
 - The first presentation of BCTMs was given by \citet{carlan2023bayesian}, where the author proposed the use of monotonic B-spline bases \citep{pya2015shape} to model conditional transformation functions. 
 
-- Additionally, an MCMC algorithm based on the No-U-Turn Sampler (NUTS) \citep{hoffman2014no} was employed to sample from the posterior distributions of the model parameters.
-
-- The construction of BCTMs follows the same principles as CTMs. However, the Bayesian framework naturally introduces penalization and smoothness in the B-spline bases through the choice of prior distributions on the basis coefficients. 
+- The Bayesian framework naturally introduces penalization and smoothness in the B-spline bases through the choice of prior distributions on the basis coefficients. 
 
 - Consequently, inferences about model parameters can be conducted using Highest Posterior Density (HPD) intervals and posterior probability calculations.
 
@@ -394,7 +390,7 @@ ___
     "6": [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
     "7": [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]
   },
-  "group": ["SharedData2bf4a463"]
+  "group": ["SharedData672b7b3a"]
 }</script>
 </div>
 </div>
@@ -402,8 +398,8 @@ ___
 </div>
 </div>
 <div class="col-xs-10">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-b4dd74d26b29eb89c871" style="width:100%;height:400px;"></div>
-<script type="application/json" data-for="htmlwidget-b4dd74d26b29eb89c871">{"x":{"visdat":{"5de11d39f3dd":["function () ","plotlyVisDat"]},"cur_data":"5de11d39f3dd","attrs":{"5de11d39f3dd":{"x":{},"y":{},"mode":"lines","line":{"simplyfy":false},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"width":700,"height":350,"margin":{"b":40,"l":60,"t":25,"r":10},"title":{"text":"B-splines of degree 1"},"xaxis":{"domain":[0,1],"automargin":true,"title":{"text":"y"}},"autosize":false,"yaxis":{"domain":[0,1],"automargin":true,"title":"B"},"dragmode":"zoom","hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[1,0.89999999999999991,0.79999999999999982,0.70000000000000018,0.60000000000000009,0.5,0.39999999999999991,0.29999999999999982,0.20000000000000018,0.10000000000000009,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(102,194,165,1)","simplyfy":false},"type":"scatter","key":["1"],"set":"SharedData2bf4a463","name":"1","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0.10000000000000009,0.20000000000000018,0.29999999999999982,0.39999999999999991,0.5,0.60000000000000009,0.70000000000000018,0.79999999999999982,0.89999999999999991,1,0.89999999999999991,0.79999999999999982,0.70000000000000018,0.59999999999999964,0.5,0.39999999999999991,0.29999999999999982,0.20000000000000018,0.099999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(252,141,98,1)","simplyfy":false},"type":"scatter","key":["2"],"set":"SharedData2bf4a463","name":"2","marker":{"color":"rgba(252,141,98,1)","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0.10000000000000009,0.20000000000000018,0.29999999999999982,0.40000000000000036,0.5,0.60000000000000009,0.70000000000000018,0.79999999999999982,0.90000000000000036,1,0.90000000000000036,0.79999999999999982,0.69999999999999929,0.59999999999999964,0.5,0.40000000000000036,0.29999999999999982,0.19999999999999929,0.099999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(141,160,203,1)","simplyfy":false},"type":"scatter","key":["3"],"set":"SharedData2bf4a463","name":"3","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.099999999999999645,0.20000000000000018,0.30000000000000071,0.40000000000000036,0.5,0.59999999999999964,0.70000000000000018,0.80000000000000071,0.90000000000000036,1,0.90000000000000036,0.79999999999999982,0.69999999999999929,0.59999999999999964,0.5,0.40000000000000036,0.29999999999999982,0.19999999999999929,0.099999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(231,138,195,1)","simplyfy":false},"type":"scatter","key":["4"],"set":"SharedData2bf4a463","name":"4","marker":{"color":"rgba(231,138,195,1)","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)"},"error_y":{"color":"rgba(231,138,195,1)"},"error_x":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.099999999999999645,0.20000000000000018,0.30000000000000071,0.40000000000000036,0.5,0.59999999999999964,0.70000000000000018,0.80000000000000071,0.90000000000000036,1,0.89999999999999947,0.79999999999999982,0.70000000000000018,0.59999999999999964,0.5,0.39999999999999947,0.29999999999999982,0.19999999999999929,0.099999999999999645,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(166,216,84,1)","simplyfy":false},"type":"scatter","key":["5"],"set":"SharedData2bf4a463","name":"5","marker":{"color":"rgba(166,216,84,1)","line":{"color":"rgba(166,216,84,1)"}},"textfont":{"color":"rgba(166,216,84,1)"},"error_y":{"color":"rgba(166,216,84,1)"},"error_x":{"color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.10000000000000053,0.20000000000000018,0.29999999999999982,0.40000000000000036,0.5,0.60000000000000053,0.70000000000000018,0.80000000000000071,0.90000000000000036,1,0.89999999999999947,0.79999999999999982,0.69999999999999929,0.59999999999999964,0.5,0.39999999999999947,0.29999999999999982,0.19999999999999929,0.099999999999999645,0],"mode":"lines","line":{"color":"rgba(255,217,47,1)","simplyfy":false},"type":"scatter","key":["6"],"set":"SharedData2bf4a463","name":"6","marker":{"color":"rgba(255,217,47,1)","line":{"color":"rgba(255,217,47,1)"}},"textfont":{"color":"rgba(255,217,47,1)"},"error_y":{"color":"rgba(255,217,47,1)"},"error_x":{"color":"rgba(255,217,47,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.10000000000000053,0.20000000000000018,0.30000000000000071,0.40000000000000036,0.5,0.60000000000000053,0.70000000000000018,0.80000000000000071,0.90000000000000036,1],"mode":"lines","line":{"color":"rgba(229,196,148,1)","simplyfy":false},"type":"scatter","key":["7"],"set":"SharedData2bf4a463","name":"7","marker":{"color":"rgba(229,196,148,1)","line":{"color":"rgba(229,196,148,1)"}},"textfont":{"color":"rgba(229,196,148,1)"},"error_y":{"color":"rgba(229,196,148,1)"},"error_x":{"color":"rgba(229,196,148,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedData2bf4a463"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-d92daeb31ae4533f88b2" style="width:100%;height:400px;"></div>
+<script type="application/json" data-for="htmlwidget-d92daeb31ae4533f88b2">{"x":{"visdat":{"a01056960b55":["function () ","plotlyVisDat"]},"cur_data":"a01056960b55","attrs":{"a01056960b55":{"x":{},"y":{},"mode":"lines","line":{"simplyfy":false},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"width":700,"height":350,"margin":{"b":40,"l":60,"t":25,"r":10},"title":{"text":"B-splines of degree 1"},"xaxis":{"domain":[0,1],"automargin":true,"title":{"text":"y"}},"autosize":false,"yaxis":{"domain":[0,1],"automargin":true,"title":"B"},"dragmode":"zoom","hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[1,0.89999999999999991,0.79999999999999982,0.70000000000000018,0.60000000000000009,0.5,0.39999999999999991,0.29999999999999982,0.20000000000000018,0.10000000000000009,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(102,194,165,1)","simplyfy":false},"type":"scatter","key":["1"],"set":"SharedData672b7b3a","name":"1","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0.10000000000000009,0.20000000000000018,0.29999999999999982,0.39999999999999991,0.5,0.60000000000000009,0.70000000000000018,0.79999999999999982,0.89999999999999991,1,0.89999999999999991,0.79999999999999982,0.70000000000000018,0.59999999999999964,0.5,0.39999999999999991,0.29999999999999982,0.20000000000000018,0.099999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(252,141,98,1)","simplyfy":false},"type":"scatter","key":["2"],"set":"SharedData672b7b3a","name":"2","marker":{"color":"rgba(252,141,98,1)","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0.10000000000000009,0.20000000000000018,0.29999999999999982,0.40000000000000036,0.5,0.60000000000000009,0.70000000000000018,0.79999999999999982,0.90000000000000036,1,0.90000000000000036,0.79999999999999982,0.69999999999999929,0.59999999999999964,0.5,0.40000000000000036,0.29999999999999982,0.19999999999999929,0.099999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(141,160,203,1)","simplyfy":false},"type":"scatter","key":["3"],"set":"SharedData672b7b3a","name":"3","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.099999999999999645,0.20000000000000018,0.30000000000000071,0.40000000000000036,0.5,0.59999999999999964,0.70000000000000018,0.80000000000000071,0.90000000000000036,1,0.90000000000000036,0.79999999999999982,0.69999999999999929,0.59999999999999964,0.5,0.40000000000000036,0.29999999999999982,0.19999999999999929,0.099999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(231,138,195,1)","simplyfy":false},"type":"scatter","key":["4"],"set":"SharedData672b7b3a","name":"4","marker":{"color":"rgba(231,138,195,1)","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)"},"error_y":{"color":"rgba(231,138,195,1)"},"error_x":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.099999999999999645,0.20000000000000018,0.30000000000000071,0.40000000000000036,0.5,0.59999999999999964,0.70000000000000018,0.80000000000000071,0.90000000000000036,1,0.89999999999999947,0.79999999999999982,0.70000000000000018,0.59999999999999964,0.5,0.39999999999999947,0.29999999999999982,0.19999999999999929,0.099999999999999645,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(166,216,84,1)","simplyfy":false},"type":"scatter","key":["5"],"set":"SharedData672b7b3a","name":"5","marker":{"color":"rgba(166,216,84,1)","line":{"color":"rgba(166,216,84,1)"}},"textfont":{"color":"rgba(166,216,84,1)"},"error_y":{"color":"rgba(166,216,84,1)"},"error_x":{"color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.10000000000000053,0.20000000000000018,0.29999999999999982,0.40000000000000036,0.5,0.60000000000000053,0.70000000000000018,0.80000000000000071,0.90000000000000036,1,0.89999999999999947,0.79999999999999982,0.69999999999999929,0.59999999999999964,0.5,0.39999999999999947,0.29999999999999982,0.19999999999999929,0.099999999999999645,0],"mode":"lines","line":{"color":"rgba(255,217,47,1)","simplyfy":false},"type":"scatter","key":["6"],"set":"SharedData672b7b3a","name":"6","marker":{"color":"rgba(255,217,47,1)","line":{"color":"rgba(255,217,47,1)"}},"textfont":{"color":"rgba(255,217,47,1)"},"error_y":{"color":"rgba(255,217,47,1)"},"error_x":{"color":"rgba(255,217,47,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.10000000000000053,0.20000000000000018,0.30000000000000071,0.40000000000000036,0.5,0.60000000000000053,0.70000000000000018,0.80000000000000071,0.90000000000000036,1],"mode":"lines","line":{"color":"rgba(229,196,148,1)","simplyfy":false},"type":"scatter","key":["7"],"set":"SharedData672b7b3a","name":"7","marker":{"color":"rgba(229,196,148,1)","line":{"color":"rgba(229,196,148,1)"}},"textfont":{"color":"rgba(229,196,148,1)"},"error_y":{"color":"rgba(229,196,148,1)"},"error_x":{"color":"rgba(229,196,148,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedData672b7b3a"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -482,7 +478,7 @@ ___
     "7": [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
     "8": [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]
   },
-  "group": ["SharedDatab4dd74d2"]
+  "group": ["SharedDatad92daeb3"]
 }</script>
 </div>
 </div>
@@ -490,19 +486,19 @@ ___
 </div>
 </div>
 <div class="col-xs-10">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-4233190fa42f1d0ec140" style="width:100%;height:400px;"></div>
-<script type="application/json" data-for="htmlwidget-4233190fa42f1d0ec140">{"x":{"visdat":{"5de17f08998c":["function () ","plotlyVisDat"]},"cur_data":"5de17f08998c","attrs":{"5de17f08998c":{"x":{},"y":{},"mode":"lines","line":{"simplyfy":false},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"width":650,"height":350,"margin":{"b":40,"l":60,"t":25,"r":10},"title":{"text":"B-splines of degree 2"},"xaxis":{"domain":[0,1],"automargin":true,"title":{"text":"y"}},"autosize":false,"yaxis":{"domain":[0,1],"automargin":true,"title":"B"},"dragmode":"zoom","hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0.5,0.40499999999999992,0.31999999999999984,0.24500000000000013,0.18000000000000005,0.125,0.07999999999999996,0.04499999999999995,0.020000000000000035,0.0050000000000000088,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(102,194,165,1)","simplyfy":false},"type":"scatter","key":["1"],"set":"SharedDatab4dd74d2","name":"1","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0.5,0.59000000000000008,0.66000000000000014,0.70999999999999996,0.73999999999999999,0.75,0.73999999999999999,0.70999999999999996,0.66000000000000014,0.59000000000000008,0.5,0.40499999999999992,0.31999999999999984,0.24500000000000013,0.1799999999999998,0.125,0.07999999999999996,0.04499999999999995,0.020000000000000035,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(252,141,98,1)","simplyfy":false},"type":"scatter","key":["2"],"set":"SharedDatab4dd74d2","name":"2","marker":{"color":"rgba(252,141,98,1)","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0.0050000000000000088,0.020000000000000035,0.04499999999999995,0.07999999999999996,0.125,0.18000000000000005,0.24500000000000013,0.31999999999999984,0.40499999999999992,0.5,0.59000000000000008,0.66000000000000014,0.70999999999999996,0.7400000000000001,0.75,0.73999999999999999,0.70999999999999996,0.66000000000000014,0.58999999999999975,0.5,0.4050000000000003,0.31999999999999984,0.2449999999999995,0.1799999999999998,0.125,0.08000000000000014,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(141,160,203,1)","simplyfy":false},"type":"scatter","key":["3"],"set":"SharedDatab4dd74d2","name":"3","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0.0050000000000000088,0.020000000000000035,0.04499999999999995,0.08000000000000014,0.125,0.18000000000000005,0.24500000000000013,0.31999999999999984,0.4050000000000003,0.5,0.58999999999999975,0.66000000000000014,0.7100000000000003,0.7400000000000001,0.75,0.7400000000000001,0.70999999999999996,0.65999999999999959,0.58999999999999975,0.5,0.4050000000000003,0.31999999999999984,0.2449999999999995,0.1799999999999998,0.125,0.08000000000000014,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(231,138,195,1)","simplyfy":false},"type":"scatter","key":["4"],"set":"SharedDatab4dd74d2","name":"4","marker":{"color":"rgba(231,138,195,1)","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)"},"error_y":{"color":"rgba(231,138,195,1)"},"error_x":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.0049999999999999645,0.020000000000000035,0.045000000000000213,0.08000000000000014,0.125,0.1799999999999998,0.24500000000000013,0.32000000000000056,0.4050000000000003,0.5,0.58999999999999975,0.66000000000000014,0.7100000000000003,0.7400000000000001,0.75,0.7400000000000001,0.70999999999999996,0.65999999999999959,0.58999999999999975,0.5,0.40499999999999953,0.31999999999999984,0.24500000000000013,0.1799999999999998,0.125,0.079999999999999793,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(166,216,84,1)","simplyfy":false},"type":"scatter","key":["5"],"set":"SharedDatab4dd74d2","name":"5","marker":{"color":"rgba(166,216,84,1)","line":{"color":"rgba(166,216,84,1)"}},"textfont":{"color":"rgba(166,216,84,1)"},"error_y":{"color":"rgba(166,216,84,1)"},"error_x":{"color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.0049999999999999645,0.020000000000000035,0.045000000000000213,0.08000000000000014,0.125,0.1799999999999998,0.24500000000000013,0.32000000000000056,0.4050000000000003,0.5,0.59000000000000041,0.66000000000000014,0.70999999999999996,0.7400000000000001,0.75,0.73999999999999988,0.70999999999999996,0.65999999999999959,0.58999999999999975,0.5,0.40499999999999953,0.31999999999999984,0.2449999999999995,0.1799999999999998,0.125,0.079999999999999793,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0],"mode":"lines","line":{"color":"rgba(255,217,47,1)","simplyfy":false},"type":"scatter","key":["6"],"set":"SharedDatab4dd74d2","name":"6","marker":{"color":"rgba(255,217,47,1)","line":{"color":"rgba(255,217,47,1)"}},"textfont":{"color":"rgba(255,217,47,1)"},"error_y":{"color":"rgba(255,217,47,1)"},"error_x":{"color":"rgba(255,217,47,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.005000000000000053,0.020000000000000035,0.04499999999999995,0.08000000000000014,0.125,0.18000000000000033,0.24500000000000013,0.32000000000000056,0.4050000000000003,0.5,0.59166666666666712,0.66666666666666674,0.72500000000000031,0.76666666666666683,0.79166666666666663,0.80000000000000004,0.79166666666666663,0.76666666666666639,0.72499999999999976,0.66666666666666663],"mode":"lines","line":{"color":"rgba(229,196,148,1)","simplyfy":false},"type":"scatter","key":["7"],"set":"SharedDatab4dd74d2","name":"7","marker":{"color":"rgba(229,196,148,1)","line":{"color":"rgba(229,196,148,1)"}},"textfont":{"color":"rgba(229,196,148,1)"},"error_y":{"color":"rgba(229,196,148,1)"},"error_x":{"color":"rgba(229,196,148,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.0033333333333333691,0.013333333333333357,0.030000000000000145,0.053333333333333427,0.083333333333333329,0.12000000000000022,0.16333333333333341,0.21333333333333371,0.27000000000000018,0.33333333333333331],"mode":"lines","line":{"color":"rgba(179,179,179,1)","simplyfy":false},"type":"scatter","key":["8"],"set":"SharedDatab4dd74d2","name":"8","marker":{"color":"rgba(179,179,179,1)","line":{"color":"rgba(179,179,179,1)"}},"textfont":{"color":"rgba(179,179,179,1)"},"error_y":{"color":"rgba(179,179,179,1)"},"error_x":{"color":"rgba(179,179,179,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedDatab4dd74d2"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-84a4dfe5e56cd5646deb" style="width:100%;height:400px;"></div>
+<script type="application/json" data-for="htmlwidget-84a4dfe5e56cd5646deb">{"x":{"visdat":{"a0106ffc7efd":["function () ","plotlyVisDat"]},"cur_data":"a0106ffc7efd","attrs":{"a0106ffc7efd":{"x":{},"y":{},"mode":"lines","line":{"simplyfy":false},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"width":650,"height":350,"margin":{"b":40,"l":60,"t":25,"r":10},"title":{"text":"B-splines of degree 2"},"xaxis":{"domain":[0,1],"automargin":true,"title":{"text":"y"}},"autosize":false,"yaxis":{"domain":[0,1],"automargin":true,"title":"B"},"dragmode":"zoom","hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0.5,0.40499999999999992,0.31999999999999984,0.24500000000000013,0.18000000000000005,0.125,0.07999999999999996,0.04499999999999995,0.020000000000000035,0.0050000000000000088,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(102,194,165,1)","simplyfy":false},"type":"scatter","key":["1"],"set":"SharedDatad92daeb3","name":"1","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0.5,0.59000000000000008,0.66000000000000014,0.70999999999999996,0.73999999999999999,0.75,0.73999999999999999,0.70999999999999996,0.66000000000000014,0.59000000000000008,0.5,0.40499999999999992,0.31999999999999984,0.24500000000000013,0.1799999999999998,0.125,0.07999999999999996,0.04499999999999995,0.020000000000000035,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(252,141,98,1)","simplyfy":false},"type":"scatter","key":["2"],"set":"SharedDatad92daeb3","name":"2","marker":{"color":"rgba(252,141,98,1)","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0.0050000000000000088,0.020000000000000035,0.04499999999999995,0.07999999999999996,0.125,0.18000000000000005,0.24500000000000013,0.31999999999999984,0.40499999999999992,0.5,0.59000000000000008,0.66000000000000014,0.70999999999999996,0.7400000000000001,0.75,0.73999999999999999,0.70999999999999996,0.66000000000000014,0.58999999999999975,0.5,0.4050000000000003,0.31999999999999984,0.2449999999999995,0.1799999999999998,0.125,0.08000000000000014,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(141,160,203,1)","simplyfy":false},"type":"scatter","key":["3"],"set":"SharedDatad92daeb3","name":"3","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0.0050000000000000088,0.020000000000000035,0.04499999999999995,0.08000000000000014,0.125,0.18000000000000005,0.24500000000000013,0.31999999999999984,0.4050000000000003,0.5,0.58999999999999975,0.66000000000000014,0.7100000000000003,0.7400000000000001,0.75,0.7400000000000001,0.70999999999999996,0.65999999999999959,0.58999999999999975,0.5,0.4050000000000003,0.31999999999999984,0.2449999999999995,0.1799999999999998,0.125,0.08000000000000014,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(231,138,195,1)","simplyfy":false},"type":"scatter","key":["4"],"set":"SharedDatad92daeb3","name":"4","marker":{"color":"rgba(231,138,195,1)","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)"},"error_y":{"color":"rgba(231,138,195,1)"},"error_x":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.0049999999999999645,0.020000000000000035,0.045000000000000213,0.08000000000000014,0.125,0.1799999999999998,0.24500000000000013,0.32000000000000056,0.4050000000000003,0.5,0.58999999999999975,0.66000000000000014,0.7100000000000003,0.7400000000000001,0.75,0.7400000000000001,0.70999999999999996,0.65999999999999959,0.58999999999999975,0.5,0.40499999999999953,0.31999999999999984,0.24500000000000013,0.1799999999999998,0.125,0.079999999999999793,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(166,216,84,1)","simplyfy":false},"type":"scatter","key":["5"],"set":"SharedDatad92daeb3","name":"5","marker":{"color":"rgba(166,216,84,1)","line":{"color":"rgba(166,216,84,1)"}},"textfont":{"color":"rgba(166,216,84,1)"},"error_y":{"color":"rgba(166,216,84,1)"},"error_x":{"color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.0049999999999999645,0.020000000000000035,0.045000000000000213,0.08000000000000014,0.125,0.1799999999999998,0.24500000000000013,0.32000000000000056,0.4050000000000003,0.5,0.59000000000000041,0.66000000000000014,0.70999999999999996,0.7400000000000001,0.75,0.73999999999999988,0.70999999999999996,0.65999999999999959,0.58999999999999975,0.5,0.40499999999999953,0.31999999999999984,0.2449999999999995,0.1799999999999998,0.125,0.079999999999999793,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0],"mode":"lines","line":{"color":"rgba(255,217,47,1)","simplyfy":false},"type":"scatter","key":["6"],"set":"SharedDatad92daeb3","name":"6","marker":{"color":"rgba(255,217,47,1)","line":{"color":"rgba(255,217,47,1)"}},"textfont":{"color":"rgba(255,217,47,1)"},"error_y":{"color":"rgba(255,217,47,1)"},"error_x":{"color":"rgba(255,217,47,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.005000000000000053,0.020000000000000035,0.04499999999999995,0.08000000000000014,0.125,0.18000000000000033,0.24500000000000013,0.32000000000000056,0.4050000000000003,0.5,0.59166666666666712,0.66666666666666674,0.72500000000000031,0.76666666666666683,0.79166666666666663,0.80000000000000004,0.79166666666666663,0.76666666666666639,0.72499999999999976,0.66666666666666663],"mode":"lines","line":{"color":"rgba(229,196,148,1)","simplyfy":false},"type":"scatter","key":["7"],"set":"SharedDatad92daeb3","name":"7","marker":{"color":"rgba(229,196,148,1)","line":{"color":"rgba(229,196,148,1)"}},"textfont":{"color":"rgba(229,196,148,1)"},"error_y":{"color":"rgba(229,196,148,1)"},"error_x":{"color":"rgba(229,196,148,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.0033333333333333691,0.013333333333333357,0.030000000000000145,0.053333333333333427,0.083333333333333329,0.12000000000000022,0.16333333333333341,0.21333333333333371,0.27000000000000018,0.33333333333333331],"mode":"lines","line":{"color":"rgba(179,179,179,1)","simplyfy":false},"type":"scatter","key":["8"],"set":"SharedDatad92daeb3","name":"8","marker":{"color":"rgba(179,179,179,1)","line":{"color":"rgba(179,179,179,1)"}},"textfont":{"color":"rgba(179,179,179,1)"},"error_y":{"color":"rgba(179,179,179,1)"},"error_x":{"color":"rgba(179,179,179,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedDatad92daeb3"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
 
 ---
-
-- We will represent our transformation function as a linear combination of B-spline basis of degree `\(k = 3\)` and a vector of parameters `\(\boldsymbol{\gamma}\)`
+- So, with a B-spline basis of degree `\(k = 3\)` we can represent a particular `\(h_j\)` as
 
 `$$h_j(y) = \sum_{i = 1}^q B_{i,3,\boldsymbol{t}}(y) \gamma_{j,i} =  \boldsymbol{a}(y)^{\top} \boldsymbol{\gamma}_j,$$`
 with `\(\bfs{a}(y) = (B_{1,3,\bfs{t}}(y), B_{2,3,\bfs{t}}(y) \hdots, B_{q,3,\bfs{t}}(y))^{\top}\)`, and `\(\bfs{\gamma}_j = (\gamma_{j,1},\gamma_{j,2}, \hdots, \gamma_{j,q})^{\top}\)`.
-- But it is not necessary monotonic on `\(y\)`. But, it is sufficient for the derivative of the function with respect to `\(y\)` to be greater than zero for all $y $.
+
+- But this construction does not cover only monotonic functions. 
 - A positive and increasing sequence of all parameters `\(\gamma_i\)` produces a monotonically increasing spline function. 
 - We consider an alternative parameterization of the spline parameters to produce monotonically increasing spline function (Pya and Wood, 2015). 
 -  The vector `\(\bfs{\gamma}_j = (\gamma_{j,1}, \hdots, \gamma_{j,q})^{\top}\)` is defined in terms of unconstrained parameters `\(\bfs{\beta}_j\)` as
@@ -536,7 +532,6 @@ is an `\(l \times l\)` matrix, and
 ---
 
 - A further case that contemplates `\(y\)` and `\(x\)` non-linear interaction is achieved by considering the tensor product of B-splines bases.
-- We use two distinct B-spline bases for `\(y\)` and $x $, each one with of degree `\(k\)` with knot vectors `\(\mathbf{t}_1\)` and $\mathbf{t}_2 $, respectively
 - Let us take two distinct B-spline basis for `\(y\)` and `\(x\)` of degree `\(k\)` with knots vector `\(\boldsymbol{l}_1\)` and `\(\boldsymbol{l}_2\)`. 
 -  The transformation function formed by the tensor product of these bases as `\(h_j(y|x)\)` and express it as
 
@@ -558,8 +553,9 @@ ___
 - (Eilers and Marx, 1996) proposes an appealing penalty based on the finite difference of adjacent basis coefficients, called P-splines to addresses the overfitting problem of unregularized splines.
 - In the Bayesian context, smoothness and regularization are achieved through shrinkage priors distributions.
 - In the Bayesian P-Splines approach (Lang and Brezger, 2004), we assign multivariate normal distributions with a zero vector mean and a precision matrix `\(\boldsymbol{Q}\)` to the parameter models
+- For the case `\(h_j(y) = \sum_{i = 1}^q B_{i,3,\bfs{t}}(y) \gamma_{j, i} =  \boldsymbol{a}(y)^T \bfs{\gamma}_j\)`, see (\ref{spline}),  we set `\(\bfs{\beta}_j \sim N_q(0, \bfs{Q}_j(\tau_j))\)`, which `\(\bfs{Q}_j(\tau_j) = \frac{1}{\tau_j}\bfs{K}_1\)`.
 ---
-- For the case `\(h_j(y) = \sum_{i = 1}^q B_{i,3,\bfs{t}}(y) \gamma_{j, i} =  \boldsymbol{a}(y)^T \bfs{\gamma}_j\)`, see (\ref{spline}),  we set `\(\bfs{\beta}_j \sim N_q(0, \bfs{Q}_j(\tau_j))\)`, which `\(\bfs{Q}_j(\tau_j) = \frac{1}{\tau_j}\bfs{K}_1\)`, and
+
 
 
 `$$\begin{equation}\label{ordem1}
@@ -574,21 +570,8 @@ ___
 \end{bmatrix}_{q \times q}
 \end{equation}$$`
 
-\noindent which is `\(q - 1\)` rank. Then the prior distribution for `\(\bfs{\beta}\)` is improper. To guarantee that the prior for `\(\bfs{\beta}_j\)` will be proper, we sum `\(10^{-6}\)` in diagonal elements to ensure the positive definiteness of `\(\bfs{K}_1\)`.
-- The penalty matrix `\(\bfs{K}_1\)` enforces that the unconstrained parameters stay close to each other. promoting smoothness in the estimated function.
 - By penalizing differences between adjacent parameters, it helps prevent overfitting and ensures a more stable and regularized solution.
 
----
-- The hyperparameter `\(\tau_j\)` is represented internally on the log scale, that is, `\(\theta_j = \log(\tau_j)\)`. This representation is computationally convenient because the parameter is not bounded on this scale.
-
--  We set a Half-Cauchy distribution with location parameter `\(x_0 = 0\)` and scale `\(\varphi = 25\)` as the prior distribution for `\(\tau_j\)`.
-
-`$$\begin{equation}
-    \pi(\theta) = \pi_{\tau}(\exp(\theta)) \left| \frac{\partial g^{-1}(\theta)}{\partial\theta} \right| \\
-    =\pi_{\tau}(\exp(\theta)) \exp(\theta) 
-\end{equation}$$`
-
-- The amount of smoothness induced by the precision matrix (\ref{ordem1}) is controlled by the hyperparameter.
 
 - In the tensor product model for `\(h_j(y|\boldsymbol{x})\)`, we maintain a Gaussian prior distribution for `\(\boldsymbol{\beta}_j\)` parameters. Although the precision matrix controls the smoothness in two directions
 
@@ -597,67 +580,25 @@ ___
     \frac{1}{\tau_{j2}}\left(I_{L_1} \otimes \bfs{K_2}\right),
 \end{equation}$$`
 
----
+- The hyperparameter `\(\tau_j\)` is represented internally on the log scale, that is, `\(\theta_j = \log(\tau_j)\)`.
+- We set a Half-Cauchy distribution with location parameter `\(x_0 = 0\)` and scale `\(\varphi = 25\)` as the prior distribution for `\(\tau_j\)`.
 
-THe `\(\bfs{K}_2\)` matrix considered here \citep{carlan2023bayesian}
-can be represented as `\(\bfs{K}_2 = \bfs{P}^T \bfs{P}\)`, where
-
-`$$\begin{equation}\label{matrixP}
-\bfs{P} = \left(
-    \begin{array}{ccccc}
-        \bfs{P}_{u} &amp; \bfs{0} &amp; \bfs{0} &amp; \dots &amp; \bfs{0} \\
-         \bfs{0} &amp; \bfs{P}_s &amp; \bfs{0} &amp; \dots &amp; \bfs{0} \\
-         \bfs{0} &amp; \bfs{0} &amp; \bfs{P}_{s} &amp; \dots &amp; \bfs{0} \\
-         \dots &amp; \dots &amp; \dots &amp; \ddots &amp; \vdots \\
-          \bfs{0} &amp; \bfs{0} &amp; \bfs{0} &amp; \dots &amp; \bfs{P}_s
-    \end{array} \right),
-\end{equation}$$`
-
-\noindent `\(\bfs{0}\)` are null matrices of the corresponding dimensions. The `\(\boldsymbol{P}_u\)` and `\(\boldsymbol{P}_s\)` matrices are the `\((L_2 - 2)\times L_2\)` and `\((L_2 - 1)\times L_2\)` matrices given by
-
-
-`$$\begin{equation} \bfs{P}_u = \left(
-    \begin{array}{cccccc}
-        1 &amp; -2 &amp; 1 &amp; 0 &amp; \dots &amp; 0 \\
-        0 &amp; 1 &amp; -2 &amp; 1 &amp;  \dots &amp; 0 \\
-        0 &amp; 0 &amp; 1 &amp; -2 &amp;  \dots &amp; 0 \\
-        \dots &amp; \dots &amp; \dots  &amp; \dots &amp;  \ddots &amp; \vdots \\
-        0 &amp; 0&amp; 0 &amp; 0&amp;  \dots &amp; 0 \\
-    \end{array}\right), \bfs{P}_s = \left(\begin{array}{ccccc}
-        -1 &amp; 1 &amp; 0 &amp; \dots &amp; 0 \\
-         0 &amp; -1 &amp; 1 &amp; \dots &amp; 0 \\
-         \dots &amp; \dots&amp; \dots&amp; \ddots &amp;\vdots \\
-         0 &amp; 0 &amp; 0 &amp; \dots &amp; 1 \\
-    \end{array}\right).
-\end{equation}$$`
-
-
-
-- For the vector `\(\boldsymbol{\tau} = (\tau_1, \tau_2)\)` we set independent prior distributions considering then `\(\pi(\boldsymbol{\tau}) = \pi(\tau_1)\pi(\tau_2)\)`.
 ---
 ### Bernstein polynomial basis
 ___
 
 **Definition:** Let `\(k\)` be a non-negative integer and `\(t \in [0,1]\)`, the Bernstein polynomials of degree `\(k\)` are defined by
 
-\begin{equation}\label{bern_def}
+`$$\begin{equation}\label{bern_def}
     B_{r,k}(t) = \binom{k}{r} t^r(1 - t)^{k -r},
-\end{equation}
+\end{equation}$$`
 
-\noindent for `\(r = 0, \hdots, k\)`,  where 
-
-$$
-\binom{k}{r} = \frac{k!}{r!(k-r)!}.
-$$
-
- The Bernstein polynomials of degree 1 are represented by the following equations:  
+The Bernstein polynomials of degree 1 are represented by the following equations:  
 
 `$$\begin{align}
     B_{0,1}(t) &amp; = 1 - t, \\
     B_{1,1}(t) &amp; = t,
 \end{align}$$`
-
-\noindent for `\(t \in [0,1]\)`.  
 
 The Bernstein polynomials of degree 2 are given by:  
 
@@ -667,31 +608,24 @@ The Bernstein polynomials of degree 2 are given by:
     B_{2,2}(t) &amp; = t^2,
 \end{align}$$`
 
-\noindent also for `\(t \in [0,1]\)`. 
+for `\(t \in [0,1]\)`. 
 
 ---
 
-- These polynomials can be combined to approximate or represent a function as follows:  
 
-`$$\begin{equation}\label{func_asbern}
-    f(x) = \sum_{r=0}^k B_{r,k}(x) \beta_r,
-\end{equation}$$`
 
-\noindent where `\(\beta_r\)`, `\(r = 1, \dots, k,\)` are the Bernstein coefficients. 
-
-- The domain of the Bernstein basis can be redefined over an arbitrary interval `\([a, b]\)` by changing the variable `\(y = (b-a)t + a\)` for `\(t \in [0,1]\)`, resulting in:  
-   `$$B_{r,k}(y) = \binom{k}{r} \left(\frac{y-a}{b-a}\right)^r \left(1 - \frac{y-a}{b-a}\right)^{k-r}, \quad y \in [a,b].$$`  
-    
 - We propose to represent the transformation function `\(h_j(y)\)`, independent of explanatory variables, `\(\boldsymbol{x}\)`, for some `\(j = 1, \hdots, J\)` as a Bernstein polynomial of degree `\(k\)`
 
 `$$\begin{equation}\label{bern_transf}
     h_j(y) = \sum_{r = 0}^p B_{r,k}(y) \gamma_{j,k+1} = \boldsymbol{a}_j(y)^{\top} \boldsymbol{\gamma}_j
 \end{equation}$$`
+
+- But how to construct monotonic Bernstein?
 ---
 
 ** Proposition ** Let `\(h_j(y)\)` be the transformation function defined in (\ref{bern_transf}) with Bernstein basis representation. Let `\(\boldsymbol{\gamma}_j = \boldsymbol{\Sigma}_j \boldsymbol{\Tilde{\beta}}_j\)` with `\(\boldsymbol{\Tilde{\beta}}_j\)` as in (\ref{beta_tilde}) and `\(\Sigma\)` defined in (\ref{Sigma_mono}). Then, `\(h_j(y)\)` is monotonically increasing, that is for all `\(y_1, y_2 \in \mathbb{R}\)` with `\(y_1 &lt; y_2\)` we have `\(h(y_1) \leq h(y_2)\)`.
 
-
+colocar a matri Sigma aqui
 ---
 ### Properties of the BCTM
 
@@ -789,7 +723,7 @@ transformation function (`\(h(y|\bfs{x})\)`, right panel) of a count response (`
 ### Posterior Inference
 ___
 - From the transformation functions defined so far, we have the parameter models, `\(\boldsymbol{\gamma}\)`, both for linear and B-spline transformation functions, and the hyperparameters `\(\boldsymbol{\tau}\)`, for B-spline transformation.
-- To obtain posterior estimates of the BCTM, Carlan, Kneib, and Klein (2023) proposed an MCMC method based on No-U-Turn-Sample and Gibbs sampling to sample values from the posterior distribution of model parameters.
+- To obtain posterior estimates of the BCTM, Carlan, Kneib, and Klein (2024) proposed an MCMC method based on No-U-Turn-Sample and Gibbs sampling to sample values from the posterior distribution of model parameters.
 - We present an alternative estimation method based on the Integrated Nested Laplace Approximation (INLA) given by Rue, Martino, and Chopin (2009).
 - The contribution is to provide an alternative way to the MCMC methods to implement Bayesian inference on these models.
 
@@ -1685,7 +1619,7 @@ ___
 - For comparison purposes we decided to implement our algorithm in models which already been applied in three different data sets.
 - The first application is a density estimation presented by Hothorn, Möst, and Bühlmann (2018) using CTM with the *mlt* R package.
 - The second is a regression problem with only one explanatory variable also applied using the *mlt* R package.
-- The third one is presented by Carlan, Kneib, and Klein (2023) and involves more explanatory variables and random effects in a BCTM. The application was developed using MCMC algorithm
+- The third one is presented by Carlan, Kneib, and Klein (2024) and involves more explanatory variables and random effects in a BCTM. The application was developed using MCMC algorithm
 
 
 ---
@@ -1990,7 +1924,7 @@ ___
 
 - We briefly review the application using longitudinal data presented in \citet{carlan2023bayesian} to test our algorithm on models that have already been fitted using the NUTS algorithm.
 - This dataset comes from the Framingham Heart Study. In 1948, the Framingham Heart Study started a project to identify common factors that contribute to cardiovascular disease by following group of participants over a long period.
-- Carlan, Kneib, and Klein (2023) randomly selected 200 participants from the study ncludes the following: cholesterol levels (`\(Y\)`) of 200 individuals measured at the start of the study and every two years for ten years; the individuals' sex (female and male); and their current age (a discrete variable ranging from 31 to 62 years).
+- Carlan, Kneib, and Klein (2024) randomly selected 200 participants from the study ncludes the following: cholesterol levels (`\(Y\)`) of 200 individuals measured at the start of the study and every two years for ten years; the individuals' sex (female and male); and their current age (a discrete variable ranging from 31 to 62 years).
 
 &lt;style type="text/css"&gt;
 .tg  {border:none;border-collapse:collapse;border-color:#ccc;border-spacing:0;}
@@ -2367,14 +2301,74 @@ Z_i &amp; \overset{d}{=} h(Y_i|\boldsymbol{x}_i, \boldsymbol{b}_i,\boldsymbol{\b
     W &amp; \sim \text{Wishart} (4, I_2, I_2,I_2) \nonumber \\
     \exp(\theta_l) &amp; \sim \text{Inv-Gamma(1,0.001)}, l=1,2,3,
 \end{align}$$`
-
+---
 - In this application, we consider the monotonic Bernstein polynomials and the monotonic B-splines for the function `\(\boldsymbol{a}(y)^{\top} \boldsymbol{\gamma}\)`. 
 
 - The model was fitted using the algorithm proposed in \ref{VBC_BCTM}. The number of parameters in the model is moderate, as it includes only one fixed effect and a small number of individuals. For this reason, we propose a full-rank correction. 
 
 - We compare the models using the Logarithm of the Pseudo-Marginal Likelihood (LPML) 
 
+`$$\begin{equation}
+   \textrm{LPML} =  \sum_i \log \textrm{CPO}_i.
+\end{equation}$$`
 
+where `\(\text{CPO}_i = \pi(y_i | \bfs{y}_{-i})\)` is the posterior predictive density of each observation `\(y_i\)` given `\(\boldsymvol{y}_{-i}\)`.
+
+- The LPML of the model with Bernstein basis is -863.7924, while the LPML with B-spline is -844.707.
+
+---
+- The posterior mean of the estimated distribution `\(\beta_1|\boldsymbol{y}\)` is -0.443. This result is not directly comparable with the coefficient from the linear mixed model ();
+
+- Let the median of the `\(i\)`-th individual, conditional on the number of days of sleep deprivation, be denoted as `\(m_i\)`. Then, 
+
+
+`$$\begin{align}
+     \frac{\partial h(m_i|\text{Days}_{ij}, \boldsymbol{b}_i)}{\partial \text{Days}_{ij}} &amp; = \beta_1 + b_{i2} \nonumber\\
+     \frac{\partial h(m_i|\text{Days}_{ij}, \boldsymbol{b}_i)}{\partial m_i} &amp; = \boldsymbol{a}'(m)^{\top} \boldsymbol{\gamma} \nonumber \\
+     \frac{\partial m_i}{\partial \text{Days}_{ij}} &amp; = \frac{ -(\beta_1 + b_{i2})}{\boldsymbol{a}'(m)^{\top} \boldsymbol{\gamma}}
+\end{align}$$`
+
+- The expression in \ref{marginal_effect_app5} is evaluated by the following
+
+`$$\begin{equation}
+    \text{marginal impact} = \frac{1}{R}\sum_{r= 1}^R\frac{-(\beta_1^{(r)} + b_{2i}^{(r)})}{\boldsymbol{a}(m)^{\top}\boldsymbol{\gamma}^{(r)}}
+\end{equation}$$`
+
+for a particular `\(m\)`.
+
+---
+
+---
+
+
+---
+Probability Integral Transform (PIT) \citep{PIT} as
+
+
+
+`$$\begin{equation}
+    \text{PIT} = P(Y_i \leq y_i^{obs}| \bfs{y}_{-i})
+\end{equation}$$`
+
+---
+### Application 6.2 - Analysis of vehicle theft incident in the city of São Paulo 
+
+- São Paulo is the largest economy in Brazil and has the highest number of automobiles, accounting for over 10\% of the entire national fleet.
+
+- Analyzing vehicle theft incidents (VTI) in São Paulo is critical for understanding the underlying patterns and trends that drive this crime. 
+
+- All Vehicle Theft Incidents (involving only robbery) recorded by the police in the city between 2017-01-01 and 2023-01-31 were obtained from the website of the Public Security Secretariat of São Paulo (\url{https://www.ssp.sp.gov.br/estatistica/consultas}).
+
+- The raw data consists of detailed records of each reported VTI in the City of São Paulo, including the specific date (year, month and day) and the hour of occurrence.
+
+- Under-reporting is not a concern, as a police report is mandatory for any car insurance claim in Brazil. Moreover, the possibility of the vehicle being recovered by the owner is more likely with an official police record.
+
+---
+- For the purposes of this analysis, we aggregate the number of Vehicle Theft Incidents (VTIs) into pre-defined time intervals.
+
+- his aggregation facilitates the identification of broader temporal patterns and trends that might not be apparent when analyzing each hour individually.
+
+``night am" [00:00 - 04:00], ``pre-morning" [04:00 - 06:00], ``morning" [06:00 - 08:00], ``day am" [08:00 - 12:00], ``day pm" [12:00 - 16:00], ``pre night" [16:00 - 18:00], ``night" [18:00 - 20:00], and ``night pm" [20:00 - 24:00].
 ---
 ### Final remarks
 ___
