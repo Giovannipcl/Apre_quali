@@ -122,13 +122,13 @@ knitr::include_graphics("figuras/Imagem-5-1.png")
 
 - Fully Nonparametric? No! Conditional Transformation models!
 
-- The idea is to find $F_{y|x}$, but indirectly using a variable transformation.
+- The idea is to find $F_{Y|x}$, but indirectly using a variable transformation.
 
-- **Conditional** on $x$, the approach applies a **Transformation** function $h(Y|x)$ to the random variable $Y$; by composing this transformation with a base distribution, we obtain a model for the variable $Y$ given $x$.
+- **Conditional** on $x$, the approach applies a **Transformation** function $h(Y|x)$ to the random variable $Y$; by composing this transformation with a base distribution, we obtain a **Model** for the variable $Y$ given $x$.
 
-- Formally, the CTM was first introduced by `r Citet(myBib,"hothorn2014conditional")`. The definition involves only concepts of conditional probability and random variable transformation.
+- Formally, the CTM was first introduced by `r Citet(myBib,"hothorn2014conditional")`. The definition involves concepts of conditional probability and random variable transformation.
 
-- `r Citet(myBib,"carlan2023bayesian")` presented the Bayesian Conditional Transformation Model (BCTM) Building on the same definition as the CTM, this approach proposed a different parameterization for the transformation function $h(y|\boldsymbol{X})$.
+- `r Citet(myBib,"carlan2023bayesian")` presented the Bayesian Conditional Transformation Model (BCTM). Building on the same definition as the CTM, this approach proposed a different parameterization for the transformation function $h(Y|x)$.
 
 
 ---
@@ -136,7 +136,7 @@ knitr::include_graphics("figuras/Imagem-5-1.png")
 
 - In this work, we aim to contribute to the CTM class and, more specifically, to the BCTM. We present two alternative and efficient Bayesian estimation procedures for the BCTM.
 - The first approach is based on the Laplace approximation, inspired by the Integrated Nested Laplace Approximation (INLA). The second approach relies on the Variational Bayes. 
-- We also propose an alternative parameterization for the transformation functions $h(y|x)$, distinct from the one presented in `r Citet(myBib,"carlan2023bayesian")` . In our proposal,  we employ Bernstein bases, which allow us to express nonlinear functions as linear combinations of these bases.
+- We also propose an alternative parameterization for the transformation functions $h(y|x)$, distinct from the one presented in `r Citet(myBib,"carlan2023bayesian")` . In our proposal,  we employ Bernstein bases to parametrize the function.
 - The CTM class of models suffers from a lack of interpretability due to its construction. In this work, we propose two different results that enable us to evaluate how a particular variable $x$ impacts both the expected value of $Y$ and the quantiles of the distribution of $Y$.
 - Finally, we illustrate our methods using real data applications.
 
@@ -165,13 +165,21 @@ $$
 h(Y|\boldsymbol{x}) + F_Z = \text{CTM}
 $$
 
+
 Thus,
 
-\begin{equation}\label{ctm}
+$$
     F_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = P(Y \leq y|\boldsymbol{X} = \boldsymbol{x})= P(Y \leq y|\boldsymbol{X} = \boldsymbol{x}) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
-\end{equation}
+$$
 
-\noindent where $F_Z(\cdot)$ is a continuous baseline cumulative distribution function (cdf) of the Gaussian distribution.
+
+```{r, echo=FALSE,  out.width = "45%", dpi = 300 , fig.retina = 2,fig.align='center'}
+knitr::include_graphics("figuras/transformacao.png")
+```
+
+- It is convenient to assume $Z\sim N(0,1)$.
+
+---
 
 - The conditional transformation function $h(Y \mid \boldsymbol{x})$ is monotonically increasing in $y \in \mathbb{R}$, conditional on $\boldsymbol{X} = \boldsymbol{x}$ (Second assumption).
 
@@ -179,26 +187,20 @@ Thus,
 
 - At the end of the day, The task of obtaining $F_{Y|\boldsymbol{X} = \boldsymbol{x}}$ reduces to estimating the transformation function $h$.
 
----
-#### More about $h(Y \mid \boldsymbol{x})$
-
-- We have assumed that the transformation function $h(y \mid \boldsymbol{x})$ is strictly monotonic, right-continuous, and differentiable.
-
 - The construction of $h(y|\boldsymbol{x})$ must account for all the characteristics and objectives of the proposed model (Monotonic on $y$).
 
-- It is convenient to decompose the transformation function $h$ additively into $J$ partial transformation functions, defined for all $\boldsymbol{x} \in \mathbb{R}^M $.
+- It is convenient to decompose the transformation function $h$ additively into $J$ partial transformation functions, defined for all $\boldsymbol{x} \in \mathbb{R}^M$.
 
-\begin{equation}\label{decomp_h}
+
+$$\begin{equation}
     h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x}).
-\end{equation}
-
-- The transformation functions $h_j(y|\boldsymbol{x})$ from (\ref{decomp_h}) can range from low-parameterized forms to complex structures with many parameters.
+\end{equation}$$
 
 
 ---
 ### Example of a simple CTM
 
-We assume $J = 3$ in (\ref{decomp_h}) and
+Assume $J= 3$ and 
     \begin{equation}
         h(y \mid x) = h_1(y) + h_2(y \mid x) + h_3(x) = \gamma_0 + \gamma_1 \cdot y + \gamma_2 \cdot x \cdot y + \gamma_3 \cdot x.
     \end{equation}
@@ -215,65 +217,61 @@ $$\begin{aligned}
     \end{aligned}$$
     
 - If Z is normal, linear combination of $Y$ would be Normal too.
-
 ---
 
-- See that in the example we have a linear combination of function where $\boldsymbol{c}(y|\boldsymbol{x})^{\top} = (1,y, y \cdot x,x)$, with $\boldsymbol{\gamma} = (\gamma_0, \gamma_1, \gamma_2, \gamma_3)$
+- Assuming linear transformation of the response variable, like $h(y) = y \cdot \gamma$ or even $h(y|x) = y \cdot x \cdot \gamma$, will only give us Gaussian models. 
 
-$$
-h(y|\boldsymbol{x}) = \boldsymbol{c}(y|\boldsymbol{x})^{\top} \boldsymbol{\gamma}
-$$
+- To leave the class of Gaussian models, we have to increase the $h(y)$ complexity. 
 
-- Essa parametrizacao como uma combinacao linear de funcoes proposta por () facilita uma definicao mais 
+- This transformation can take a familiar form, such as $\log$. If we consider non-linear monotone functions the range of options is very large. 
 
-- Abre caminho para utilizarmos basis functions
+- An alternative use basis functions which define a functions space, and to represent every function as a linear combination of basis function.
 
-$$
-\boldsymbol{a}: \mathbb{R} \rightarrow \mathbb{R}^v,
-$$
+- But many questions and challenges arise from this approach.
+  - The functions should express many possible different functions, but they should preferably be smooth (2,3).
+  - How much smooth should they be?
+  - They should be monotone(1).
 
-such that
-
-$$
-h(y) = \boldsymbol{a(y)}^T \gamma$, $\gamma \in \mathbb{R}^v
-$$
-
+  
 ---
-
-- For now, we write the transformation as a linear function of its basis-transformed argument $y$ using basis function.
+#### First,
+- This parameterization as a linear combination of functions proposed by `r Citet(myBib,"hothorn2018most")` facilitates a more general definition for the CTM class.
 
 - First, let us parameterize the transformation function as a linear function of evaluated basis of $y$,
 
 $$
 \boldsymbol{a}: \mathbb{R} \rightarrow \mathbb{R}^v,
 $$
-- The choice of the basis has to attend to the monotonically increasing restriction, and the first derivative $a(y)'$ must be available. 
-- Let $\boldsymbol{b}: \mathbb{R} \rightarrow \mathbb{R}^m$ denote a basis for explanatory variables.
-
-- The joint basis is $\boldsymbol{c}: \mathbb{R}^v \times \mathbb{R}^m  \rightarrow \mathbb{R}^{d(v, m)}$, such that $h(y|\boldsymbol{x}) = c(y, \boldsymbol{x})^T\boldsymbol{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^{d(v,m)}$, and its dimension $d(v, m)$ depends on the combination of the $\boldsymbol{b}$ and $\boldsymbol{a}$ basis functions.
 such that
 
--  The conditional transformation function $h(Y|\boldsymbol{x})$ is parameterized as  a linear function of joint evaluate basis of $Y$ and $\boldsymbol{x}$.
+$$\begin{equation}\label{hy}
+h_j(y) = \boldsymbol{a(y)}^{\top} \boldsymbol{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^v,
+\end{equation}$$
 
- $$\boldsymbol{c}: \mathbb{R}^v \times \mathbb{R}^m  \rightarrow \mathbb{R}^{d(v, m)}$$
-is parameterized as a linear function of joint evaluate basis of $Y$ and $\boldsymbol{x}$ denoted as $\boldsymbol{c}(y,\boldsymbol{x}): \Xi \times \mathcal{X}  \rightarrow \mathbb{R}^{d(P, Q)}$.
+for some $j$ in $h(y|x)$. 
 
-such that $h(y|\boldsymbol{x}) = c(y, \boldsymbol{x})^T\boldsymbol{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^{d(v,m)}$
+- The choice of the basis has to attend to the monotonically increasing restriction, and the first derivative $a(y)'$ must be available. 
+
+- Combining the transformation in (\ref{hy}) with some explanatory variables $\boldsymbol{x}$ for different $j's$ can yield a model different from the Normal.
+
+
+---
+#### Now let us take a look to $\boldsymbol{x}$
+
+- We can also define a bases for $\boldsymbol{x}$ to assume more than linear effects.
+
+- Let $\boldsymbol{b}: \mathbb{R} \rightarrow \mathbb{R}^m$ denote a basis for explanatory variables such that
+
+$$h_j(y) = \boldsymbol{b(x)}^{\top} \boldsymbol{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^m,$$
+
+for some $j$ in $h(y|x)$. **There is no monotonicity constraint, but it is convenient for it to be a smooth function**.
+
+- **Finally**, the joint basis is $\boldsymbol{c}: \mathbb{R}^v \times \mathbb{R}^m  \rightarrow \mathbb{R}^{d(v, m)}$, such that $h(y|\boldsymbol{x}) = c(y, \boldsymbol{x})^T\boldsymbol{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^{d(v,m)}$, and its dimension $d(v, m)$ depends on the combination of the $\boldsymbol{b}$ and $\boldsymbol{a}$ basis functions.
 
 - For an evaluated basis and a vector of coefficients, we estimate the $F_{Y|\boldsymbol{X} = \boldsymbol{x}}$ distribution through the decomposition $F_Z \circ \boldsymbol{c(y,\boldsymbol{x})}^T \boldsymbol{\gamma}$.
----
 
-- Assuming linear transformation of the response variable, like $h(y) = y \cdot \gamma$ or even $h(y|x) = y \cdot x \cdot \gamma$, will only give us Gaussian models. 
-- To leave the class of Gaussian models, we have to increase the $h(y)$ complexity. 
-- This transformation can take a familiar form, such as $\log$. If we consider non-linear monotone functions the range of options is very large. 
-- An alternative is to relax the specification of the transformation function and return for our basis specification.
-- We must pick up a basis that defines a space of functions which our transformation function belongs.
-- But many questions and challenges arise from this approach.
-  - The functions should express complex functions, but they should preferably be smooth.
-  - How much smooth should they be?
-  - They should be monotone.
+- Colocar c do exemplo?
 
-  
 ---
 
 ### Bayesian Conditional Transformation Models
@@ -395,15 +393,13 @@ bscols(
 - So, with a B-spline basis of degree $k = 3$ we can represent a particular $h_j$ as
 
 $$h_j(y) = \sum_{i = 1}^q B_{i,3,\boldsymbol{t}}(y) \gamma_{j,i} =  \boldsymbol{a}(y)^{\top} \boldsymbol{\gamma}_j,$$
-with $\boldsymbol{a}(y) = (B_{1,3,\boldsymbol{t}}(y), B_{2,3,\boldsymbol{t}}(y) \hdots, B_{q,3,\boldsymbol{t}}(y))^{\top}$, and $\boldsymbol{\gamma}_j = (\gamma_{j,1},\gamma_{j,2}, \hdots, \gamma_{j,q})^{\top}$.
+with $\boldsymbol{a}(y) = (B_{1,3,\boldsymbol{t}}(y), B_{2,3,\boldsymbol{t}}(y) \dots, B_{q,3,\boldsymbol{t}}(y))^{\top}$, and $\boldsymbol{\gamma}_j = (\gamma_{j,1},\gamma_{j,2}, \dots, \gamma_{j,q})^{\top}$.
 
 - But this construction does not cover only monotonic functions. 
-- A positive and increasing sequence of all parameters $\gamma_i$ produces a monotonically increasing spline function. 
-- We consider an alternative parameterization of the spline parameters to produce monotonically increasing spline function `r Citep(myBib,"pya2015shape")`. 
--  The vector $\boldsymbol{\gamma}_j = (\gamma_{j,1}, \hdots, \gamma_{j,q})^{\top}$ is defined in terms of unconstrained parameters $\boldsymbol{\beta}_j$ as
+- A positive and increasing sequence of all parameters $\gamma_i$ produces a monotonically increasing spline function `r Citep(myBib,"pya2015shape")`
 
 $$\begin{equation}\label{beta_mono}
-  \gamma_{j,1} = \beta_{j,1}, \hspace{0.1cm} \text{and} \hspace{0.1cm} \gamma_{j,l} = \beta_{j,1} + \sum_{i = 2}^l \exp(\beta_{j,i}), \hspace{0.1cm} \text{for} \hspace{0.1cm} l = 2, \hdots, q, 
+  \gamma_{j,1} = \beta_{j,1}, \hspace{0.1cm} \text{and} \hspace{0.1cm} \gamma_{j,l} = \beta_{j,1} + \sum_{i = 2}^l \exp(\beta_{j,i}), \hspace{0.1cm} \text{for} \hspace{0.1cm} l = 2, \dots, q, 
 \end{equation}$$
 ---
 
@@ -426,22 +422,22 @@ $$\begin{equation}
     \boldsymbol{\tilde{\beta}}_j = (\beta_{j,1}, \exp(\beta_{j,2}), \dots, \exp(\beta_{j,q}))^\top.
 \end{equation}$$
 
+- Then,
 
+$$h_j(y) = \boldsymbol{a}(y)^{\top}\boldsymbol{\gamma}_j = \boldsymbol{a}(y)^{\top}\Sigma \boldsymbol{\tilde{\beta}}(\boldsymbol{\beta})_j $$
 
 ---
 
 - A further case that contemplates $y$ and $x$ non-linear interaction is achieved by considering the tensor product of B-splines bases.
-- Let us take two distinct B-spline basis for $y$ and $x$ of degree $k$ with knots vector $\boldsymbol{l}_1$ and $\boldsymbol{l}_2$. 
 -  The transformation function formed by the tensor product of these bases as $h_j(y|x)$ and express it as
 
 $$\begin{align}\label{bctm_model}
     h_j(y|x) = \sum_{l_1 = 1}^{L_1}\sum_{l_2 = 1}^{L_2} \gamma_{j,l_1,l_2} B_{l_1,3,\boldsymbol{t}_1}(y)B_{l_2,3,\boldsymbol{t}_2}(x) =  (\boldsymbol{a}(y)^{\top} \otimes \boldsymbol{b}(x)^{\top}) \boldsymbol{\gamma}_j \end{align}$$
 
-- We have a total of $L_1 \times L_2$ parameters.
-- Now, the restriction of monotonicity is necessary only in the $y$ direction. In the matrix notation $\boldsymbol{\gamma}_j = \Sigma \boldsymbol{\tilde{\beta}}_j$ with $\Sigma = \Sigma_1 \otimes I_2$ and
+- The restriction of monotonicity is necessary only in the $y$ direction. In the matrix notation $\boldsymbol{\gamma}_j = \Sigma \boldsymbol{\tilde{\beta}}_j$ with $\Sigma = \Sigma_1 \otimes I_2$ and
 
 $$\begin{equation}\label{betatilde}
-    \boldsymbol{\tilde{\beta}}_j = (\beta_{j,1,1}, \beta_{j,1,2}, \hdots, \beta_{j,1,L_2}, \exp(\beta_{j,2,1}), \exp(\beta_{j,2,2}), \hdots, \exp{(\beta_{j,2,L_2})}, \hdots, \exp(\beta_{j,L_1,L_2}))^{\top} 
+    \boldsymbol{\tilde{\beta}}_j = (\beta_{j,1,1}, \beta_{j,1,2}, \dots, \beta_{j,1,L_2}, \exp(\beta_{j,2,1}), \exp(\beta_{j,2,2}), \dots, \exp{(\beta_{j,2,L_2})}, \dots, \exp(\beta_{j,L_1,L_2}))^{\top} 
 \end{equation}$$
 
 ---
@@ -449,10 +445,16 @@ $$\begin{equation}\label{betatilde}
 ___
 
 - The B-spline bases is already used in regression models. In this context, they estimate effects of exploratory variables using smooth functions.
-- `r Citep(myBib,"eilers1996flexible")` proposes an appealing penalty based on the finite difference of adjacent basis coefficients, called P-splines to addresses the overfitting problem of unregularized splines.
-- In the Bayesian context, smoothness and regularization are achieved through shrinkage priors distributions.
-- In the Bayesian P-Splines approach `r Citep(myBib,"lang2004bayesian")`, we assign multivariate normal distributions with a zero vector mean and a precision matrix $\boldsymbol{Q}$ to the parameter models
-- For the case $h_j(y) = \sum_{i = 1}^q B_{i,3,\boldsymbol{t}}(y) \gamma_{j, i} =  \boldsymbol{a}(y)^T \boldsymbol{\gamma}_j$, see (\ref{spline}),  we set $\boldsymbol{\beta}_j \sim N_q(0, \boldsymbol{Q}_j(\tau_j))$, which $\boldsymbol{Q}_j(\tau_j) = \frac{1}{\tau_j}\boldsymbol{K}_1$.
+- `r Citet(myBib,"eilers1996flexible")` proposed an appealing penalty based on the finite difference of adjacent basis coefficients, called P-splines to addresses the overfitting problem of unregularized splines.
+- In the Bayesian context, smoothness and regularization are achieved through shrinkage priors distributions `r Citep(myBib,"lang2004bayesian")`
+- For the case 
+
+$$h_j(y) = \sum_{i = 1}^q B_{i,3,\boldsymbol{t}}(y) \gamma_{j, i} =  \boldsymbol{a}(y)^T \boldsymbol{\gamma}_j = \boldsymbol{a}(y)^{\top}\Sigma \boldsymbol{\tilde{\beta}}(\boldsymbol{\beta})_j,$$ 
+
+
+$$\boldsymbol{\beta}_j \sim N_q(0, \boldsymbol{Q}_j(\tau_j)),$$ 
+
+$$\boldsymbol{Q}_j(\tau_j) = \frac{1}{\tau_j}\boldsymbol{K}_1.$$
 ---
 
 
@@ -513,7 +515,7 @@ for $t \in [0,1]$.
 
 
 
-- We propose to represent the transformation function $h_j(y)$, independent of explanatory variables, $\boldsymbol{x}$, for some $j = 1, \hdots, J$ as a Bernstein polynomial of degree $k$
+- We propose to represent the transformation function $h_j(y)$, independent of explanatory variables, $\boldsymbol{x}$, for some $j = 1, \dots, J$ as a Bernstein polynomial of degree $k$
 
 $$\begin{equation}\label{bern_transf}
     h_j(y) = \sum_{r = 0}^p B_{r,k}(y) \gamma_{j,k+1} = \boldsymbol{a}_j(y)^{\top} \boldsymbol{\gamma}_j
@@ -540,7 +542,7 @@ colocar a matri Sigma aqui
 
 ---
 
-- Let us assume the transformation function $h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x})$, and a set of explanatory variables represented by $\boldsymbol{x} = (x_1, x_2, \hdots, x_m)$. The marginal impact of a particular covariate $x_l \in \boldsymbol{x}, l =1, \hdots, m$ is is defined by
+- Let us assume the transformation function $h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x})$, and a set of explanatory variables represented by $\boldsymbol{x} = (x_1, x_2, \dots, x_m)$. The marginal impact of a particular covariate $x_l \in \boldsymbol{x}, l =1, \dots, m$ is is defined by
 
 
 $$\begin{align}\label{rate_of_chane_ey}
@@ -570,7 +572,7 @@ $$\begin{equation}
     Q_p = h^{-1}(\Phi^{-1}(p)|\boldsymbol{x})
 \end{equation}$$
 
-- Let us assume the transformation function $h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x})$, and a set of explanatory variables represented by $\boldsymbol{x} = (x_1, x_2, \hdots, x_p)$. The marginal impact of a particular covariate $x_l \in \boldsymbol{x}, l =1, \hdots, m$ is the expected rate of change on the quantile $Q_p$ of $Y|\boldsymbol{X} = \boldsymbol{x}$ for a one-unit variation in the covariate $x_l$, keeping all other variables constant
+- Let us assume the transformation function $h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x})$, and a set of explanatory variables represented by $\boldsymbol{x} = (x_1, x_2, \dots, x_p)$. The marginal impact of a particular covariate $x_l \in \boldsymbol{x}, l =1, \dots, m$ is the expected rate of change on the quantile $Q_p$ of $Y|\boldsymbol{X} = \boldsymbol{x}$ for a one-unit variation in the covariate $x_l$, keeping all other variables constant
 
 
 $$\begin{align}\label{rate_of_chane_qp}
@@ -637,7 +639,7 @@ $$\begin{equation}\label{joint_prior}
 \pi(\boldsymbol{\beta}, \boldsymbol{\tau}|\boldsymbol{y}) \propto \left[ f_{\boldsymbol{Y}|\boldsymbol{X} = \boldsymbol{x}}(\boldsymbol{y}|\boldsymbol{x}, \boldsymbol{\beta})\right] 
     \phi(\boldsymbol{\beta}|\boldsymbol{\mu}, \boldsymbol{Q}(\boldsymbol{\tau})) \pi(\boldsymbol{\tau}), 
 \end{equation}$$
-- We are interested in the marginal distribution of the unconstrained parameters $\beta_r$, which are components of vector $\boldsymbol{\beta}_j = (\beta_1, \hdots, \beta_{I_j})^{\top}$ from the vector $\boldsymbol{\beta} = (\boldsymbol{\beta}_1, \hdots, \boldsymbol{\beta}_J)^{\top}$, where $j \in \lbrace 1, \dots, J\rbrace$,
+- We are interested in the marginal distribution of the unconstrained parameters $\beta_r$, which are components of vector $\boldsymbol{\beta}_j = (\beta_1, \dots, \beta_{I_j})^{\top}$ from the vector $\boldsymbol{\beta} = (\boldsymbol{\beta}_1, \dots, \boldsymbol{\beta}_J)^{\top}$, where $j \in \lbrace 1, \dots, J\rbrace$,
 
 $$\begin{equation}\label{marginal_app}
     \pi(\beta_r|\boldsymbol{y}) = \int \boxed{\pi(\beta_r|\boldsymbol{\tau},\boldsymbol{y})} \hspace{0.3cm}\boxed{\pi(\boldsymbol{\tau}|\boldsymbol{y})}, d\boldsymbol{\tau}.
@@ -838,84 +840,13 @@ $$\begin{equation}
     \tilde{\pi}_{VBC}(\beta_r|\boldsymbol{y}) = \sum_{p = 1}^P \tilde{\pi}_{VBC}(\beta_r|\boldsymbol{\tau}^{(p)}, \boldsymbol{y})\tilde{\pi}(\boldsymbol{\tau}^{(p)}|\boldsymbol{y}) \Delta \boldsymbol{\tau}^{(p)}, 
 \end{equation}$$
 
-where $\lbrace \boldsymbol{\tau}^{[1]}, \hdots, \boldsymbol{\tau}^{[P]} \rbrace$ is a set of points of $\boldsymbol{\tau}$.
+where $\lbrace \boldsymbol{\tau}^{[1]}, \dots, \boldsymbol{\tau}^{[P]} \rbrace$ is a set of points of $\boldsymbol{\tau}$.
 
 $$\begin{align}
     \pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y}) & = \prod_{i =1}^n \pi(y_i|\boldsymbol{\beta}, \boldsymbol{\tau})\pi(\boldsymbol{\beta}|\boldsymbol{\tau}) \nonumber \\
     \tilde{\pi}(\boldsymbol{\tau}|\boldsymbol{y}) & \propto  \frac{\pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})}{\tilde{\pi}_{G}(\boldsymbol{\beta}| \boldsymbol{\tau}, \boldsymbol{y})}\bigg|_{\boldsymbol{\beta} = \boldsymbol{\beta}^{*}(\boldsymbol{\tau})} \nonumber \\
     \tilde{\pi}(\beta_r|\boldsymbol{y}) & = \int \tilde{\pi}_{\small{VBC}}(\beta_r |\boldsymbol{\tau}, \boldsymbol{y})\tilde{\pi}(\boldsymbol{\tau}|\boldsymbol{y})d\boldsymbol{\tau}
 \end{align}$$
-
----
-### Low-rank correction
-
-- In the proposed algorithm, the correction is applied to the mean of the Normal approximation of the unknown posterior distribution \(\boldsymbol{\beta}|\boldsymbol{\tau}, \boldsymbol{y}\). Specifically, we use the approximation $N(\boldsymbol{\beta}_0 + \boldsymbol{\delta}, H^{-1}_p(\boldsymbol{\beta}_0)),
-
-- The mean \(\boldsymbol{\beta}_0\), prior to correction, is the solution to the following linear system:
-
-\begin{equation}\label{linear_system_beta0}
- H_p(\boldsymbol{\beta}_0) = \nabla p(\boldsymbol{\beta}_0) + H_p(\boldsymbol{\beta}_0) \boldsymbol{\beta}_0,
-\end{equation}
-
-- To simplify the notation, let us define $Q_0 = H_p(\boldsymbol{\beta}_0) \quad \text{and} \quad b_0 = \nabla p(\boldsymbol{\beta}_0) + H_p(\boldsymbol{\beta}_0) \boldsymbol{\beta}_0.$
-
-\begin{equation}
-    Q_0 \boldsymbol{\beta}_0 = \boldsymbol{b}_0.
-\end{equation}
-
-- Given that the number of parameters can grow substantially in some applications, such as random effects models, \citet{HaavardVBC} proposes an implicit correction of the mean term \(\boldsymbol{\beta}_0\) by explicitly correcting the estimated gradient, such that the improved posterior mean \(\boldsymbol{\beta}_1\) satisfies the new linear system:
-
-
-\begin{equation}
-    Q_0 \boldsymbol{\beta}_1 = \boldsymbol{b}_0 + \boldsymbol{\lambda} = \boldsymbol{b}_1,
-\end{equation}
-
-- where \(\boldsymbol{\lambda}\) is the implicit correction term applied to \(\boldsymbol{b}_0 = \nabla p(\boldsymbol{\beta}_0) + H_p(\boldsymbol{\beta}_0) \boldsymbol{\beta}_0\). This implies that the mean \(\boldsymbol{\beta}_0\) is no longer explicitly corrected.
-
----
-
-- However, if \(\boldsymbol{\lambda}\) is of the same dimension as the gradient and the term \(\boldsymbol{\beta}_0\), that is, \(\boldsymbol{\lambda} \in \mathbb{R}^T\), then no computational advantage would be gained over the proposal
-
-- we can examine how a non-zero value of the \(j\)-th element of \(\boldsymbol{\lambda}\), \(\lambda_j \neq 0\), impacts the \(i\)-th element of the corrected mean vector \(\boldsymbol{\beta}_1\), denoted by \(\beta_{1,i}\)
-
-$$\frac{\partial \beta_{1,i}}{\partial \lambda_j} \lambda_j = \frac{\partial \beta_{1,i}}{\partial b_{1,j}} \frac{\partial b_{1,j}}{\partial \lambda_j} \lambda_j = Q_0^{i,j} \lambda_j,$$
-
-- The equation in (\ref{derivada_correcao_low}) shows that the \(j\)-th term of the vector \(\boldsymbol{\lambda}\) impacts the \(i\)-th term of the vector \(\boldsymbol{\beta}_1\) through the term \(Q_0^{i,j}\).
-
-$$\begin{equation}
-    \frac{\partial \boldsymbol{\beta}_1}{\partial \lambda_j} \lambda_j = Q_0^{.,j} \lambda_j,
-\end{equation}$$
-
-where \(Q_0^{.,j}\) denotes the \(j\)-th column of the matrix \(Q_0\).
-
----
-
-- In other words, a single term of \(\boldsymbol{\lambda}\) propagates its correction to all elements of \(\boldsymbol{\beta}_1\). 
-- This forms the basis of the Low-Rank Variational Bayes correction proposal, as selecting only a subset of p columns of \(Q_0\) would still propagate the correction to all terms of \(\boldsymbol{\beta}_1\).
-
-- Consider a set of indices \( i \in I \subset \{1, 2, \dots, P\} \) for which we aim to correct \( b_{0,i} \). We then extract the corresponding columns of \( \boldsymbol{Q}_0^{-1} \)
-
-
-$$\begin{equation}
-    \boldsymbol{\beta}_1 = \boldsymbol{\beta}_0 + \boldsymbol{Q}_I^{-1}\boldsymbol{\lambda}
-\end{equation}$$
-
-- Now, we can optimize (\ref{delta_correction}), but for the $\boldsymbol{\lambda}$ instead of $\boldsymbol{\delta}$ as follows
-
-\begin{equation}
-    \tilde{\boldsymbol{\lambda}} = \underset{\boldsymbol{\lambda}} {\textrm{agr min}}\left\lbrace E_{\boldsymbol{\beta}|\boldsymbol{\tau} \sim N(\boldsymbol{\beta}_0 + \boldsymbol{Q}_I^{-1}\boldsymbol{\lambda}, \boldsymbol{Q}^{-1}_0)} \left[-\log \pi(\boldsymbol{y}|\boldsymbol{\beta},\boldsymbol{\tau} ) \right] + \frac{1}{2}(\boldsymbol{\beta}_0 + \boldsymbol{Q}_I^{-1}\boldsymbol{\lambda})^T \boldsymbol{Q}_0(\boldsymbol{\beta}_0 + \boldsymbol{Q}_I^{-1}\boldsymbol{\lambda}) \right\rbrace.
-\end{equation}
-
-
----
-
-- There is still no established rule or criterion for selecting the optimal set of indices \(I\).
-
-- In the original paper, \citet{HaavardVBC} proposes selecting indices related to the fixed effects parameters. For a random effects model, for example, all indices related to the random effects of individuals would be excluded.
-
-- However, in our context, we also have the parameters of the transformations of the observed response variable.
-
-- We will not delve further into this discussion in this work. 
 
 ---
 
@@ -1592,7 +1523,7 @@ $$\begin{align}
 \end{align}$$
 
 ---
-- The expression in \ref{marginal_effect_app5} is evaluated by the following
+- The expression is evaluated by the following
 
 $$\begin{equation}
     \text{marginal impact} = \frac{1}{R}\sum_{r= 1}^R\frac{-(\beta_1^{(r)} + b_{2i}^{(r)})}{\boldsymbol{a}(m)^{\top}\boldsymbol{\gamma}^{(r)}}
@@ -1614,39 +1545,98 @@ knitr::include_graphics("figuras/marginal_308bspline.png")
 ]
 
 ---
-
----
-
-
----
-Probability Integral Transform (PIT) \citep{PIT} as
-
-
+The Probability Integral Transform (PIT), or cross validation predictive p-value is
 
 $$\begin{equation}
     \text{PIT} = P(Y_i \leq y_i^{obs}| \boldsymbol{y}_{-i})
 \end{equation}$$
 
+- The evaluated PIT's are uniformly distributed under the hypothesis that the model is correct.
+
+```{r, echo=FALSE, out.width = "60%", dpi = 300 , fig.cap=".", fig.retina = 2,fig.align='center'}
+knitr::include_graphics("figuras/PIT_bspline.png")
+```
+
 ---
 ### Application 6.2 - Analysis of vehicle theft incident in the city of São Paulo 
 
-- São Paulo is the largest economy in Brazil and has the highest number of automobiles, accounting for over 10\% of the entire national fleet.
+- All Vehicle Theft Incidents (involving only robbery) recorded by the police in the city between 2017-01-01 and 2023-01-31 were obtained from the website of the Public Security Secretariat of São Paulo (https://www.ssp.sp.gov.br/estatistica/consultas).
 
-- Analyzing vehicle theft incidents (VTI) in São Paulo is critical for understanding the underlying patterns and trends that drive this crime. 
-
-- All Vehicle Theft Incidents (involving only robbery) recorded by the police in the city between 2017-01-01 and 2023-01-31 were obtained from the website of the Public Security Secretariat of São Paulo (\url{https://www.ssp.sp.gov.br/estatistica/consultas}).
-
-- The raw data consists of detailed records of each reported VTI in the City of São Paulo, including the specific date (year, month and day) and the hour of occurrence.
+- The raw data consists of detailed records of each reported vehicle theft incidents (VTI) in the City of São Paulo, including the specific date (year, month and day) and the hour of occurrence.
 
 - Under-reporting is not a concern, as a police report is mandatory for any car insurance claim in Brazil. Moreover, the possibility of the vehicle being recovered by the owner is more likely with an official police record.
 
+- For the purposes of this analysis, we aggregate the number of Vehicle Theft Incidents (VTIs) into pre-defined time intervals:  night am: [00:00 - 04:00], morning: [04:00 - 08:00], day_am [08:00 - 12:00], day_pm [12:00 - 16:00], pre_night [16:00 - 20:00], night [20:00 - 24:00]
 ---
-- For the purposes of this analysis, we aggregate the number of Vehicle Theft Incidents (VTIs) into pre-defined time intervals.
 
-- his aggregation facilitates the identification of broader temporal patterns and trends that might not be apparent when analyzing each hour individually.
+- We define the count response variable $Y$ as the number of VTIs within each specific time interval. 
 
-``night am" [00:00 - 04:00], ``pre-morning" [04:00 - 06:00], ``morning" [06:00 - 08:00], ``day am" [08:00 - 12:00], ``day pm" [12:00 - 16:00], ``pre night" [16:00 - 18:00], ``night" [18:00 - 20:00], and ``night pm" [20:00 - 24:00].
+- The dataset includes the following predictors: the annual effect, calculated as the difference between each year and the base year (2017) plus one; the weekly effect, measured as the difference between each day of the week and Sunday plus one; and the monthly effect, defined as the difference between each month and January plus one.
+
+- The intervals of the day are treated as categorical.
+
+**Model 1:**
+\begin{align}
+    P(Y \leq y| \boldsymbol{X} = \boldsymbol{x})  = & \Phi(\boldsymbol{a}_{20}(\lfloor y \rfloor)^T \boldsymbol{\gamma} + \beta_0 + \textrm{Year} \times \beta_1 + \textrm{Month} \times \beta_2 + \textrm{Day} \times \beta_3 + \textrm{Period} \times \beta_4).
+\end{align}
+
+**Model 2:**
+\begin{align}
+    P(Y \leq y| \boldsymbol{X} = \boldsymbol{x}) = & \Phi(\boldsymbol{a}_{20}(\lfloor y \rfloor)^T \boldsymbol{\gamma}_1  + \boldsymbol{a}_5(Year)^T\boldsymbol{\gamma}_2 + \boldsymbol{a}_5(Month)^T\boldsymbol{\gamma}_3 + \boldsymbol{a}_5(Day)^T\boldsymbol{\gamma}_4+ \beta_0 + \textrm{Period} \times \beta_1). 
+\end{align}
+
+**Model 3:**
+\begin{align}
+    P(Y \leq y| \boldsymbol{X} = \boldsymbol{x}) = & \Phi(\boldsymbol{a}_{20}(\lfloor y \rfloor)^T \boldsymbol{\gamma}_1 + \beta_0 + \boldsymbol{a}_5(Year)^T\boldsymbol{\gamma}_2 + \boldsymbol{a}_5(Month)^T\boldsymbol{\gamma}_3 \\
+    & +  (\boldsymbol{a}_5(Day)^T \otimes (\textrm{Period})^T) \boldsymbol{\gamma}_4 + \textrm{Period} \beta_1). \nonumber
+\end{align}
+
+
 ---
+
+<table border="1" style="text-align: center;">
+  <caption>Comparison of Model Performance Metrics: DIC, WAIC, and MAE. For the Vehicle thefts in São Paulo city.</caption>
+  <thead>
+    <tr>
+      <th style="border-top: 1px solid black; border-bottom: 1px solid black;">Model</th>
+      <th style="border-top: 1px solid black; border-bottom: 1px solid black;">DIC</th>
+      <th style="border-top: 1px solid black; border-bottom: 1px solid black;">WAIC</th>
+      <th style="border-top: 1px solid black; border-bottom: 1px solid black;">MAE</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="background-color: white;">
+      <td>Model 1</td>
+      <td>28109.49</td>
+      <td>28145.12</td>
+      <td>6.28</td>
+    </tr>
+    <tr style="background-color: white;">
+      <td>Model 2</td>
+      <td>27224.26</td>
+      <td>27246.02</td>
+      <td>6.11</td>
+    </tr>
+    <tr style="background-color: white;">
+      <td><strong>Model 3</strong></td>
+      <td><strong>26410.83</strong></td>
+      <td><strong>26447.97</strong></td>
+      <td><strong>5.46</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+Comparasion with GAM
+---
+Plot valores ajustados
+
+---
+Impacto das var
+
+---
+
+
+
 ### Final remarks
 ___
 - The BCTM targets a flexible estimation leaving aside any parametric and linear restriction on conditional transformation function. However, flexibility comes with a price, and the interpretability of the model is restrictive. 
