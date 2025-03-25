@@ -70,19 +70,12 @@ ___
 - Conditional Transformation Models
 
 - Bayesian Conditional Transformation Models
-  - B-spline and Bernstein basis
-  - Prior specification
 
-- Properties of the Bayesian Conditional Transformation Models
-
-- Bayesian count CTM
 
 - Posterior inference
   - Integrated Laplace with Bayesian Conditional
 Transformation Models
   - Variational Bayes correction to BCTM
-
-
 
 
 ---
@@ -119,13 +112,13 @@ ___
 
 #### Alternatives
 - An approach that guarantees the flexibilization of some assumptions in the class of regression models is the Generalized additive model for the location, scale, and shape (GAMLSS) class.
-- To move beyond the parametric framework, quantile regression models (Koenker and Hallock, 2001) provide a flexible alternative to regression models. In quantile regression, each conditional quantile is modeled independently as a function of linear or smooth terms of the explanatory variables.
+- Quantile regression models (Koenker and Hallock, 2001) provide a flexible alternative to regression models. In quantile regression, each conditional quantile is modeled independently as a function of linear or smooth terms of the explanatory variables.
 
 
 ---
-#### If we go further?
+#### If we go further...
 
-- Conditional Transformation Models (CTM) (Hothorn, Kneib, and Bühlmann, 2014) address the direct estimation of the conditional distribution function of a random variable `\(Y\)` conditional on a set of covariates `\(X = x\)`.
+
 
 &lt;img src="figuras/Imagem-5-1.png" width="50%" style="display: block; margin: auto;" /&gt;
 
@@ -134,9 +127,9 @@ ___
 
 - Fully Nonparametric? No! Conditional Transformation models!
 
-- The idea is to find `\(F_{Y|x}\)`, but indirectly using a variable transformation.
+- The idea is to find `\(F_{Y|x}\)`, but indirectly, using a transformation of random variables.
 
-- **Conditional** on `\(x\)`, the approach applies a **Transformation** function `\(h(Y|x)\)` to the random variable `\(Y\)`; by composing this transformation with a base distribution, we obtain a **Model** for the variable `\(Y\)` given `\(x\)`.
+- **Conditional** on `\(x\)`, the approach applies a **Transformation** function `\(h(Y|x)\)` to the random variable `\(Y\)`; by composing this transformation with a baseline distribution, we obtain a **Model** for the variable `\(Y\)` given `\(x\)`.
 
 - Formally, the CTM was first introduced by Hothorn, Kneib, and Bühlmann (2014). The definition involves concepts of conditional probability and random variable transformation.
 
@@ -146,11 +139,11 @@ ___
 ---
 #### What about this work?
 
-- In this work, we aim to contribute to the CTM class and, more specifically, to the BCTM. We present two alternative and efficient Bayesian estimation procedures for the BCTM.
-- The first approach is based on the Laplace approximation, inspired by the Integrated Nested Laplace Approximation (INLA). The second approach relies on the Variational Bayes. 
-- We also propose an alternative parameterization for the transformation functions `\(h(y|x)\)`, distinct from the one presented in Carlan, Kneib, and Klein (2024) . In our proposal,  we employ Bernstein bases to parametrize the function.
-- The CTM class of models suffers from a lack of interpretability due to its construction. In this work, we propose two different results that enable us to evaluate how a particular variable `\(x\)` impacts both the expected value of `\(Y\)` and the quantiles of the distribution of `\(Y\)`.
-- Finally, we illustrate our methods using real data applications.
+- In this work, we contribute to the CTM class and, more specifically, to the BCTM. We present two alternative and efficient Bayesian estimation procedures for the BCTM.
+- We also propose an alternative parameterization for the transformation functions `\(h(y|x)\)`, distinct from the one presented in Carlan, Kneib, and Klein (2024) . 
+- The CTM class of models suffers from a lack of interpretability due to its construction. In this work, we propose to adapt some techniques to evaluate how a particular variable `\(x\)` impacts both the expected value of `\(Y\)` and the quantiles of the distribution of `\(Y\)`.
+
+- Finally, we illustrated our methods using real data applications.
 
 ---
 ### Conditional Transformation Models
@@ -169,7 +162,7 @@ ___
 
 ---
 
-- But we have a transformation on an unkwnown random variable. What's next?
+- But, we have a transformation on an unkwnown random variable. What's next?
 
 - Assuming that `\(h(Y|\boldsymbol{x})\)` follows a known probability distribution (First assumption)
 
@@ -181,21 +174,16 @@ $$
 Thus,
 
 $$
-    F_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = P(Y \leq y|\boldsymbol{X} = \boldsymbol{x})= P(Y \leq y|\boldsymbol{X} = \boldsymbol{x}) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
+    F_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
 $$
-
-
-&lt;img src="figuras/transformacao.png" width="45%" style="display: block; margin: auto;" /&gt;
-
-- It is convenient to assume `\(Z\sim N(0,1)\)`.
-
----
-
 - The conditional transformation function `\(h(Y \mid \boldsymbol{x})\)` is monotonically increasing in `\(y \in \mathbb{R}\)`, conditional on `\(\boldsymbol{X} = \boldsymbol{x}\)` (Second assumption).
 
 - Besides that, right continuous and differentiable (Third assumption).
 
-- At the end of the day, the task of obtaining `\(F_{Y|\boldsymbol{X} = \boldsymbol{x}}\)` reduces to estimating the transformation function `\(h\)`.
+
+- It is convenient to assume `\(Z\sim N(0,1)\)`.
+
+---
 
 - The construction of `\(h(y|\boldsymbol{x})\)` must account for all the characteristics and objectives of the proposed model (Monotonic on `\(y\)`).
 
@@ -205,6 +193,10 @@ $$
 `$$\begin{equation}
     h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x}).
 \end{equation}$$`
+
+
+
+- At the end of the day, the task of obtaining `\(F_{Y|\boldsymbol{X} = \boldsymbol{x}}\)` reduces to estimating the transformation function `\(h\)`.
 
 
 ---
@@ -217,15 +209,7 @@ Assume `\(J= 3\)` and
     
 - The first transformation function `\(h_1(y) = \gamma_1 \cdot y\)` is a linear function of y .
 - The second transformation function `\(h_2(y|\boldsymbol{x}) = \gamma_2 \cdot x \cdot y\)` involves a linear interaction between `\(y\)` and `\(x\)`.
-- The last transformation function `\(h_3(\boldsymbol{x}) = \gamma_4 \cdot x\)` describes marginal effects of `\(x\)`.
-
-`$$\begin{aligned}
-     E(\gamma_0 + \gamma_1 \cdot Y + \gamma_2\cdot x \cdot Y + \gamma_3 \cdot x|\boldsymbol{x}) = E(Z) \\
-     E(Y|\boldsymbol{x}) = \frac{ -(\gamma_0  + \gamma_3 \cdot x) }{\gamma_1  + \gamma_2\cdot x}.\\
-     V(\gamma_0 + \gamma_1 \cdot Y + \gamma_2\cdot x \cdot Y + \gamma_3 \cdot x|\boldsymbol{x}) = 1 \\
-     V(Y|\boldsymbol{x}) = \frac{1}{  (\gamma_1 + \gamma_2\cdot x)^2}. \\
-    \end{aligned}$$`
-    
+- The last transformation function `\(h_3(\boldsymbol{x}) = \gamma_0 +  \gamma_4 \cdot x\)` describes marginal effects of `\(x\)`.
 - If Z is normal, linear combination of `\(Y\)` would be Normal too.
 ---
 
@@ -233,14 +217,14 @@ Assume `\(J= 3\)` and
 
 - To leave the class of Gaussian models, we have to increase the `\(h(y)\)` complexity. 
 
-- This transformation can take a familiar form, such as `\(\log\)`. If we consider non-linear monotone functions the range of options is very large. 
+- This transformation can take a familiar form, such as `\(\log\)`. 
 
 - An alternative use basis functions which define a functions space, and to represent every function as a linear combination of basis function.
 
 - But many questions and challenges arise from this approach.
-  - The functions should express many possible different functions, but they should preferably be smooth (2,3).
+  - The functions should express many possible different functions, but they should preferably be smooth (3,4).
   - How much smooth should they be?
-  - They should be monotone(1).
+  - They should be monotone(2).
 
   
 ---
@@ -260,27 +244,26 @@ h_j(y) = \boldsymbol{a(y)}^{\top} \boldsymbol{\gamma}, \boldsymbol{\gamma} \in \
 
 for some `\(j\)` in `\(h(y|x)\)`. 
 
-- The choice of the basis has to attend to the monotonically increasing restriction, and the first derivative `\(a(y)'\)` must be available. 
 
-- Combining the transformation in (\ref{hy}) with some explanatory variables `\(\boldsymbol{x}\)` for different `\(j's\)` can yield a model different from the Normal.
+- Combining the transformation in (\ref{hy}) with some explanatory variables `\(\boldsymbol{x}\)` for different `\(j's\)` can yield a model different from the Normal (as long as it is an appropriate basis).
 
 
 ---
-#### Now let us take a look to `\(\boldsymbol{x}\)`
+#### Now let us take a look to `\(x\)`
 
-- We can also define a bases for `\(\boldsymbol{x}\)` to assume more than linear effects.
+- We can also define a bases for `\(x\)` to assume more than linear effects.
 
 - Let `\(\boldsymbol{b}: \mathbb{R} \rightarrow \mathbb{R}^m\)` denote a basis for explanatory variables such that
 
-`$$h_j(y) = \boldsymbol{b(x)}^{\top} \boldsymbol{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^m,$$`
+`$$h_j(y) = \boldsymbol{b}(x)^{\top} \boldsymbol{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^m,$$`
 
-for some `\(j\)` in `\(h(y|x)\)`. **There is no monotonicity constraint, but it is convenient for it to be a smooth function**.
+for some `\(j\)`. **There is no monotonicity constraint, but it is convenient for it to be a smooth function**.
+
+- We can consider fixed effects and random effects in the transformation function.
 
 - **Finally**, the joint basis is `\(\boldsymbol{c}: \mathbb{R}^v \times \mathbb{R}^m  \rightarrow \mathbb{R}^{d(v, m)}\)`, such that `\(h(y|\boldsymbol{x}) = c(y, \boldsymbol{x})^T\boldsymbol{\gamma}, \boldsymbol{\gamma} \in \mathbb{R}^{d(v,m)}\)`, and its dimension `\(d(v, m)\)` depends on the combination of the `\(\boldsymbol{b}\)` and `\(\boldsymbol{a}\)` basis functions.
 
-- For an evaluated basis and a vector of coefficients, we estimate the `\(F_{Y|\boldsymbol{X} = \boldsymbol{x}}\)` distribution through the decomposition `\(F_Z \circ \boldsymbol{c(y,\boldsymbol{x})}^T \boldsymbol{\gamma}\)`.
-
-- Colocar c do exemplo?
+- For an evaluated basis and a vector of coefficients, we estimate the `\(F_{Y|\boldsymbol{X} = \boldsymbol{x}}\)` distribution through the decomposition `\(F_Z(\boldsymbol{c(y,\boldsymbol{x})}^T \boldsymbol{\gamma})\)`.
 
 ---
 
@@ -289,9 +272,7 @@ ___
 
 - In the previous section, we introduced the definition of CTMs.
 
-- Bayesian Conditional Transformation Models (BCTMs) extend CTMs by incorporating a Bayesian framework for inference.
-
-- The first presentation of BCTMs was given by Carlan, Kneib, and Klein (2024), where the author proposed the use of monotonic B-spline bases Pya and Wood (2015) to model conditional transformation functions. 
+- The first presentation of BCTMs was given by Carlan, Kneib, and Klein (2024), where the author proposed the use of monotonic B-spline bases (Pya and Wood, 2015) to model conditional transformation functions. 
 
 - The Bayesian framework naturally introduces penalization and smoothness in the B-spline bases through the choice of prior distributions on the basis coefficients. 
 
@@ -306,24 +287,15 @@ ___
 ### B-splines basis
 ___
 
-**Definition:** Let k be a non-negative integer, `\(\boldsymbol{t}\)` be the node vector of a non-decreasing sequence of real numbers of length at least k + 2, and `\(Q\)` the length of `\(\boldsymbol{t}\)`. The jth B-spline of degree k with nodes `\(\boldsymbol{t}\)` is defined by
+**Definition:**  Let k be a non-negative integer, `\(\boldsymbol{t}\)` a vector of a non-decreasing sequence of real numbers. The ith B-spline basis of degree k with nodes `\(\boldsymbol{t}\)` is defined by
 
-`$$B_{j,k,\boldsymbol{t}}(y) = \frac{y - t_j}{t_{j + k}- t_j} B_{j,k-1,\boldsymbol{t}}(y) + \frac{t_{j + 1 + k} - y}{t_{j + 1 + k}- t_{j + 1}} B_{j + 1,k - 1,\boldsymbol{t}}(y), j =1, \dots, Q,$$`
+`$$B_{j,k,\boldsymbol{t}}(y) = \frac{y - t_j}{t_{j + k}- t_j} B_{j,k-1,\boldsymbol{t}}(y) + \frac{t_{j + 1 + k} - y}{t_{j + 1 + k}- t_{j + 1}} B_{j + 1,k - 1,\boldsymbol{t}}(y), j =1, \dots, q,$$`
 
 `$$B_{j,0,\boldsymbol{t}}(y)  = \left\lbrace\begin{array}{lc}
         1, &amp; t_j \leq y \leq t_{j + 1}  \\
          0 &amp;  \textrm{othwerwise}
     \end{array}\right.$$`
- 
-- A B-spline form for some function `\(f\)` requires: two integers, `\(k\)` and `\(q\)`, defining respectively the degree and the number of linear parameters, a vector of knots `\(\boldsymbol{t}\)` of length `\(2k + q\)` in increasing order, where the `\(t_{k + 1}, \dots, t_q\)` are the inner knots.
-- The interval over which the spline is to be evaluated lies within `\(t_{k + 1}, \dots, t_q\)`. The first and last `\(k\)` knot locations are arbitrary.
-- On the other hand, we can define a basis by choosing only `\(k\)` and the inner knots. In this case, `\(q = q' + k - 1.\)` The length of vector knots is `\(q' + 3k - 1\)`.
-
----
-
-- For degree `\(k = 2\)` with a vector of inner knots `\((2,3, \dots, 8)\)` of length 7 we should have a vector of knots `\(\boldsymbol{t} = (t_1, t_2, 2,3, \dots, 8, t_{10}, t_{11}, t_{12})\)`.  The total of curve and linear parameters is `\(q = 7 + 2 -1 = 8\)`.
-- j = 1
-`$$\small{  B_{1,2,\boldsymbol{t}}(y) = \frac{y - 2}{3- 2} B_{1,1,\boldsymbol{t}}(y) + \frac{4 - y}{4 - 3} B_{2,1,\boldsymbol{t}}(y), j =1, \dots, 8,}$$`
+   
 <div class="container-fluid crosstalk-bscols">
 <div class="row">
 <div class="col-xs-2">
@@ -393,7 +365,7 @@ ___
     "7": [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
     "8": [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]
   },
-  "group": ["SharedData880a5f24"]
+  "group": ["SharedData106ac811"]
 }</script>
 </div>
 </div>
@@ -401,13 +373,16 @@ ___
 </div>
 </div>
 <div class="col-xs-10">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-ec68c8a31ec7b7f6db89" style="width:100%;height:400px;"></div>
-<script type="application/json" data-for="htmlwidget-ec68c8a31ec7b7f6db89">{"x":{"visdat":{"10284f610958":["function () ","plotlyVisDat"]},"cur_data":"10284f610958","attrs":{"10284f610958":{"x":{},"y":{},"mode":"lines","line":{"simplyfy":false},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"width":650,"height":350,"margin":{"b":40,"l":60,"t":25,"r":10},"title":{"text":"B-splines of degree 2"},"xaxis":{"domain":[0,1],"automargin":true,"title":{"text":"y"}},"autosize":false,"yaxis":{"domain":[0,1],"automargin":true,"title":"B"},"dragmode":"zoom","hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0.5,0.40499999999999992,0.31999999999999984,0.24500000000000013,0.18000000000000005,0.125,0.07999999999999996,0.04499999999999995,0.020000000000000035,0.0050000000000000088,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(102,194,165,1)","simplyfy":false},"type":"scatter","key":["1"],"set":"SharedData880a5f24","name":"1","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0.5,0.59000000000000008,0.66000000000000014,0.70999999999999996,0.73999999999999999,0.75,0.73999999999999999,0.70999999999999996,0.66000000000000014,0.59000000000000008,0.5,0.40499999999999992,0.31999999999999984,0.24500000000000013,0.1799999999999998,0.125,0.07999999999999996,0.04499999999999995,0.020000000000000035,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(252,141,98,1)","simplyfy":false},"type":"scatter","key":["2"],"set":"SharedData880a5f24","name":"2","marker":{"color":"rgba(252,141,98,1)","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0.0050000000000000088,0.020000000000000035,0.04499999999999995,0.07999999999999996,0.125,0.18000000000000005,0.24500000000000013,0.31999999999999984,0.40499999999999992,0.5,0.59000000000000008,0.66000000000000014,0.70999999999999996,0.7400000000000001,0.75,0.73999999999999999,0.70999999999999996,0.66000000000000014,0.58999999999999975,0.5,0.4050000000000003,0.31999999999999984,0.2449999999999995,0.1799999999999998,0.125,0.08000000000000014,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(141,160,203,1)","simplyfy":false},"type":"scatter","key":["3"],"set":"SharedData880a5f24","name":"3","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0.0050000000000000088,0.020000000000000035,0.04499999999999995,0.08000000000000014,0.125,0.18000000000000005,0.24500000000000013,0.31999999999999984,0.4050000000000003,0.5,0.58999999999999975,0.66000000000000014,0.7100000000000003,0.7400000000000001,0.75,0.7400000000000001,0.70999999999999996,0.65999999999999959,0.58999999999999975,0.5,0.4050000000000003,0.31999999999999984,0.2449999999999995,0.1799999999999998,0.125,0.08000000000000014,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(231,138,195,1)","simplyfy":false},"type":"scatter","key":["4"],"set":"SharedData880a5f24","name":"4","marker":{"color":"rgba(231,138,195,1)","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)"},"error_y":{"color":"rgba(231,138,195,1)"},"error_x":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.0049999999999999645,0.020000000000000035,0.045000000000000213,0.08000000000000014,0.125,0.1799999999999998,0.24500000000000013,0.32000000000000056,0.4050000000000003,0.5,0.58999999999999975,0.66000000000000014,0.7100000000000003,0.7400000000000001,0.75,0.7400000000000001,0.70999999999999996,0.65999999999999959,0.58999999999999975,0.5,0.40499999999999953,0.31999999999999984,0.24500000000000013,0.1799999999999998,0.125,0.079999999999999793,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(166,216,84,1)","simplyfy":false},"type":"scatter","key":["5"],"set":"SharedData880a5f24","name":"5","marker":{"color":"rgba(166,216,84,1)","line":{"color":"rgba(166,216,84,1)"}},"textfont":{"color":"rgba(166,216,84,1)"},"error_y":{"color":"rgba(166,216,84,1)"},"error_x":{"color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.0049999999999999645,0.020000000000000035,0.045000000000000213,0.08000000000000014,0.125,0.1799999999999998,0.24500000000000013,0.32000000000000056,0.4050000000000003,0.5,0.59000000000000041,0.66000000000000014,0.70999999999999996,0.7400000000000001,0.75,0.73999999999999988,0.70999999999999996,0.65999999999999959,0.58999999999999975,0.5,0.40499999999999953,0.31999999999999984,0.2449999999999995,0.1799999999999998,0.125,0.079999999999999793,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0],"mode":"lines","line":{"color":"rgba(255,217,47,1)","simplyfy":false},"type":"scatter","key":["6"],"set":"SharedData880a5f24","name":"6","marker":{"color":"rgba(255,217,47,1)","line":{"color":"rgba(255,217,47,1)"}},"textfont":{"color":"rgba(255,217,47,1)"},"error_y":{"color":"rgba(255,217,47,1)"},"error_x":{"color":"rgba(255,217,47,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.005000000000000053,0.020000000000000035,0.04499999999999995,0.08000000000000014,0.125,0.18000000000000033,0.24500000000000013,0.32000000000000056,0.4050000000000003,0.5,0.59166666666666712,0.66666666666666674,0.72500000000000031,0.76666666666666683,0.79166666666666663,0.80000000000000004,0.79166666666666663,0.76666666666666639,0.72499999999999976,0.66666666666666663],"mode":"lines","line":{"color":"rgba(229,196,148,1)","simplyfy":false},"type":"scatter","key":["7"],"set":"SharedData880a5f24","name":"7","marker":{"color":"rgba(229,196,148,1)","line":{"color":"rgba(229,196,148,1)"}},"textfont":{"color":"rgba(229,196,148,1)"},"error_y":{"color":"rgba(229,196,148,1)"},"error_x":{"color":"rgba(229,196,148,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.0033333333333333691,0.013333333333333357,0.030000000000000145,0.053333333333333427,0.083333333333333329,0.12000000000000022,0.16333333333333341,0.21333333333333371,0.27000000000000018,0.33333333333333331],"mode":"lines","line":{"color":"rgba(179,179,179,1)","simplyfy":false},"type":"scatter","key":["8"],"set":"SharedData880a5f24","name":"8","marker":{"color":"rgba(179,179,179,1)","line":{"color":"rgba(179,179,179,1)"}},"textfont":{"color":"rgba(179,179,179,1)"},"error_y":{"color":"rgba(179,179,179,1)"},"error_x":{"color":"rgba(179,179,179,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedData880a5f24"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-0ecc4ddba235ea031f17" style="width:100%;height:400px;"></div>
+<script type="application/json" data-for="htmlwidget-0ecc4ddba235ea031f17">{"x":{"visdat":{"2253a782b08":["function () ","plotlyVisDat"]},"cur_data":"2253a782b08","attrs":{"2253a782b08":{"x":{},"y":{},"mode":"lines","line":{"simplyfy":false},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"width":650,"height":350,"margin":{"b":40,"l":60,"t":25,"r":10},"title":{"text":"B-splines of degree 2"},"xaxis":{"domain":[0,1],"automargin":true,"title":{"text":"y"}},"autosize":false,"yaxis":{"domain":[0,1],"automargin":true,"title":"B"},"dragmode":"zoom","hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0.5,0.40499999999999992,0.31999999999999984,0.24500000000000013,0.18000000000000005,0.125,0.07999999999999996,0.04499999999999995,0.020000000000000035,0.0050000000000000088,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(102,194,165,1)","simplyfy":false},"type":"scatter","key":["1"],"set":"SharedData106ac811","name":"1","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0.5,0.59000000000000008,0.66000000000000014,0.70999999999999996,0.73999999999999999,0.75,0.73999999999999999,0.70999999999999996,0.66000000000000014,0.59000000000000008,0.5,0.40499999999999992,0.31999999999999984,0.24500000000000013,0.1799999999999998,0.125,0.07999999999999996,0.04499999999999995,0.020000000000000035,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(252,141,98,1)","simplyfy":false},"type":"scatter","key":["2"],"set":"SharedData106ac811","name":"2","marker":{"color":"rgba(252,141,98,1)","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0.0050000000000000088,0.020000000000000035,0.04499999999999995,0.07999999999999996,0.125,0.18000000000000005,0.24500000000000013,0.31999999999999984,0.40499999999999992,0.5,0.59000000000000008,0.66000000000000014,0.70999999999999996,0.7400000000000001,0.75,0.73999999999999999,0.70999999999999996,0.66000000000000014,0.58999999999999975,0.5,0.4050000000000003,0.31999999999999984,0.2449999999999995,0.1799999999999998,0.125,0.08000000000000014,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(141,160,203,1)","simplyfy":false},"type":"scatter","key":["3"],"set":"SharedData106ac811","name":"3","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0.0050000000000000088,0.020000000000000035,0.04499999999999995,0.08000000000000014,0.125,0.18000000000000005,0.24500000000000013,0.31999999999999984,0.4050000000000003,0.5,0.58999999999999975,0.66000000000000014,0.7100000000000003,0.7400000000000001,0.75,0.7400000000000001,0.70999999999999996,0.65999999999999959,0.58999999999999975,0.5,0.4050000000000003,0.31999999999999984,0.2449999999999995,0.1799999999999998,0.125,0.08000000000000014,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(231,138,195,1)","simplyfy":false},"type":"scatter","key":["4"],"set":"SharedData106ac811","name":"4","marker":{"color":"rgba(231,138,195,1)","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)"},"error_y":{"color":"rgba(231,138,195,1)"},"error_x":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.0049999999999999645,0.020000000000000035,0.045000000000000213,0.08000000000000014,0.125,0.1799999999999998,0.24500000000000013,0.32000000000000056,0.4050000000000003,0.5,0.58999999999999975,0.66000000000000014,0.7100000000000003,0.7400000000000001,0.75,0.7400000000000001,0.70999999999999996,0.65999999999999959,0.58999999999999975,0.5,0.40499999999999953,0.31999999999999984,0.24500000000000013,0.1799999999999998,0.125,0.079999999999999793,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0,0,0,0,0,0,0,0,0,0,0],"mode":"lines","line":{"color":"rgba(166,216,84,1)","simplyfy":false},"type":"scatter","key":["5"],"set":"SharedData106ac811","name":"5","marker":{"color":"rgba(166,216,84,1)","line":{"color":"rgba(166,216,84,1)"}},"textfont":{"color":"rgba(166,216,84,1)"},"error_y":{"color":"rgba(166,216,84,1)"},"error_x":{"color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.0049999999999999645,0.020000000000000035,0.045000000000000213,0.08000000000000014,0.125,0.1799999999999998,0.24500000000000013,0.32000000000000056,0.4050000000000003,0.5,0.59000000000000041,0.66000000000000014,0.70999999999999996,0.7400000000000001,0.75,0.73999999999999988,0.70999999999999996,0.65999999999999959,0.58999999999999975,0.5,0.40499999999999953,0.31999999999999984,0.2449999999999995,0.1799999999999998,0.125,0.079999999999999793,0.04499999999999995,0.019999999999999858,0.0049999999999999645,0],"mode":"lines","line":{"color":"rgba(255,217,47,1)","simplyfy":false},"type":"scatter","key":["6"],"set":"SharedData106ac811","name":"6","marker":{"color":"rgba(255,217,47,1)","line":{"color":"rgba(255,217,47,1)"}},"textfont":{"color":"rgba(255,217,47,1)"},"error_y":{"color":"rgba(255,217,47,1)"},"error_x":{"color":"rgba(255,217,47,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.005000000000000053,0.020000000000000035,0.04499999999999995,0.08000000000000014,0.125,0.18000000000000033,0.24500000000000013,0.32000000000000056,0.4050000000000003,0.5,0.59166666666666712,0.66666666666666674,0.72500000000000031,0.76666666666666683,0.79166666666666663,0.80000000000000004,0.79166666666666663,0.76666666666666639,0.72499999999999976,0.66666666666666663],"mode":"lines","line":{"color":"rgba(229,196,148,1)","simplyfy":false},"type":"scatter","key":["7"],"set":"SharedData106ac811","name":"7","marker":{"color":"rgba(229,196,148,1)","line":{"color":"rgba(229,196,148,1)"}},"textfont":{"color":"rgba(229,196,148,1)"},"error_y":{"color":"rgba(229,196,148,1)"},"error_x":{"color":"rgba(229,196,148,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[2,2.1000000000000001,2.2000000000000002,2.2999999999999998,2.3999999999999999,2.5,2.6000000000000001,2.7000000000000002,2.7999999999999998,2.8999999999999999,3,3.1000000000000001,3.2000000000000002,3.2999999999999998,3.4000000000000004,3.5,3.6000000000000001,3.7000000000000002,3.7999999999999998,3.9000000000000004,4,4.0999999999999996,4.2000000000000002,4.3000000000000007,4.4000000000000004,4.5,4.5999999999999996,4.7000000000000002,4.8000000000000007,4.9000000000000004,5,5.0999999999999996,5.2000000000000002,5.3000000000000007,5.4000000000000004,5.5,5.5999999999999996,5.7000000000000002,5.8000000000000007,5.9000000000000004,6,6.1000000000000005,6.2000000000000002,6.2999999999999998,6.4000000000000004,6.5,6.6000000000000005,6.7000000000000002,6.8000000000000007,6.9000000000000004,7,7.1000000000000005,7.2000000000000002,7.3000000000000007,7.4000000000000004,7.5,7.6000000000000005,7.7000000000000002,7.8000000000000007,7.9000000000000004,8],"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.0033333333333333691,0.013333333333333357,0.030000000000000145,0.053333333333333427,0.083333333333333329,0.12000000000000022,0.16333333333333341,0.21333333333333371,0.27000000000000018,0.33333333333333331],"mode":"lines","line":{"color":"rgba(179,179,179,1)","simplyfy":false},"type":"scatter","key":["8"],"set":"SharedData106ac811","name":"8","marker":{"color":"rgba(179,179,179,1)","line":{"color":"rgba(179,179,179,1)"}},"textfont":{"color":"rgba(179,179,179,1)"},"error_y":{"color":"rgba(179,179,179,1)"},"error_x":{"color":"rgba(179,179,179,1)"},"xaxis":"x","yaxis":"y","_isSimpleKey":true,"_isNestedKey":false,"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0,"ctGroups":["SharedData106ac811"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
-
+    
 ---
+ 
+- A B-spline form for some function `\(f\)` requires: two integers, `\(k\)` and `\(q\)`, defining respectively the degree and the number of linear parameters, a vector of knots `\(\boldsymbol{t}\)` of length `\(2k + q\)` in increasing order.
+
 - So, with a B-spline basis of degree `\(k = 3\)` we can represent a particular `\(h_j\)` as
 
 `$$h_j(y) = \sum_{i = 1}^q B_{i,3,\boldsymbol{t}}(y) \gamma_{j,i} =  \boldsymbol{a}(y)^{\top} \boldsymbol{\gamma}_j,$$`
@@ -421,7 +396,7 @@ with `\(\boldsymbol{a}(y) = (B_{1,3,\boldsymbol{t}}(y), B_{2,3,\boldsymbol{t}}(y
 \end{equation}$$`
 ---
 
-- In the matrix notation we have `\(\boldsymbol{\gamma}_j = \Sigma \boldsymbol{\tilde{\beta}}_j\)`, where
+- In the matrix notation, we have `\(\boldsymbol{\gamma}_j = \Sigma \boldsymbol{\tilde{\beta}}_j\)`, where
 
 `$$\begin{equation}\label{Sigma_mono}
 \Sigma = \left(
@@ -443,20 +418,6 @@ is an `\(l \times l\)` matrix, and
 - Then,
 
 $$h_j(y) = \boldsymbol{a}(y)^{\top}\boldsymbol{\gamma}_j = \boldsymbol{a}(y)^{\top}\Sigma \boldsymbol{\tilde{\beta}}(\boldsymbol{\beta})_j $$
-
----
-
-- A further case that contemplates `\(y\)` and `\(x\)` non-linear interaction is achieved by considering the tensor product of B-splines bases.
--  The transformation function formed by the tensor product of these bases as `\(h_j(y|x)\)` and express it as
-
-`$$\begin{align}\label{bctm_model}
-    h_j(y|x) = \sum_{l_1 = 1}^{L_1}\sum_{l_2 = 1}^{L_2} \gamma_{j,l_1,l_2} B_{l_1,3,\boldsymbol{t}_1}(y)B_{l_2,3,\boldsymbol{t}_2}(x) =  (\boldsymbol{a}(y)^{\top} \otimes \boldsymbol{b}(x)^{\top}) \boldsymbol{\gamma}_j \end{align}$$`
-
-- The restriction of monotonicity is necessary only in the `\(y\)` direction. In the matrix notation `\(\boldsymbol{\gamma}_j = \Sigma \boldsymbol{\tilde{\beta}}_j\)` with `\(\Sigma = \Sigma_1 \otimes I_2\)` and
-
-`$$\begin{equation}\label{betatilde}
-    \boldsymbol{\tilde{\beta}}_j = (\beta_{j,1,1}, \beta_{j,1,2}, \dots, \beta_{j,1,L_2}, \exp(\beta_{j,2,1}), \exp(\beta_{j,2,2}), \dots, \exp{(\beta_{j,2,L_2})}, \dots, \exp(\beta_{j,L_1,L_2}))^{\top} 
-\end{equation}$$`
 
 ---
 ### Prior specification and P-splines
@@ -492,15 +453,7 @@ ___
 - By penalizing differences between adjacent parameters, it helps prevent overfitting and ensures a more stable and regularized solution.
 
 
-- In the tensor product model for `\(h_j(y|\boldsymbol{x})\)`, we maintain a Gaussian prior distribution for `\(\boldsymbol{\beta}_j\)` parameters. Although the precision matrix controls the smoothness in two directions
-
-`$$\begin{equation}\label{priori_K_2}
-    Q_j(\boldsymbol{\tau}_j) = \frac{1}{\tau_{j1}} \left(\boldsymbol{K_1} \otimes I_{L_2}\right) +
-    \frac{1}{\tau_{j2}}\left(I_{L_1} \otimes \boldsymbol{K_2}\right),
-\end{equation}$$`
-
 - The hyperparameter `\(\tau_j\)` is represented internally on the log scale, that is, `\(\theta_j = \log(\tau_j)\)`.
-- We set a Half-Cauchy distribution with location parameter `\(x_0 = 0\)` and scale `\(\varphi = 25\)` as the prior distribution for `\(\tau_j\)`.
 
 ---
 ### Bernstein polynomial basis
@@ -511,23 +464,25 @@ ___
 `$$\begin{equation}\label{bern_def}
     B_{r,k}(t) = \binom{k}{r} t^r(1 - t)^{k -r},
 \end{equation}$$`
+for `\(t \in [0,1]\)`. 
 
 The Bernstein polynomials of degree 1 are represented by the following equations:  
 
 `$$\begin{align}
-    B_{0,1}(t) &amp; = 1 - t, \\
+    B_{0,1}(t) &amp; = 1 - t, \nonumber \\
     B_{1,1}(t) &amp; = t,
 \end{align}$$`
 
 The Bernstein polynomials of degree 2 are given by:  
 
 `$$\begin{align}
-    B_{0,2}(t) &amp; = (1 - t)^2, \\
-    B_{1,2}(t) &amp; = 2t(1 - t), \\
+    B_{0,2}(t) &amp; = (1 - t)^2, \nonumber \\
+    B_{1,2}(t) &amp; = 2t(1 - t), \nonumber \\
     B_{2,2}(t) &amp; = t^2,
 \end{align}$$`
 
-for `\(t \in [0,1]\)`. 
+
+
 
 ---
 class: center, middle
@@ -551,9 +506,11 @@ class: center, middle
 #### Monotonic Bernstein Polynomials
 
 
-** Proposition ** Let `\(h_j(y)\)` be the transformation function defined in (\ref{bern_transf}) with Bernstein basis representation. Let `\(\boldsymbol{\gamma}_j = \boldsymbol{\Sigma}_j \boldsymbol{\tilde{\beta}}_j\)` with ,
+** Proposition ** Let `\(h_j(y) = \boldsymbol{a}_j(y)^{\top} \boldsymbol{\gamma}_j\)` be the transformation function defined with Bernstein basis representation. Let `\(\boldsymbol{\gamma}_j = \boldsymbol{\Sigma}_j \boldsymbol{\tilde{\beta}}_j\)` with ,
 
-`$$\boldsymbol{\tilde{\beta}}_j = (\exp(\beta_{j,1}), \dots, \exp(\beta_{j,k}))^\top,$$`
+`$$\begin{equation}
+\boldsymbol{\tilde{\beta}}_j = (\exp(\beta_{j,1}), \dots, \exp(\beta_{j,k}))^\top,
+\end{equation}$$`
 
 and,
 
@@ -579,17 +536,24 @@ Then, `\(h_j(y)\)` is monotonically increasing, that is for all `\(y_1, y_2 \in 
 
 
 ---
-### Properties of the BCTM
+### Marginal effects
+___
 
-- When we start dealing with more complex transformations, such as using B-spline or Bernstein bases, how can we assess the relationship between `\(x\)` and `\(y\)`? That is, how does impact the expected value (or median) of `\(Y\)`?
+- A Taylor expansion of a function `\(f\)` defined around `\(x\)` is
 
-- This is not an issue exclusive to BCTM. Many models that involve nonlinear relationships between explanatory variables and the response variable also face this challenge.
+$$
+f(x + 1) - f(x) \approx f'(x + 1 - x)
+$$
 
-- However, in BCTM, we do not have a direct relationship between `\(x\)` and the distribution moments or parameters.
+- The derivative of the function can then give us a rate of change regarding how the function varies with respect to `\(x\)`.
 
-- Based on the idea of the Marginal Effect (GLM), we will propose something similar here.
+- When `\(|f'(x)|\)` is large, the function changes rapidly.
 
-- The marginal effect refers to the expected rate of change in the response (dependent variable) associated with a one-unit change in an explanatory variable, keeping all other variables constant.
+- We can replace `\(f\)` with the expected value or quantile of the distribution of `\(Y|\boldsymbol{X} = \boldsymbol{x}\)`.
+
+- Based on the idea of the Marginal Effect in GLM, we will propose something similar here.
+
+- The marginal effect refers to the **expected rate of change** in the response (dependent variable) associated with a one-unit change in an explanatory variable, keeping all other variables constant.
 
 ---
 
@@ -597,14 +561,14 @@ Then, `\(h_j(y)\)` is monotonically increasing, that is for all `\(y_1, y_2 \in 
 
 
 `$$\begin{align}\label{rate_of_chane_ey}
-    \frac{\mathbb{E}(Y|\boldsymbol{X} = \boldsymbol{x})}{\partial x_l}  = &amp;\int_{\mathbb{R}} y \frac{\partial }{\partial x_l} f_Z(h(y|\boldsymbol{x}))h'(y|\boldsymbol{x}) dy  \nonumber \\
-     = &amp; \int_{\mathbb{R}} y \left[ f_Z(h(y|\boldsymbol{x}))\left(-h(y|\boldsymbol{x}) \frac{\partial h(y|\boldsymbol{x})}{\partial x_l}h'(y|\boldsymbol{x}) + \frac{\partial h'(y|\boldsymbol{x})}{\partial x_l} \right)\right] dy  \nonumber 
+    \frac{\partial\mathbb{E}(Y|\boldsymbol{X} = \boldsymbol{x})}{\partial x_l}  = &amp;\int_{\mathbb{R}} y \frac{\partial }{\partial x_l} f_Z(h(y|\boldsymbol{x}))h'(y|\boldsymbol{x}) dy  \nonumber \\
+     = &amp; \int_{\mathbb{R}} y \left[ f_Z(h(y|\boldsymbol{x}))\left(-h(y|\boldsymbol{x}) \frac{\partial h(y|\boldsymbol{x})}{\partial x_l}h'(y|\boldsymbol{x}) + \frac{\partial h'(y|\boldsymbol{x})}{\partial x_l} \right)\right] dy  
 \end{align}$$`
 
 - If there is no interaction between `\(y\)` and `\(x_l\)` in the terms of `\(h(y|\boldsymbol{x})\)` 
 
 `$$\begin{align}\label{impact_EY_nointeraction}
-     \frac{\mathbb{E}(Y|\boldsymbol{X} = \boldsymbol{x})}{\partial x_l} =  -\frac{\partial h(y|\boldsymbol{x})}{\partial x_1} \mathbb{E}(Yh(Y|\boldsymbol{x})). \nonumber
+     \frac{\partial\mathbb{E}(Y|\boldsymbol{X} = \boldsymbol{x})}{\partial x_l} =  -\frac{\partial h(y|\boldsymbol{x})}{\partial x_1} \mathbb{E}(Yh(Y|\boldsymbol{x})).
 \end{align}$$`
 
 - If `\(h_j(x_l) = x_l\beta_j\)` for some `\(j\)` from 1 to `\(J\)`, and the coefficient `\(\beta_j \in \mathbb{R}\)`
@@ -612,25 +576,25 @@ Then, `\(h_j(y)\)` is monotonically increasing, that is for all `\(y_1, y_2 \in 
 
 
 `$$\begin{align}
-    \frac{E(Y|\boldsymbol{X} = \boldsymbol{x})}{\partial x_l} =   -\beta_j \mathbb{E}(Yh(Y|\boldsymbol{x})). \nonumber   
+    \frac{\partial \mathbb{E}(Y|\boldsymbol{X} = \boldsymbol{x})}{\partial x_l} =   -\beta_j \mathbb{E}(Yh(Y|\boldsymbol{x})).  
 \end{align}$$`
 
 ---
 
-Let `\(Q_p\)` be the p-quantile of the random variable `\(Y|\boldsymbol{X} = \boldsymbol{x}\)`. Then,
+The p-quantile, `\(Q_p\)`, of the random variable of a BCTM is given by
 
 `$$\begin{equation}
     Q_p = h^{-1}(\Phi^{-1}(p)|\boldsymbol{x})
 \end{equation}$$`
 
-- The marginal impact of a particular covariate `\(x_l \in \boldsymbol{x}, l =1, \dots, m\)` is the expected rate of change on the quantile `\(Q_p\)` of `\(Y|\boldsymbol{X} = \boldsymbol{x}\)` for a one-unit variation in the covariate `\(x_l\)`, keeping all other variables constant
+- The marginal impact of a particular covariate `\(x_l \in \boldsymbol{x}, l =1, \dots, m\)` in `\(Q_p\)` for a one-unit variation in the covariate `\(x_l\)`, keeping all other variables constant, is 
 
 
 `$$\begin{align}\label{rate_of_chane_qp}
     \frac{\partial Q_p}{\partial x_l} = &amp; \left[ \sum_{j = 1}^J \frac{\partial h_j(y \mid \boldsymbol{x})}{\partial x_l} \right] \left[ \frac{\partial h(q_p \mid \boldsymbol{x})}{\partial q_p} \right]^{-1}.
 \end{align}$$`
 
-If even the term of `\(x_l\)` in the transformation function `\(h(y|\boldsymbol{x})\)` is linear, that is, `\(h_j(x_l) = x_l\beta_j\)` for some `\(j\)` from 1 to `\(J\)`, and the coefficient `\(\beta_j \in \mathbb{R}\)` the effect of `\(x_l\)` is not linear on the quantile `\(p\)` of `\(Y\)`
+If `\(h_j(x_l) = x_l\beta_j\)` for some `\(j\)` from 1 to `\(J\)`, and the coefficient `\(\beta_j \in \mathbb{R}\)` the effect of `\(x_l\)` is not linear on the quantile `\(p\)` of `\(Y\)`
 
 `$$\begin{equation}
     \frac{\partial q_p}{\partial x_l}  = \beta_j \left[ \frac{\partial h(q_p|\boldsymbol{x})}{\partial q_p} \right]^{-1} .
@@ -645,10 +609,10 @@ If even the term of `\(x_l\)` in the transformation function `\(h(y|\boldsymbol{
 - The Bayesian count CTM specifies the conditional distribution function `\(F_{Y|\boldsymbol{X} = \boldsymbol{x}}\)` of a count response `\(Y\)` given `\(x\)` as follows:  
 
 `$$\begin{equation}\label{count_BCTM}
-F_{Y|X = x}(y) = P(Y \leq y \mid x) = F_Z(h(y|\boldsymbol{x}) = F_Z(\alpha( \lfloor y \rfloor) + h(\boldsymbol{x})), \quad y \in \mathbb{R}^+,
+F_{Y|X = x}(y) = P(Y \leq y \mid \boldsymbol{X} = \boldsymbol{x})  = F_Z(\alpha( \lfloor y \rfloor) + h(\boldsymbol{x})), \quad y \in \mathbb{R}^+,
 \end{equation}$$`
 
-- where `\(\alpha\)` is a smooth, continuous, and monotonically increasing function applied to the greatest integer `\(\lfloor y \rfloor\)` less than or equal to `\(y\)`. The function `\(\alpha\)` can be written in terms of basis functions `\(\boldsymbol{a}: \mathbb{R} \rightarrow \mathbb{R}^q\)`, such that
+where `\(\alpha\)` is a smooth, continuous, and monotonically increasing function applied to the greatest integer `\(\lfloor y \rfloor\)` less than or equal to `\(y\)`. The function `\(\alpha\)` can be written in terms of basis functions `\(\boldsymbol{a}: \mathbb{R} \rightarrow \mathbb{R}^q\)`, such that
 
 
 \begin{equation}
@@ -671,16 +635,16 @@ $$
 ___
 - From the transformation functions defined so far, we have the parameter models, `\(\boldsymbol{\gamma}\)`, and the hyperparameters `\(\boldsymbol{\tau}\)`, for B-spline and Bernstein transformations.
 
-- To obtain posterior estimates of the BCTM, Carlan, Kneib, and Klein (2024) proposed an MCMC method based on No-U-Turn-Sample and Gibbs sampling to sample values from the posterior distribution of model parameters.
+- The original paper proposed an MCMC method based on No-U-Turn-Sample and Gibbs sampling to sample values from the posterior distribution of model parameters.
 
-- We aim to contribute to the BCTM class by proposing an algorithm that is more computationally efficient than traditional MCMC approaches. We presented two alternative estimation methods for this class of models, both based on approximation techniques, including Laplace approximation and Variational Bayes
+- We aim to contribute to the BCTM class by proposing an algorithm that is more computationally efficient than traditional MCMC approaches. We presented two alternative estimation methods for this class of models, both based on approximation techniques, including Laplace approximation (INLA, (Rue, Martino, and Chopin, 2009)) and Variational Bayes.
 
 ---
 
 ### Integrated Laplace with Bayesian Conditional Transformation Models
 ___
 
-- In the BCTM, we have the vector of some constrained parameters `\(\boldsymbol{\gamma}\)`, which are functions the unconstrained vector of parameters `\(\boldsymbol{\beta}\)`. 
+- The vector of some constrained parameters `\(\boldsymbol{\gamma}\)` are functions the unconstrained vector of parameters `\(\boldsymbol{\beta}\)`. 
 - Ultimately, we have the following quantities to estimate: `\(\boldsymbol{\beta} = (\boldsymbol{\beta}_1, \dots, \boldsymbol{\beta}_J)^{\top}\)`, and `\(\boldsymbol{\tau} = (\boldsymbol{\tau}_1, \dots, \boldsymbol{\tau}_J)^{\top}\)`.
 - Let `\(\boldsymbol{y} = (y_1, \ldots, y_n)^{\top}\)` be a random sample of the random variable `\(Y\)`, which is independently distributed given `\(\boldsymbol{x}\)` with distribution `\(F_{Y|\boldsymbol{X} = \boldsymbol{x}}\)`. Then, the joint posterior distribution of the parameters `\(\boldsymbol{\beta}\)` and `\(\boldsymbol{\tau}\)` is
 
@@ -701,23 +665,12 @@ ___
 `$$\begin{equation}\label{hyper_dist}
    \tilde{\pi}(\boldsymbol{\tau}|\boldsymbol{y}) \propto  \frac{\pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})}{\tilde{\pi}(\boldsymbol{\beta}| \boldsymbol{\tau}, \boldsymbol{y})}\bigg|_{\boldsymbol{\beta} = \boldsymbol{\beta}^{*}(\boldsymbol{\tau})}
 \end{equation}$$`
+and,
 
-- The approximation from the denominator comes from the fact that we can write
-
-`$$\begin{align}\label{condi_beta}
-    \pi(\boldsymbol{\beta}|\boldsymbol{\tau}, \boldsymbol{y}) = &amp; \frac{\pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})}{\int \pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y}) d\boldsymbol{\beta}} \nonumber \\    
-    = &amp; \frac{\exp(\log \pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y}))}{\int \exp(\log \pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})) d\boldsymbol{\beta}} \nonumber \\
-    = &amp; \frac{\exp(\log \pi(\boldsymbol{y}|\boldsymbol{\beta}) + \log \pi(\boldsymbol{\beta}| \boldsymbol{\tau}) + \log \pi(\boldsymbol{\tau}))}
-             {\int \exp( \underbrace{\log \pi(\boldsymbol{y}|\boldsymbol{\beta}) + \log \pi(\boldsymbol{\beta}|\boldsymbol{\tau}) + \log \pi(\boldsymbol{\tau})}_{p(\boldsymbol{\beta})}) d\boldsymbol{\beta}}.
-\end{align}$$`
-
-- The integral in the denominator of `\(\pi(\boldsymbol{\beta}|\boldsymbol{\tau}, \boldsymbol{y})\)` can be approximated by **Laplace method**
-
-`$$\int \exp(p(\boldsymbol{\beta})) d\boldsymbol{\beta} \approx  \exp(p(\boldsymbol{\beta}^{*}))(2\pi)^{I/2} 
-    | -H_p(\boldsymbol{\beta}^{*}(\boldsymbol{\tau}))|^{-1/2}.$$`
-
----
-- The final approximation of log density of full conditional evaluated at the mode `\(\boldsymbol{\beta}^{*}(\boldsymbol{\tau})\)`  is
+$$
+\log(\tilde{\pi}(\boldsymbol{\tau}|\boldsymbol{y})) \propto \log(\pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})) - \log(\tilde{\pi}(\boldsymbol{\beta}| \boldsymbol{\tau}, \boldsymbol{y})) \bigg|_{\boldsymbol{\beta} = \boldsymbol{\beta}^{*}(\boldsymbol{\tau})}
+$$
+- The final approximation of log density of full conditional evaluated at the mode `\(\boldsymbol{\beta}^{*}(\boldsymbol{\tau})\)` using **Laplace method**  is
 `$$\begin{equation}
     \log( \tilde{\pi}(\boldsymbol{\beta}^{*}(\boldsymbol{\tau})|\boldsymbol{y}, \boldsymbol{\tau})) \approx -\frac{n}{2} \log(2\pi) + \frac{1}{2} \log \left| -H_p(\boldsymbol{\beta}^{*}(\boldsymbol{\tau})) \right |
 \end{equation}$$`
@@ -727,7 +680,7 @@ ___
     \log \tilde{\pi}(\boldsymbol{\tau}|\boldsymbol{y}) \propto \left[ \log(\pi(\boldsymbol{y},\boldsymbol{\beta}^{*}(\boldsymbol{\tau}), \boldsymbol{\tau}) - \frac{1}{2} \log \left| -H_p(\boldsymbol{\beta}^{*}(\boldsymbol{\tau})) \right| \right]_{\boldsymbol{\beta} = \boldsymbol{\beta}^{*}(\boldsymbol{\tau})}
 \end{equation}$$`
 
-
+---
 - The difficult is that the evaluation of this distribution require the optimization of `\(p(\boldsymbol{\beta})\)`.
 
 - We need to explore high-density points that will be used later in the numerical integration.
@@ -735,9 +688,6 @@ ___
 - Locate the `\(\boldsymbol{\tau}^{*}\)` mode by using the quasi-Newton L-BFGS-B method to optimize the `\(\log \pi(\boldsymbol{\tau}|\boldsymbol{y})\)` density concerning `\(\boldsymbol{\tau}\)`.
 
 - Select and evaluate a grid of points around `\(\boldsymbol{\tau}^{*}\)`, like `\(\boldsymbol{\tau}^{*} \pm \delta\)`, where `\(\delta\)` parameter can be customized. We adopted small values like 1.
-
----
-class: center, middle
 
 .pull-left[
 &lt;div class="figure" style="text-align: center"&gt;
@@ -757,17 +707,10 @@ class: center, middle
 #### Approximating `\(\pi(\beta_r|\boldsymbol{\tau}, \boldsymbol{y})\)`
 
 `$$\begin{equation}\label{beta_marginais}
-    \tilde{\pi}({\beta}_r| \boldsymbol{\tau}, \boldsymbol{y}) \propto \frac{\pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})}{\tilde{\pi}(\boldsymbol{\beta_{-r}} |\beta_r, \boldsymbol{\tau}, \boldsymbol{y})} \bigg|_{\boldsymbol{\beta}_{-r} = \boldsymbol{\beta}_{-r}^{*}(\beta_r, \boldsymbol{\tau})},
+    \tilde{\pi}({\beta}_r| \boldsymbol{\tau}, \boldsymbol{y}) \propto \frac{\pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})}{\tilde{\pi}(\boldsymbol{\beta}_{-r} |\beta_r, \boldsymbol{\tau}, \boldsymbol{y})} \bigg|_{\boldsymbol{\beta}_{-r} = \boldsymbol{\beta}_{-r}^{*}(\beta_r, \boldsymbol{\tau})},
 \end{equation}$$`
  where `\(\boldsymbol{\beta}_{-r}^{*}(\beta_r, \boldsymbol{\tau})\)` maximizes `\(p(\boldsymbol{\beta}) \propto \log(\pi(\boldsymbol{\beta}, \boldsymbol{\tau},\boldsymbol{y}))\)` given the constraint `\(\beta^*(\boldsymbol{\tau})_r = \beta_r\)` (the r-th component of the mode vector `\(\beta^*(\boldsymbol{\tau})\)` is equal to `\(\beta_r\)`.
  
-
-- The denominator in (\ref{beta_marginais}) is a 
-
-`$$\begin{equation}\label{beta_marginais2}
-    \pi(\boldsymbol{\beta}_{-r}|{\beta}_{r}, \boldsymbol{\tau},\boldsymbol{y}) = \frac{\pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})}{\int \pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})d\boldsymbol{\beta}_{-r}}
-\end{equation}$$`
-
 - Another **Laplace approximation**? Yes! But.
 
 - The integral in the denominator involves a constrained optimization of `\(\boldsymbol{\beta}_{-r}\)` for a set of values of `\(\beta_r\)` for all `\(r = 1, \dots I_j \times J\)`, with `\(I_j\)` being the number of parameters of a particular transformation `\(j = 1, \dots, J\)`.
@@ -794,25 +737,14 @@ where `\(\boldsymbol{\beta}(\boldsymbol{\tau})\)` is the mode vector of `\(p(\bo
 \tilde{\pi}(\beta_r|\boldsymbol{y}) = \sum_{p = 1}^P \tilde{\pi}(\beta_r|\boldsymbol{\tau}^{(p)}, \boldsymbol{y}) \tilde{\pi}(\boldsymbol{\tau}^{(p)}|\boldsymbol{y})\Delta \boldsymbol{\tau}_p.
 \end{equation}$$`
 
-
 ---
 ### Variational Bayes
 ___
 
+
 - VB is an approximate inference technique used to estimate posterior distributions in complex Bayesian models. It is particularly useful when the exact posterior distribution is intractable or computationally expensive to obtain.
 
-- There are many available VB algorithms. The algorithm presented by van
-Niekerk and Rue (2024) is a proposal within the class of VB algorithms. The original proposal aims to be an alternative to INLA for the class of Latent Gaussian Models (LGM).
-
-- This algorithm is named "Variational Bayes correction to the Laplace method".
-
-- Our proposal is to adapt this algorithm for the BCTM class. This is plausible since our initial approach already involved normal approximations for the posteriors of interest.
-
----
-
-- The VB methods optimize an objective function over a specific family of distributions to approximate the true posterior distribution in Bayesian inference.
-
- **The central idea of Variational Bayes (VB) is to transform the Bayesian inference problem into an optimization problem.**
+**The central idea of Variational Bayes (VB) is to transform the Bayesian inference problem into an optimization problem.**
  
 The best posterior from a parametric family `\(\mathcal{Q}\)` is the solution of 
 
@@ -828,69 +760,51 @@ The best posterior from a parametric family `\(\mathcal{Q}\)` is the solution of
   - The one that maximizes the ELBO (Evidence Lower Bound).
 
 ---
+
 class: center, middle
 
 &lt;img src="figuras/interpretacao2VB.png" width="50%" style="display: block; margin: auto;" /&gt;
 
+
 ---
-### Variational Bayes correction
+
+
+- There are many available VB algorithms. The algorithm presented by van
+Niekerk and Rue (2024) is a proposal within the class of VB algorithms. The original proposal aims to be an alternative to INLA for the class of Latent Gaussian Models (LGM).
+
+- This algorithm is named "Variational Bayes correction to the Laplace method".
 
 - In this case, VB is not employed as an approximation for an unknown posterior, but as a correction to the Gaussian approximation of the posterior distribution obtained from the Laplace method.
 
-- The Gaussian approximation of a posterior distribution, `\(\pi(\boldsymbol{\theta}|\boldsymbol{y})\)` is
-
-$$
-    \tilde{\pi}_{G}(\boldsymbol{\theta}|\boldsymbol{y}) \propto \exp\left( - \frac{1}{2} (\boldsymbol{\theta}- \boldsymbol{\theta}_0)^{\top} \boldsymbol{H}_0(\boldsymbol{\theta}- \boldsymbol{\theta}_0) \right),
-$$
-
-such that `\(-\boldsymbol{H}_0\)` is the Hessian matrix, and `\(\boldsymbol{\theta}_0\)` the mode of `\(\log{\pi}(\boldsymbol{\theta}|\boldsymbol{y})\)`.
-
-- The variational correction proposal is to correct only the mean of this Normal approximation `\(\tilde{\pi}_{G}(\boldsymbol{\theta}|\boldsymbol{y})\)` to achieve a more accurate estimate.
-
--  In particular, Normal approximations can present an error in location and/or a lack of skewness.
-
-- The Hessian of the unknown function, evaluated at the mode provides a reasonable quantification of the uncertainty.
----
-
-- The updated mean is given by `\(\boldsymbol{\theta}_1 = \boldsymbol{\theta}_0 + \boldsymbol{\delta}\)`,  where `\(\boldsymbol{\delta}\)` is the correction to the mean. The posterior of `\(\boldsymbol{\theta}\)` is now given by
-
-`$$\tilde{\pi}_{G}(\boldsymbol{\theta}|\boldsymbol{y}) \propto \exp\left( - \frac{1}{2} (\boldsymbol{\theta}- \boldsymbol{\theta}_1)^{T} \boldsymbol{H}_0(\boldsymbol{\theta}- \boldsymbol{\theta}_1) \right).$$`
-
-- The proposal search for a vector `\(\boldsymbol{\delta}\)` of length `\(m\)` that produces a more accurate mean, while fixing the precision matrix based on the Hessian of `\(\ln(\pi(\boldsymbol{\theta}|\boldsymbol{y}))\)`. 
-
-- The parametric family `\(\mathcal{Q}\)` for this problem is the multivariate Normal, with known covariance matrix `\(\boldsymbol{H}_0^{-1}\)`, and a mean vector `\(\boldsymbol{\theta}_0 + \boldsymbol{\delta}\)`.
-
-- To get the best approximation for the posterior distribution from the family `\(\mathcal{Q}\)`
-
-$$
-    \tilde{\boldsymbol{\delta}} = \underset{\boldsymbol{\delta}} {\textrm{arg min}}\left\lbrace E_{\boldsymbol{\theta} \sim N(\boldsymbol{\theta}_0 + \boldsymbol{\delta}, \boldsymbol{H}^{-1}_0)} \left[-\log \pi(\boldsymbol{y}|\boldsymbol{\theta}) \right] + \textrm{KLD}(\phi(\boldsymbol{\theta}|\boldsymbol{\theta}_0 + \boldsymbol{\delta},\boldsymbol{H}_0^{-1})||\pi(\boldsymbol{\theta})) \right\rbrace,
-$$
-
-**It is important to note that we are not producing approximate posterior marginals or marginal corrections. Instead, this proposal ensures a joint improvement of the posterior distribution.**
+- Our proposal is to adapt this algorithm for the BCTM class. This is plausible since our initial approach already involved normal approximations for the posteriors of interest.
 
 ---
-### Variational Bayes correction to BCTM
+#### Variational Bayes correction to BCTM
 
-- Our general definition of BCTM involves hyperparameters.
+- The first step is to approximate the full condition `\(\pi(\boldsymbol{\beta}|\boldsymbol{\tau}, \boldsymbol{y})\)` by a Normal distribution, with mean and Covariance matrix being the mode and the negative Hessian of `\(\log(\pi(\boldsymbol{\beta},\boldsymbol{\tau}, \boldsymbol{y}))\)` for a given `\(\boldsymbol{\tau}\)`.
 
-
-- Conditional on the hyperparameters, `\(\boldsymbol{\tau}\)`,  the corrected posterior mean of the joint distribution is given by `\(\boldsymbol{\beta}_1(\boldsymbol{\tau}) = \boldsymbol{\beta}_0(\boldsymbol{\tau}) + \boldsymbol{\delta}\)`, where `\(\boldsymbol{\delta}\)` is the correction term.
+- The values of `\(\boldsymbol{\tau}\)` are those explored from the posterior distribution. Conditional on the them,  the corrected posterior mean of the joint distribution is given by `\(\boldsymbol{\beta}_1(\boldsymbol{\tau}) = \boldsymbol{\beta}_0(\boldsymbol{\tau}) + \boldsymbol{\delta}\)`, where `\(\boldsymbol{\delta}\)` is the correction term.
 
 - So, now we solve the following (conditionally on `\(\boldsymbol{\tau}\)`)
 
 `$$\begin{align}\label{delta_correction}
-    \tilde{\boldsymbol{\delta}} &amp;= \underset{\boldsymbol{\delta}} {\textrm{agr min}}\left\lbrace E_{\boldsymbol{\beta}|\boldsymbol{\tau} \sim N(\boldsymbol{\theta}_0 + \boldsymbol{\delta}, \boldsymbol{H}^{-1}_0)} \left[-\log \pi(\boldsymbol{y}|\boldsymbol{\beta},\boldsymbol{\tau} ) \right] + \textrm{KLD}(\phi(\boldsymbol{\beta}|\boldsymbol{\beta}_0 + \boldsymbol{\tau},\boldsymbol{H}_0^{-1})||\phi(\boldsymbol{\beta}| \boldsymbol{0},\boldsymbol{Q}_0)) \right\rbrace, \nonumber \\
+    \tilde{\boldsymbol{\delta}} &amp;= \underset{\boldsymbol{\delta}} {\textrm{agr min}}\left\lbrace E_{\boldsymbol{\beta}|\boldsymbol{\tau} \sim N(\boldsymbol{\theta}_0 + \boldsymbol{\delta}, \boldsymbol{H}^{-1}_0)} \left[-\log \pi(\boldsymbol{y}|\boldsymbol{\beta},\boldsymbol{\tau} ) \right] + \textrm{KLD}(\phi(\boldsymbol{\beta}|\boldsymbol{\beta}_0 + \boldsymbol{\tau},\boldsymbol{H}_0^{-1})||\phi(\boldsymbol{\beta}| \boldsymbol{0},\boldsymbol{Q}_0)) \right\rbrace,  \\
 \end{align}$$`
+- Thus, the improved Normal approximation to `\(\pi(\boldsymbol{\beta}|\boldsymbol{y}, \boldsymbol{\tau})\)`, has mean `\(\boldsymbol{\beta}_1\)` and precision matrix `\(\boldsymbol{H}_0\)`.
 
-- Thus, the improved Normal approximation to `\(\pi(\boldsymbol{\beta}|\boldsymbol{y}, \boldsymbol{\tau})\)`, has mean `\(\boldsymbol{\beta}_1\)` and precision matrix `\(\boldsymbol{Q}_0\)`.
-
--  From this multivariate improved Normal distribution the marginals distributions, `\(\tilde{\pi}_{VBC}(\beta_r|\boldsymbol{y}, \boldsymbol{\tau})\)`, are Gaussian densities with mean `\(\beta_{1,r}\)` and precision `\(Q_0^{r,r}\)`. Then,
+-  From this multivariate improved Normal distribution the marginals distributions, `\(\tilde{\pi}_{VBC}(\beta_r|\boldsymbol{y}, \boldsymbol{\tau})\)`, are Gaussian densities with mean `\(\beta_{1,r}\)` and precision `\(H_0^{r,r}\)`. Then,
 `$$\begin{equation}
     \tilde{\pi}_{VBC}(\beta_r|\boldsymbol{y}) = \sum_{p = 1}^P \tilde{\pi}_{VBC}(\beta_r|\boldsymbol{\tau}^{(p)}, \boldsymbol{y})\tilde{\pi}(\boldsymbol{\tau}^{(p)}|\boldsymbol{y}) \Delta \boldsymbol{\tau}^{(p)}, 
 \end{equation}$$`
 
 where `\(\lbrace \boldsymbol{\tau}^{[1]}, \dots, \boldsymbol{\tau}^{[P]} \rbrace\)` is a set of points of `\(\boldsymbol{\tau}\)`.
+---
 
+-  In particular, Normal approximations can present an error in location and/or a lack of skewness.
+
+- The Hessian of the unknown function, evaluated at the mode provides a reasonable quantification of the uncertainty.
+
+**It is important to note that we are not producing approximate posterior marginals or marginal corrections. Instead, this proposal ensures a joint improvement of the posterior distribution.**
 
 ---
 
@@ -898,8 +812,9 @@ where `\(\lbrace \boldsymbol{\tau}^{[1]}, \dots, \boldsymbol{\tau}^{[P]} \rbrace
 ___
 
 - The main point of the BCTM is the estimate of conditional distribution. The construction of the conditional distribution involves a non-linear combination of parameters.
-- Using the approximated distributions obtained it is complicated to obtain the resultanting distribution of the combination. However, simulations from these marginals are possible by the Metropolis-Hasting (MH) algorithm.
-- The resulting MCMC samples are employed to estimate the conditional cumulative distribution `\(F_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = \hat{F}_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = F_Z(\hat{h}(y|\boldsymbol{x}))\)` where `\(\hat{h}(y|\boldsymbol{x})\)` is the posterior mean estimate
+- Using the approximated distributions obtained it is complicated to obtain the resultanting distribution of the combination. However, simulations from these marginals are possible by some sample algorithm.
+
+- The resulting samples are employed to estimate the conditional cumulative distribution `\(F_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = \hat{F}_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = F_Z(\hat{h}(y|\boldsymbol{x}))\)` where `\(\hat{h}(y|\boldsymbol{x})\)` is the posterior mean estimate
 
 `$$\begin{equation}
      \hat{h}(y|\boldsymbol{x}) = \sum_{s = 1}^S \frac{1}{S}(\boldsymbol{a}_j(y)^{\top} \otimes \boldsymbol{b}_j(x)^{\top})^{\top} \boldsymbol{\gamma}_j^{(s)},
@@ -917,15 +832,15 @@ ___
 
 - A simulation study was conducted to evaluate the performance of the ILBCTM algorithm in recovering the parameters for some particular cases of BCTM. We restricted ourselves into 3 differents models. 
 
-  - Model 1: `\(\textrm{P}(Y \leq y) =         \Phi(\boldsymbol{a}(y)^{\top} \boldsymbol{\gamma})\)`.
   - Model 2: `\(\textrm{P}(Y \leq y | \boldsymbol{X} = \boldsymbol{x}) = \Phi(\boldsymbol{a}(y)^{\top}\boldsymbol{\gamma} + \boldsymbol{x}^{\top} \boldsymbol{\beta})\)`.
-  - Model 3: `\(\textrm{P}(Y \leq y | \boldsymbol{X} = \boldsymbol{x}) = \Phi(\boldsymbol{a}(y)^{\top}\boldsymbol{\gamma} + \boldsymbol{x}^{\top} \boldsymbol{\beta} + \boldsymbol{z}^{\top} \boldsymbol{b})\)`
 
-- We have a total of 9 scenarios with different models and sample sizes. In every scenario, we simulated `\(R = 500\)` replicas of the model considered.
 
--  For the random effects model, we have considered 10, 20 and 30 observations from the same individual i, denoted by `\(n_{rep}\)`.
+- We considered three sample sizes (`\(n = 200, 500, 200\)`). In each scenario, we simulated `\(R = 500\)` replicas of the model considered.
 
--  We calculated the posterior mean, and the root-mean-square error (RMSE), given by RMSE(`\(\hat{\beta}\)`) = `\(\sqrt{\frac{1}{R} \sum_{r = 1}^R (\hat{\beta}_r - \beta)}\)`.
+- We fixed `\(\boldsymbol{\beta} = (-0.15,-1.3,0.3).\)`
+
+
+-  We calculated the posterior mean, and the root-mean-square error (RMSE), given by RMSE(`\(\hat{\beta}\)`) = `\(\sqrt{\frac{1}{R} \sum_{r = 1}^R (\hat{\beta}_r - \beta)^2}\)`.
 ---
 
 class: center, middle
@@ -998,77 +913,9 @@ class: center, middle
 
 ---
 
-class: center, middle
-
-&lt;html&gt;
-&lt;head&gt;
-    &lt;title&gt;Posterior Mean and RMSE&lt;/title&gt;
-    &lt;style&gt;
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            font-size: 14px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        caption {
-            font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;table&gt;
-    &lt;caption&gt;Posterior mean and root-mean-squared-error of the parameters for Model 3: &amp;#934;(a(y)&lt;sup&gt;T&lt;/sup&gt;&amp;#947; + x&lt;sup&gt;T&lt;/sup&gt;&amp;#946; + z&lt;sup&gt;T&lt;/sup&gt;b ) using ILBCTM algorithm, considering 500 replicas, in the simulating study 1.&lt;/caption&gt;
-    &lt;thead&gt;
-        &lt;tr&gt;
-            &lt;th colspan="7"&gt;&amp;#934;(a(y)&lt;sup&gt;T&lt;/sup&gt;&amp;#947; + x&lt;sup&gt;T&lt;/sup&gt;&amp;#946; + z&lt;sup&gt;T&lt;/sup&gt;b )&lt;/th&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-            &lt;th&gt;&lt;/th&gt;
-            &lt;th colspan="2"&gt;n = 10&lt;/th&gt;
-            &lt;th colspan="2"&gt;n = 20&lt;/th&gt;
-            &lt;th colspan="2"&gt;n = 30&lt;/th&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-            &lt;th&gt;True parameter (&amp;#946;)&lt;/th&gt;
-            &lt;th&gt;Estimate&lt;/th&gt;
-            &lt;th&gt;RMSE&lt;/th&gt;
-            &lt;th&gt;Estimate&lt;/th&gt;
-            &lt;th&gt;RMSE&lt;/th&gt;
-            &lt;th&gt;Estimate&lt;/th&gt;
-            &lt;th&gt;RMSE&lt;/th&gt;
-        &lt;/tr&gt;
-    &lt;/thead&gt;
-    &lt;tbody&gt;
-        &lt;tr&gt;&lt;td&gt;-0.2977&lt;/td&gt;&lt;td&gt;-0.3011&lt;/td&gt;&lt;td&gt;0.0409&lt;/td&gt;&lt;td&gt;-0.2954&lt;/td&gt;&lt;td&gt;0.0226&lt;/td&gt;&lt;td&gt;-0.2979&lt;/td&gt;&lt;td&gt;0.0240&lt;/td&gt;&lt;/tr&gt;
-        &lt;tr&gt;&lt;td&gt;-0.2970&lt;/td&gt;&lt;td&gt;-0.2984&lt;/td&gt;&lt;td&gt;0.0381&lt;/td&gt;&lt;td&gt;-0.2957&lt;/td&gt;&lt;td&gt;0.0225&lt;/td&gt;&lt;td&gt;-0.2981&lt;/td&gt;&lt;td&gt;0.0241&lt;/td&gt;&lt;/tr&gt;
-        &lt;tr&gt;&lt;td&gt;-0.3015&lt;/td&gt;&lt;td&gt;-0.2912&lt;/td&gt;&lt;td&gt;0.0334&lt;/td&gt;&lt;td&gt;-0.2961&lt;/td&gt;&lt;td&gt;0.0226&lt;/td&gt;&lt;td&gt;-0.2985&lt;/td&gt;&lt;td&gt;0.0232&lt;/td&gt;&lt;/tr&gt;
-        &lt;tr&gt;&lt;td&gt;-0.2987&lt;/td&gt;&lt;td&gt;-0.2919&lt;/td&gt;&lt;td&gt;0.0327&lt;/td&gt;&lt;td&gt;-0.2963&lt;/td&gt;&lt;td&gt;0.0226&lt;/td&gt;&lt;td&gt;-0.2990&lt;/td&gt;&lt;td&gt;0.0232&lt;/td&gt;&lt;/tr&gt;
-        &lt;tr&gt;&lt;td&gt;-0.2948&lt;/td&gt;&lt;td&gt;-0.2955&lt;/td&gt;&lt;td&gt;0.0348&lt;/td&gt;&lt;td&gt;-0.2964&lt;/td&gt;&lt;td&gt;0.0231&lt;/td&gt;&lt;td&gt;-0.2996&lt;/td&gt;&lt;td&gt;0.0237&lt;/td&gt;&lt;/tr&gt;
-        &lt;tr&gt;&lt;td&gt;-0.2964&lt;/td&gt;&lt;td&gt;-0.2910&lt;/td&gt;&lt;td&gt;0.0339&lt;/td&gt;&lt;td&gt;-0.2976&lt;/td&gt;&lt;td&gt;0.0222&lt;/td&gt;&lt;td&gt;-0.3005&lt;/td&gt;&lt;td&gt;0.0231&lt;/td&gt;&lt;/tr&gt;
-        &lt;tr&gt;&lt;td&gt;-0.2980&lt;/td&gt;&lt;td&gt;-0.2940&lt;/td&gt;&lt;td&gt;0.0328&lt;/td&gt;&lt;td&gt;-0.2982&lt;/td&gt;&lt;td&gt;0.0221&lt;/td&gt;&lt;td&gt;-0.3005&lt;/td&gt;&lt;td&gt;0.0226&lt;/td&gt;&lt;/tr&gt;
-        &lt;tr&gt;&lt;td&gt;-0.2961&lt;/td&gt;&lt;td&gt;-0.2935&lt;/td&gt;&lt;td&gt;0.0327&lt;/td&gt;&lt;td&gt;-0.2984&lt;/td&gt;&lt;td&gt;0.0224&lt;/td&gt;&lt;td&gt;-0.2984&lt;/td&gt;&lt;td&gt;0.0227&lt;/td&gt;&lt;/tr&gt;
-        &lt;tr&gt;&lt;td&gt;-0.2954&lt;/td&gt;&lt;td&gt;-0.2932&lt;/td&gt;&lt;td&gt;0.0327&lt;/td&gt;&lt;td&gt;-0.2985&lt;/td&gt;&lt;td&gt;0.0227&lt;/td&gt;&lt;td&gt;-0.2976&lt;/td&gt;&lt;td&gt;0.0232&lt;/td&gt;&lt;/tr&gt;
-        &lt;tr&gt;&lt;td&gt;-1.5000&lt;/td&gt;&lt;td&gt;-1.4679&lt;/td&gt;&lt;td&gt;0.0838&lt;/td&gt;&lt;td&gt;-1.4862&lt;/td&gt;&lt;td&gt;0.0552&lt;/td&gt;&lt;td&gt;-1.4672&lt;/td&gt;&lt;td&gt;0.0590&lt;/td&gt;&lt;/tr&gt;
-        &lt;tr&gt;&lt;td&gt;-0.8000&lt;/td&gt;&lt;td&gt;-0.7706&lt;/td&gt;&lt;td&gt;0.0593&lt;/td&gt;&lt;td&gt;-0.7949&lt;/td&gt;&lt;td&gt;0.0375&lt;/td&gt;&lt;td&gt;-0.7774&lt;/td&gt;&lt;td&gt;0.0370&lt;/td&gt;&lt;/tr&gt;
-    &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-
----
-
 
 ### Study 2: BCTM with Bernstein polynomials
-- In this study, we evaluated the performance of the BCTM in recovering the true conditional distributions in various regression models. The models considered include regression with fixed effects, regression with nonlinear effects, and regression with random effects.
+- In this study, we evaluated the performance of the BCTM in recovering the **true conditional distributions** in various regression models. The models considered include regression with fixed effects, regression with nonlinear effects, and regression with random effects.
 
 - For this, we employed the BCTM with a Bernstein basis, estimated using the VCBCTM.
 
@@ -1150,146 +997,6 @@ class: center, middle
 &lt;/body&gt;
 &lt;/html&gt;
 
-
----
-#### Regression models with non-linear effects
-
-`$$\begin{align}Y_{i}| \boldsymbol{x}_i &amp;\sim SN(\mu_{i}, \sigma, \lambda) \\
-\mu_{i} &amp;= \boldsymbol{x}_{i}^{\top}\boldsymbol{\beta}\end{align}$$`
-
-where
-
- - Case (a): `\(\mu_{i} = \boldsymbol{x}_{i}^{\top}\boldsymbol{\beta} + f_1(z_{i1})\)`; 
- - **Case (b)**: `\(\mu_{i} = \boldsymbol{x}_{i}^{\top}\boldsymbol{\beta} + f_1(z_{i1}) + f_2(z_{i2})\)`;
- - **Case (c)**: `\(\mu_{i} = \boldsymbol{x}_{i}^{\top}\boldsymbol{\beta} + f(z_{i3},z_{i4})\)`.
-
-and `\(f_1(z_1) = sin(5\pi z_1), f_2(z_2) = z_2 + z_2^2,\)` and `\(f(z_3,z_4) = (z_3 + 2z_3^2)exp(z_4/2)\)`.
-
-- In case (b) we considered the following
-
-
-`$$F_{Y_i|\boldsymbol{X}_i = \boldsymbol{x}_i}(Y_i \leq y_i | \boldsymbol{X}_i = \boldsymbol{x}_i) = \Phi(\boldsymbol{a}(y_i)^{\top} + \boldsymbol{b}(z_{1i})^{\top} \boldsymbol{\beta}_1+ \boldsymbol{b}(z_{2i})^{\top}\boldsymbol{\beta}_2 +\boldsymbol{x}_i^{\top}\boldsymbol{\beta}_3)$$`
-- In case (c) we considered the following
-
-`$$\begin{equation}
-    F_{Y_i|\boldsymbol{X}_i = \boldsymbol{x}_i}(Y_i \leq y_i | \boldsymbol{X}_i = \boldsymbol{x}_i) = \Phi(\boldsymbol{a}(y_i)^{\top}\boldsymbol{\gamma} + \boldsymbol{b}(z_{3i})^{\top} \boldsymbol{\beta}_1+ \boldsymbol{b}(z_{4i})^{\top} \boldsymbol{\beta}_2 + \boldsymbol{b}(z_{3i},z_{4i})^{\top}\boldsymbol{\beta}_3 + \boldsymbol{x}_{4i}^{\top}\boldsymbol{\beta}_4) \nonumber
-\end{equation}$$`
-
----
-class: center, middle
-
-
-&lt;html&gt;
-&lt;head&gt;
-    &lt;title&gt;Estimated Average KLD&lt;/title&gt;
-    &lt;style&gt;
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            font-size: 14px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        caption {
-            font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;table&gt;
-    &lt;caption&gt;Estimated average \(\overline{KLD}\) for BCTM and Skew Normal models across different sample sizes, basis dimension, and parameter settings, case (b), with \(p = 4\), considering 100 replicas in simulation study for the non-linear regression model.&lt;/caption&gt;
-    &lt;thead&gt;
-        &lt;tr&gt;
-            &lt;th colspan="7"&gt;\(\sigma = 1, \lambda = 2\)&lt;/th&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-            &lt;th&gt;Model&lt;/th&gt;
-            &lt;th colspan="3"&gt;k = 10&lt;/th&gt;
-            &lt;th colspan="3"&gt;k = 15&lt;/th&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-            &lt;th&gt;&lt;/th&gt;
-            &lt;th&gt;500&lt;/th&gt;
-            &lt;th&gt;1000&lt;/th&gt;
-            &lt;th&gt;2000&lt;/th&gt;
-            &lt;th&gt;500&lt;/th&gt;
-            &lt;th&gt;1000&lt;/th&gt;
-            &lt;th&gt;2000&lt;/th&gt;
-        &lt;/tr&gt;
-    &lt;/thead&gt;
-    &lt;tbody&gt;
-        &lt;tr&gt;&lt;td&gt;BCTM&lt;/td&gt;&lt;td&gt;0.05352&lt;/td&gt;&lt;td&gt;0.03206&lt;/td&gt;&lt;td&gt;0.02500&lt;/td&gt;&lt;td&gt;0.07159&lt;/td&gt;&lt;td&gt;0.03731&lt;/td&gt;&lt;td&gt;0.02799&lt;/td&gt;&lt;/tr&gt;
-        &lt;tr&gt;&lt;td&gt;Skew Normal&lt;/td&gt;&lt;td&gt;0.04342&lt;/td&gt;&lt;td&gt;0.03046&lt;/td&gt;&lt;td&gt;0.02532&lt;/td&gt;&lt;td&gt;0.07231&lt;/td&gt;&lt;td&gt;0.03768&lt;/td&gt;&lt;td&gt;0.02828&lt;/td&gt;&lt;/tr&gt;
-    &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-
-
-&lt;html&gt;
-&lt;head&gt;
-    &lt;title&gt;Estimated Average KLD&lt;/title&gt;
-    &lt;style&gt;
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            font-size: 14px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        caption {
-            font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;table&gt;
-    &lt;caption&gt;Estimated average \(\overline{KLD}\) for BCTM and Skew Normal models across different sample sizes, basis dimension, and parameter settings, case (b), with \(p = 4\), considering 100 replicas in simulation study for the non-linear regression model.&lt;/caption&gt;
-    &lt;thead&gt;
-        &lt;tr&gt;
-            &lt;th colspan="7"&gt;\(\sigma = 1, \lambda = 2\)&lt;/th&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-            &lt;th&gt;Model&lt;/th&gt;
-            &lt;th colspan="3"&gt;k = 10&lt;/th&gt;
-            &lt;th colspan="3"&gt;k = 15&lt;/th&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-            &lt;th&gt;&lt;/th&gt;
-            &lt;th&gt;500&lt;/th&gt;
-            &lt;th&gt;1000&lt;/th&gt;
-            &lt;th&gt;2000&lt;/th&gt;
-            &lt;th&gt;500&lt;/th&gt;
-            &lt;th&gt;1000&lt;/th&gt;
-            &lt;th&gt;2000&lt;/th&gt;
-        &lt;/tr&gt;
-    &lt;/thead&gt;
-    &lt;tbody&gt;
-        &lt;tr&gt;&lt;td&gt;BCTM&lt;/td&gt;&lt;td&gt;0.05352&lt;/td&gt;&lt;td&gt;0.03206&lt;/td&gt;&lt;td&gt;0.02500&lt;/td&gt;&lt;td&gt;0.07159&lt;/td&gt;&lt;td&gt;0.03731&lt;/td&gt;&lt;td&gt;0.02799&lt;/td&gt;&lt;/tr&gt;
-        &lt;tr&gt;&lt;td&gt;Skew Normal&lt;/td&gt;&lt;td&gt;0.04342&lt;/td&gt;&lt;td&gt;0.03046&lt;/td&gt;&lt;td&gt;0.02532&lt;/td&gt;&lt;td&gt;0.07231&lt;/td&gt;&lt;td&gt;0.03768&lt;/td&gt;&lt;td&gt;0.02828&lt;/td&gt;&lt;/tr&gt;
-    &lt;/tbody&gt;
-&lt;/table&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-
-
-
 ---
 ### Application 5.3 - Sleep deprivation study
 
@@ -1303,10 +1010,6 @@ class: center, middle
 
 - The dataset contains 180 observations in total.
 
----
-class: center, middle
-
-&lt;img src="figuras/ea.png" width="70%" style="display: block; margin: auto;" /&gt;
 ---
 ### Linear Mixed model
 `$$\begin{equation}\label{lme}
@@ -1343,10 +1046,7 @@ class: center, middle
 
 `$$\begin{align}\label{complete_BCTM_lme}
 h(Y_i|\boldsymbol{x}_i,\boldsymbol{s}_i, \boldsymbol{b}_i, \boldsymbol{\beta}) &amp; = \boldsymbol{a}(Y_i)^\top \boldsymbol{\gamma} + \boldsymbol{x}_i^\top \boldsymbol{\beta} + \boldsymbol{s}_i^{\top}\boldsymbol{b}_i , \nonumber \\
-Z_i &amp; \overset{d}{=} h(Y_i|\boldsymbol{x}_i, \boldsymbol{b}_i,\boldsymbol{\beta}) \sim N(0, 1), \nonumber \\
- Y_i|\boldsymbol{x}_i &amp; \overset{d}{=} h^{-1}(Z_i), \nonumber \\
- \log(\boldsymbol{\gamma}) &amp; \sim N\left(0, \frac{1}{\tau_1} K_1\right), \nonumber \\
-    \boldsymbol{\beta} &amp; \sim N(0, 10^{-6}\times I_4) \nonumber  \\
+    \boldsymbol{\beta} &amp; \sim N(0, 10^{-6}\times I_2) \nonumber  \\
     \boldsymbol{b}_i &amp; \sim N(0, W^{-1}) \nonumber  \\
     W^{-1} &amp; = \left( \begin{array}{cc}
         \tau_1 &amp; \frac{\rho}{\sqrt{\tau_2 \tau_1}} \\
@@ -1358,15 +1058,13 @@ Z_i &amp; \overset{d}{=} h(Y_i|\boldsymbol{x}_i, \boldsymbol{b}_i,\boldsymbol{\b
     \exp(\theta_l) &amp; \sim \text{Inv-Gamma(1,0.001)}, l=1,2,3,
 \end{align}$$`
 ---
-- In this application, we consider the monotonic Bernstein polynomials and the monotonic B-splines for the function `\(\boldsymbol{a}(y)^{\top} \boldsymbol{\gamma}\)`. 
+- In this application, we consider monotonic B-splines for the function `\(\boldsymbol{a}(y)^{\top} \boldsymbol{\gamma}\)`. 
 
-- The model was fitted using the VCBCTM algorithm. We compare the models using the Logarithm of the Pseudo-Marginal Likelihood (LPML), `\(\textrm{LPML} =  \sum_i \log \textrm{CPO}_i\)`, where `\(\text{CPO}_i = \pi(y_i | \boldsymbol{y}_{-i})\)` is the posterior predictive density of each observation `\(y_i\)` given `\(\boldsymbol{y}_{-i}\)`.
-
-- The LPML of the model with Bernstein basis is -863.7924, while the LPML with B-spline is **-844.707**.
+- The model was fitted using the VCBCTM algorithm. 
 
 - The posterior mean of the estimated distribution `\(\beta_1|\boldsymbol{y}\)` is -0.443. This result is not directly comparable with the coefficient from the Linear mixed model.
 
-- Let the median of the `\(i\)`-th individual, conditional on the number of days of sleep deprivation, be denoted as `\(m_i\)`. Then, 
+- Let us denote by `\(m_i\)` the median of the `\(i\)`-th individual, conditional on the number of days of sleep deprivation. Then, 
 
 
 `$$\begin{align}
@@ -1434,7 +1132,7 @@ The Probability Integral Transform (PIT), or cross validation predictive p-value
 ---
 ### Application 6.2 - Analysis of vehicle theft incident in the city of São Paulo 
 
-- All Vehicle Theft Incidents (involving only robbery) recorded by the police in the city between 2017-01-01 and 2023-01-31 were obtained from the website of the Public Security Secretariat of São Paulo (https://www.ssp.sp.gov.br/estatistica/consultas).
+- All Vehicle Theft Incidents (involving only robbery) recorded by the police in the city between 2017-01-01 and **2024-01-31** were obtained from the website of the Public Security Secretariat of São Paulo.
 
 - The raw data consists of detailed records of each reported vehicle theft incidents (VTI) in the City of São Paulo, including the specific date (year, month and day) and the hour of occurrence.
 
@@ -1444,42 +1142,31 @@ The Probability Integral Transform (PIT), or cross validation predictive p-value
 ---
 
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="figuras/barplot6_2.png" alt="." width="35%" /&gt;
+&lt;img src="figuras/ea1_6_2.png" alt="." width="80%" /&gt;
 &lt;p class="caption"&gt;.&lt;/p&gt;
 &lt;/div&gt;
 
-.pull-left[
+---
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="figuras/ea1_6_2.png" alt="." width="110%" /&gt;
+&lt;img src="figuras/ea2_6_2.png" alt="." width="80%" /&gt;
 &lt;p class="caption"&gt;.&lt;/p&gt;
 &lt;/div&gt;
-
-]
-
-.pull-right[
-&lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="figuras/ea2_6_2.png" alt="." width="110%" /&gt;
-&lt;p class="caption"&gt;.&lt;/p&gt;
-&lt;/div&gt;
-]
-
-
 
 ---
 - We define the count response variable `\(Y\)` as the number of VTI's within each specific time interval. 
 
-- The dataset includes the following predictors: the annual effect, calculated as the difference between each year and the base year (2017) plus one; the weekly effect, measured as the difference between each day of the week and Sunday plus one; and the monthly effect, defined as the difference between each month and January plus one.
+- The dataset includes the following predictors: the **annual effect**, calculated as the difference between each year and the base year (2017) plus one; the **weekly effect**, measured as the difference between each day of the week and Sunday plus one; and the **monthly effect**, defined as the difference between each month and January plus one.
 
-- The intervals of the day are treated as categorical.
+- The intervals (Period) of the day are treated as categorical.
 
 **Model 1:**
 \begin{align}
-    P(Y \leq y| \boldsymbol{X} = \boldsymbol{x})  = &amp; \Phi(\boldsymbol{a}_{20}(\lfloor y \rfloor)^T \boldsymbol{\gamma} + \beta_0 + \textrm{Year} \times \beta_1 + \textrm{Month} \times \beta_2 + \textrm{Day} \times \beta_3 + \textrm{Period} \times \beta_4). \nonumber
+    P(Y \leq y| \boldsymbol{X} = \boldsymbol{x})  = &amp; \Phi(\boldsymbol{a}_{20}(\lfloor y \rfloor)^T \boldsymbol{\gamma} + \beta_0 + \textrm{Year} \times \beta_1 + \textrm{Month} \times \beta_2 + \textrm{Day} \times \beta_3 + \textrm{Period} \times \boldsymbol{\beta}_4). \nonumber
 \end{align}
 
 **Model 2:**
 \begin{align}
-    P(Y \leq y| \boldsymbol{X} = \boldsymbol{x}) = &amp; \Phi(\boldsymbol{a}_{20}(\lfloor y \rfloor)^T \boldsymbol{\gamma}_1  + \boldsymbol{a}_5(Year)^T\boldsymbol{\gamma}_2 + \boldsymbol{a}_5(Month)^T\boldsymbol{\gamma}_3 + \boldsymbol{a}_5(Day)^T\boldsymbol{\gamma}_4+ \beta_0 + \textrm{Period} \times \beta_1). \nonumber
+    P(Y \leq y| \boldsymbol{X} = \boldsymbol{x}) = &amp; \Phi(\boldsymbol{a}_{20}(\lfloor y \rfloor)^T \boldsymbol{\gamma}_1  + \boldsymbol{a}_5(Year)^T\boldsymbol{\gamma}_2 + \boldsymbol{a}_5(Month)^T\boldsymbol{\gamma}_3 + \boldsymbol{a}_5(Day)^T\boldsymbol{\gamma}_4+ \beta_0 + \textrm{Period} \times \boldsymbol{\beta}_1). \nonumber
 \end{align}
 
 
@@ -1489,7 +1176,7 @@ The Probability Integral Transform (PIT), or cross validation predictive p-value
 **Model 3:**
 `$$\begin{align}
    P(Y \leq y| \boldsymbol{X} = \boldsymbol{x}) = &amp; \Phi(\boldsymbol{a}_{20}(\lfloor y \rfloor)^T \boldsymbol{\gamma}_1 + \beta_0 + \boldsymbol{a}_5(Year)^T\boldsymbol{\gamma}_2 + \boldsymbol{a}_5(Month)^T\boldsymbol{\gamma}_3 \\
-    &amp; +  (\boldsymbol{a}_5(Day)^T \otimes (\textrm{Period})^T) \boldsymbol{\gamma}_4 + \textrm{Period} \beta_1). \nonumber
+    &amp; +  (\boldsymbol{a}_5(Day)^T \otimes (\textrm{Period})^T) \boldsymbol{\gamma}_4 + \textrm{Period} \times \boldsymbol{\beta}_1). \nonumber
 \end{align}$$`
 
 &lt;table border="1" style="text-align: center; font-size: 16px;"&gt;
@@ -1550,7 +1237,7 @@ The Probability Integral Transform (PIT), or cross validation predictive p-value
 ---
 
 `$$\begin{align}\label{marginal_effect_month_eq}
-    \text{ME of month}= 2 \boldsymbol{a}'_5(month)^{\top} \boldsymbol{\beta}_1 \mathbb{E}(Yh(Y|\boldsymbol{x})) 
+    \text{ME of month}= -\boldsymbol{a}'_5(month)^{\top} \boldsymbol{\beta}_1 \mathbb{E}(Yh(Y|\boldsymbol{x})) 
 \end{align}$$`
 
 **Month is not a continuos explanatory variable!**
@@ -1563,7 +1250,7 @@ The Probability Integral Transform (PIT), or cross validation predictive p-value
 
 ---
 
-- For the period of the day (categorical variable):
+- For the period of the day (categorical variable) we took the difference between expected values:
 
 &lt;div class="figure" style="text-align: center"&gt;
 &lt;img src="figuras/dayxperiod.png" alt="." width="65%" /&gt;
