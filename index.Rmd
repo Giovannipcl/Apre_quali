@@ -162,7 +162,7 @@ $$
 Thus,
 
 $$
-    F_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
+    F_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = P(Y \leq y |\boldsymbol{X} = \boldsymbol{x}) = P(h(Y|\boldsymbol{x}) \leq h(y|\boldsymbol{x})) = F_Z(h(y|\boldsymbol{x}))
 $$
 - The conditional transformation function $h(Y \mid \boldsymbol{x})$ is monotonically increasing in $y \in \mathbb{R}$, conditional on $\boldsymbol{X} = \boldsymbol{x}$ (Second assumption).
 
@@ -170,6 +170,9 @@ $$
 
 
 - It is convenient to assume $Z\sim N(0,1)$.
+
+- In summary, we aim to find a transformation of $Y$ that results in a normally distributed variable.
+
 
 ---
 
@@ -207,12 +210,12 @@ Assume $J= 3$ and
 
 - This transformation can take a familiar form, such as $\log$. 
 
-- An alternative use basis functions which define a functions space, and to represent every function as a linear combination of basis function.
+- An alternative is to use bases functions which define a functions space, and to represent every function as a linear combination of basis function.
 
 - But many questions and challenges arise from this approach.
   - The functions should express many possible different functions, but they should preferably be smooth (3,4).
   - How much smooth should they be?
-  - They should be monotone(2).
+  - They should be monotone (2).
 
   
 ---
@@ -272,8 +275,7 @@ ___
 ---
 
 
-### B-splines basis
-___
+#### B-splines basis
 
 **Definition:**  Let k be a non-negative integer, $\boldsymbol{t}$ a vector of a non-decreasing sequence of real numbers. The ith B-spline basis of degree k with nodes $\boldsymbol{t}$ is defined by
 
@@ -284,7 +286,7 @@ $$B_{j,0,\boldsymbol{t}}(y)  = \left\lbrace\begin{array}{lc}
          0 &  \textrm{othwerwise}
     \end{array}\right.$$
    
-```{r,results='asis', echo=FALSE, message=FALSE, warning = FALSE,  fig.retina=2, fig.align='center',fig.width=3, fig.height=3}
+```{r,results='asis', echo=FALSE, message=FALSE, warning = FALSE,  fig.retina=1, fig.align='center',fig.width=2, fig.height=1}
 ##### 2
 library(ggplot2)
 library("splines")
@@ -330,7 +332,7 @@ $$h_j(y) = \sum_{i = 1}^q B_{i,3,\boldsymbol{t}}(y) \gamma_{j,i} =  \boldsymbol{
 with $\boldsymbol{a}(y) = (B_{1,3,\boldsymbol{t}}(y), B_{2,3,\boldsymbol{t}}(y) \dots, B_{q,3,\boldsymbol{t}}(y))^{\top}$, and $\boldsymbol{\gamma}_j = (\gamma_{j,1},\gamma_{j,2}, \dots, \gamma_{j,q})^{\top}$.
 
 - But this construction does not cover only monotonic functions. 
-- A positive and increasing sequence of all parameters $\gamma_i$ produces a monotonically increasing spline function `r Citep(myBib,"pya2015shape")`
+- A positive and increasing sequence of all parameters $\gamma_i$ produces a monotonically increasing spline function 
 
 $$\begin{equation}\label{beta_mono}
   \gamma_{j,1} = \beta_{j,1}, \hspace{0.1cm} \text{and} \hspace{0.1cm} \gamma_{j,l} = \beta_{j,1} + \sum_{i = 2}^l \exp(\beta_{j,i}), \hspace{0.1cm} \text{for} \hspace{0.1cm} l = 2, \dots, q, 
@@ -350,7 +352,7 @@ $$\begin{equation}\label{Sigma_mono}
 \end{array}  \right)  
 \end{equation}$$
 
-is an $l \times l$ matrix, and 
+is an $q \times q$ matrix, and 
 
 $$\begin{equation}
     \boldsymbol{\tilde{\beta}}_j = (\beta_{j,1}, \exp(\beta_{j,2}), \dots, \exp(\beta_{j,q}))^\top.
@@ -481,7 +483,7 @@ ___
 - A Taylor expansion of a function $f$ defined around $x$ is
 
 $$
-f(x + 1) - f(x) \approx f'(x + 1 - x)
+f(x + 1) - f(x) \approx f'(x)(x + 1 - x)
 $$
 
 - The derivative of the function can then give us a rate of change regarding how the function varies with respect to $x$.
@@ -492,11 +494,11 @@ $$
 
 - Based on the idea of the Marginal Effect in GLM, we will propose something similar here.
 
-- The marginal effect refers to the **expected rate of change** in the response (dependent variable) associated with a one-unit change in an explanatory variable, keeping all other variables constant.
+- The marginal effect refers to the **expected rate of change** in the expected value (or other interest measure) associated with a one-unit change in an explanatory variable, keeping all other variables constant.
 
 ---
 
-- Let us assume the transformation function $h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x})$, and a set of explanatory variables represented by $\boldsymbol{x} = (x_1, x_2, \dots, x_m)$. The marginal impact of a particular covariate $x_l \in \boldsymbol{x}, l =1, \dots, m$ is is defined by
+- Let us assume the transformation function $h(y|\boldsymbol{x}) = \sum_{j = 1}^J h_j(y|\boldsymbol{x})$, and a set of explanatory variables represented by $\boldsymbol{x} = (x_1, x_2, \dots, x_m)$. The marginal effect of a particular covariate $x_l \in \boldsymbol{x}, l =1, \dots, m$ is is defined by
 
 
 $$\begin{align}\label{rate_of_chane_ey}
@@ -520,13 +522,13 @@ $$\begin{align}
 
 ---
 
-The p-quantile, $Q_p$, of the random variable of a BCTM is given by
+The p-quantile, $Q_p$, of the BCTM is given by
 
 $$\begin{equation}
     Q_p = h^{-1}(\Phi^{-1}(p)|\boldsymbol{x})
 \end{equation}$$
 
-- The marginal impact of a particular covariate $x_l \in \boldsymbol{x}, l =1, \dots, m$ in $Q_p$ for a one-unit variation in the covariate $x_l$, keeping all other variables constant, is 
+- The marginal effect of a particular covariate $x_l \in \boldsymbol{x}, l =1, \dots, m$ in $Q_p$ for a one-unit variation in the covariate $x_l$, keeping all other variables constant, is 
 
 
 $$\begin{align}\label{rate_of_chane_qp}
@@ -611,7 +613,7 @@ and,
 $$
 \log(\tilde{\pi}(\boldsymbol{\tau}|\boldsymbol{y})) \propto \log(\pi(\boldsymbol{\beta}, \boldsymbol{\tau}, \boldsymbol{y})) - \log(\tilde{\pi}(\boldsymbol{\beta}| \boldsymbol{\tau}, \boldsymbol{y})) \bigg|_{\boldsymbol{\beta} = \boldsymbol{\beta}^{*}(\boldsymbol{\tau})}
 $$
-- The final approximation of log density of full conditional evaluated at the mode $\boldsymbol{\beta}^{*}(\boldsymbol{\tau})$ using **Laplace method**  is
+- The final approximation of the log density of full conditional evaluated at the mode $\boldsymbol{\beta}^{*}(\boldsymbol{\tau})$ using **Laplace method**  is
 $$\begin{equation}
     \log( \tilde{\pi}(\boldsymbol{\beta}^{*}(\boldsymbol{\tau})|\boldsymbol{y}, \boldsymbol{\tau})) \approx -\frac{n}{2} \log(2\pi) + \frac{1}{2} \log \left| -H_p(\boldsymbol{\beta}^{*}(\boldsymbol{\tau})) \right |
 \end{equation}$$
@@ -652,7 +654,7 @@ $$\begin{equation}\label{beta_marginais}
  
 - Another **Laplace approximation**? Yes! But.
 
-- The integral in the denominator involves a constrained optimization of $\boldsymbol{\beta}_{-r}$ for a set of values of $\beta_r$ for all $r = 1, \dots I_j \times J$, with $I_j$ being the number of parameters of a particular transformation $j = 1, \dots, J$.
+- The approximation in the denominator involves a constrained optimization of $\boldsymbol{\beta}_{-r}$ for a set of values of $\beta_r$ for all $r = 1, \dots I_j \times J$, with $I_j$ being the number of parameters of a particular transformation $j = 1, \dots, J$.
 
 ---
 #### So...
@@ -668,9 +670,9 @@ $$\begin{equation}
     H_{\tilde{\pi}_G(\boldsymbol{\beta}_{-r} |\beta_r)} = H_{-r,-r} - (H_{-r,r})^{-1}H_{r,r}(H_{r,-r}),
 \end{equation}$$
 
-- Since the Hessian matrix is independent of $\beta_r$ then $\pi(\beta_r| \boldsymbol{\tau}, \boldsymbol{y}) \propto \pi(\tilde{\boldsymbol{\beta}}, \boldsymbol{y}, \boldsymbol{\tau})$. 
+- Since the Hessian matrix is independent of $\beta_r$ then $\pi(\beta_r| \boldsymbol{\tau}, \boldsymbol{y}) \propto \pi(\boldsymbol{\beta}^*, \boldsymbol{y}, \boldsymbol{\tau})$. 
 
-- The last step is to integrate $\boldsymbol{\tau}$ from $\pi(\beta_i| \boldsymbol{\tau}, \boldsymbol{y})$ numerically as 
+- The last step is to integrate $\boldsymbol{\tau}$ from $\pi(\beta_r| \boldsymbol{\tau}, \boldsymbol{y})$ numerically as 
 
 $$\begin{equation}
 \tilde{\pi}(\beta_r|\boldsymbol{y}) = \sum_{p = 1}^P \tilde{\pi}(\beta_r|\boldsymbol{\tau}^{(p)}, \boldsymbol{y}) \tilde{\pi}(\boldsymbol{\tau}^{(p)}|\boldsymbol{y})\Delta \boldsymbol{\tau}_p.
@@ -696,7 +698,7 @@ $$\begin{equation}\label{pract_opt}
 
 - The posterior found in (\ref{pract_opt}) is the same as:
   - The one that minimizes the KL divergence between the true posterior and the estimated one.
-  - The one that maximizes the ELBO (Evidence Lower Bound).
+
 
 ---
 
@@ -752,7 +754,7 @@ where $\lbrace \boldsymbol{\tau}^{[1]}, \dots, \boldsymbol{\tau}^{[P]} \rbrace$ 
 ___
 
 - The main point of the BCTM is the estimate of conditional distribution. The construction of the conditional distribution involves a non-linear combination of parameters.
-- Using the approximated distributions obtained it is complicated to obtain the resultanting distribution of the combination. However, simulations from these marginals are possible by some sample algorithm.
+- Using the approximated distributions obtained it is complicated to obtain the resultanting distribution of the combination. However, simulations from these marginals are possible by some sampling algorithm.
 
 - The resulting samples are employed to estimate the conditional cumulative distribution $F_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = \hat{F}_{Y|\boldsymbol{X} = \boldsymbol{x}}(y) = F_Z(\hat{h}(y|\boldsymbol{x}))$ where $\hat{h}(y|\boldsymbol{x})$ is the posterior mean estimate
 
@@ -770,7 +772,7 @@ $$\begin{equation}
 ### Simulation Study 1: Evaluating the ILBCTM performance
 ___
 
-- A simulation study was conducted to evaluate the performance of the ILBCTM algorithm in recovering the parameters for some particular cases of BCTM. We restricted ourselves into 3 differents models. 
+- A simulation study was conducted to evaluate the performance of the ILBCTM algorithm in **recovering the parameters** for some particular cases of BCTM. We restricted ourselves into 3 differents models. 
 
   - Model 2: $\textrm{P}(Y \leq y | \boldsymbol{X} = \boldsymbol{x}) = \Phi(\boldsymbol{a}(y)^{\top}\boldsymbol{\gamma} + \boldsymbol{x}^{\top} \boldsymbol{\beta})$.
 
